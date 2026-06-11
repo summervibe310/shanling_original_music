@@ -67,6 +67,12 @@
             color: #3a2020;
             background: #fdf5f5;
             border-radius: 0 6px 6px 0;
+            transition: all 0.3s ease;
+        }
+        .lyric-line.active-lyric {
+            color: #d14b4b;
+            background: #fdf0f0;
+            border-left-color: #d14b4b;
         }
         .song-link {
             margin: 20px 0;
@@ -111,7 +117,7 @@
             display: block;
         }
 
-        /* 原始位置占位符，防止播放器被移走后页面跳动 */
+        /* 原始位置占位符 */
         .audio-placeholder {
             display: none;
             width: 100%;
@@ -185,10 +191,10 @@
         /* ========== 固定歌词面板 ========== */
         .lyric-panel {
             position: fixed;
-            left: 60px;
+            left: 20px;
             top: 10vh;
             height: 80vh;
-            width: 346px;
+            width: 280px;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 16px;
@@ -290,7 +296,7 @@
     </blockquote>
 </div>
 
-<!-- 悬浮播放器的家（空容器，播放器会被移到这里） -->
+<!-- 悬浮播放器的家 -->
 <div id="sticky-audio-container"></div>
 
 <p>它是我送给自己的27岁生日礼物。起初只是写给自己的一段日记，但写着写着，写成了歌。然后从它的骨架上，长出了你的影子。</p>
@@ -307,65 +313,77 @@
 
 <h2>第一乐章：废墟中的觉醒</h2>
 
-<p class="lyric-line">空心人 站进人海</p>
+<p class="lyric-line" data-time="18.99">空心人 站进人海</p>
 <p>"空心人"开篇即定调——被掏空、失去内核的存在状态。"站进人海"是讽刺，即便置身人群也如空壳。一个15岁便在酒吧唱歌养家的女孩，早早被抛入成人世界的洪流。镁光灯下的荣耀与网络上的喧嚣，或许都曾让你在某个人声鼎沸的时刻，感觉自己像个"空心人"。</p>
 
-<p class="lyric-line">只剩九十斤的反骨 还在</p>
+<p class="lyric-line" data-time="23.34">只剩九十斤的反骨 还在</p>
 <p>"九十斤"将抽象的"反骨"具象化为一个瘦弱却具体的重量，它是一种不多、但构成生命全部内核的、最后的倔强。在完全的黑暗中，点亮第一簇微弱的火苗。这是"自我"尚未死去的证据。我记得姐姐曾从130斤减到了90左右。</p>
 
-<p class="lyric-line">废墟里 排队等一个赦免</p>
+<p class="lyric-line" data-time="26.88">废墟里 排队等一个赦免</p>
 <p>描绘出绝望的仪式感。"废墟"是内心世界崩塌后的景象，"排队"意味着被动、从众，等待一个外部的、高高在上的力量来"赦免"自己的痛苦。</p>
 
-<p class="lyric-line">等月光失约 才学会<br>做自己的女娲 重塑这人间</p>
+<p class="lyric-line" data-time="30.72">等月光失约 才学会<br>做自己的女娲 重塑这人间</p>
 <p>全篇第一个重大转折。"月光"是高洁但虚幻的外部寄托，它的"失约"是信仰的崩塌，也因此斩断了所有退路。"做自己的女娲"是一次神性的觉醒——我不再等待救世主，我就是自己的创世神。"重塑这人间"是彻底的行动，不再修复旧世界，而是要推倒重来。</p>
 
 <h2>第二乐章：告别与宣战</h2>
 
-<p class="lyric-line">眼泪是大的海<br>那就溺死 我的从前</p>
+<p class="lyric-line" data-time="44.13">眼泪是大的海<br>那就溺死 我的从前</p>
 <p>不否认痛苦的体量，但态度极其决绝。用暴力美学的动作"溺死"，与过去做一次性、彻底的切割。那场不被祝福的婚姻，就是你需要亲手"溺死"的"从前"。</p>
 
-<p class="lyric-line">活该我盛开<br>活该我 哭着哭着就笑出来<br>活该我 偏偏要 嫁给自由 嫁给我的 不够乖</p>
+<p class="lyric-line" data-time="52.74">活该我盛开</p>
+<p class="lyric-line" data-time="55.44">活该我 哭着哭着就笑出来</p>
+<p class="lyric-line" data-time="61.35">活该我盛开</p>
+<p class="lyric-line" data-time="64.05">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</p>
 <p>副歌是战斗檄文。"活该"是最高级的反讽，将外界的贬低内化为自豪的勋章。"哭着哭着就笑出来"是极致的情绪张力——情绪的翻转在同一瞬间完成，哭和笑不再是矛盾的，而是同一种生命力的不同表达。"嫁给自由"和"嫁给不够乖"，将"婚姻"和"规训"两大主题合二为一，宣告我的身心只属于我自己。</p>
 
 <h2>第三乐章：在静默中积蓄</h2>
 
-<p class="lyric-line">不死鸟 决定叛逃<br>一万场落日 收集羽毛</p>
+<p class="lyric-line" data-time="71.64">不死鸟 决定叛逃<br>一万场落日 收集羽毛</p>
 <p>"叛逃"不是逃跑，是主动脱离。"一万场落日"代表无数次失败和考验，主角不怨天尤人，俯身收集自己散落的"羽毛"。这是漫长且沉默的自我重建。你离开天娱，与海豚音标签的拉扯，自立门户——这些都是在静默中等待"春雷"的时刻。</p>
 
-<p class="lyric-line">葡萄要静候 等待是生长<br>春雷不是号角 是我终于<br>被自己 听见的心跳</p>
+<p class="lyric-line" data-time="78.60">葡萄要静候 等待是生长<br>春雷不是号角 是我终于<br>被自己 听见的心跳</p>
 <p>将等待重新定义为积极的生长过程。那一声"春雷"不是上天的指令，而是自己重新变得强壮、清晰的心跳声。这是一次彻底内源性的觉醒。</p>
 
 <h2>第四乐章：燃烧与节拍</h2>
 
-<p class="lyric-line">反正短暂<br>反正 要燃烧</p>
+<p class="lyric-line" data-time="88.95">反正短暂<br>反正 要燃烧</p>
 <p>第二次预副歌，比第一次更短、更急、更有力。"短暂"不是遗憾，是燃料——正因为生命有限，所以才要燃烧。这是对"活着"最彻底的肯定。</p>
 
-<p class="lyric-line">活该我盛开<br>活该我 坏到最后又亮起来</p>
+<p class="lyric-line" data-time="95.76">活该我盛开</p>
+<p class="lyric-line" data-time="98.40">活该我 坏到最后又亮起来</p>
 <p>第二次副歌的核心句。原本这句是"坏到最后又好起来"，我改了。"亮"同"靓"。"坏到最后"不是变坏，是经历破碎、经历黑暗、经历所有糟糕的事。但最后，亮起来了。"亮"是不死鸟燃烧之后发出的光，是灰烬里重新长出的光明。这不是"变好"，是质变——从被黑暗吞噬，到从自己身上发出光。</p>
 
-<p class="lyric-line">活该我盛开<br>活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</p>
+<p class="lyric-line" data-time="104.28">活该我盛开</p>
+<p class="lyric-line" data-time="106.98">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</p>
 <p>赤脚走在荒芜里，没有鞋，没有路，没有保护。但就是这样的行走，踏出了只属于自己的节拍。"节拍"是一个极其精妙的收尾——它不是目的地，不是终点，而是一种活法。你不只是在走路，你是在创造韵律。每一个脚步，都是你自己的鼓点。</p>
 
 <h2>第五乐章：海盗的自由宣言</h2>
 
-<p class="lyric-line">驶向 不被命名的航线<br>不必上岸</p>
+<p class="lyric-line" data-time="113.37">驶向 不被命名的航线<br>不必上岸</p>
 <p>拒绝一切既定道路，并且拒绝世俗意义上的归宿和终点。过程本身就是意义。</p>
 
-<p class="lyric-line">我偏爱 颠倒的罗盘</p>
+<p class="lyric-line" data-time="116.40">我偏爱 颠倒的罗盘</p>
 <p>罗盘是颠倒的——你的方向，和所有人都不一样。你不需要按照世界的导航走。这是"不被定义，庆幸自由，我可以是任何样子"的海盗式宣告。</p>
 
-<p class="lyric-line">做海盗 掠夺快乐 升起红粉骷髅旗<br>你看 我这艘写满补丁的船<br>正劫持 整片黑暗</p>
+<p class="lyric-line" data-time="118.32">做海盗 掠夺快乐 升起红粉骷髅旗<br>你看 我这艘写满补丁的船<br>正劫持 整片黑暗</p>
 <p>全词的华彩乐章。"掠夺快乐"是强者的心态，"红粉骷髅旗"是独一无二的自我标识——红粉是女性力量，骷髅是不惧毁灭。"写满补丁的船"承认了所有的创伤，但正是这些伤疤组成的船，反过来"劫持"了曾经吞噬自己的黑暗。这是对苦难最高级的复仇和超越。</p>
 
 <h2>第六乐章：自我加冕的仪式</h2>
 
-<p class="lyric-line">嘿 看着吧<br>这是我 千千万万遍<br>救我于水火之后 撰写的答案</p>
+<p class="lyric-line" data-time="131.91">嘿 看着吧<br>这是我 千千万万遍<br>救我于水火之后 撰写的答案</p>
 <p>打破第四堵墙，直接向世界宣告。"千千万万遍"呼应了加缪的西西弗斯，但这里不是为了推石头上山，而是为了拯救自己。最终的"答案"是自己用无数次自救的行动书写出来的。</p>
 
-<p class="lyric-line">我是自己的靠山<br>我是自己的太阳<br>我是自己的月亮<br>我是 我唯一的 标签 与规范</p>
+<p class="lyric-line" data-time="140.64">我是自己的靠山</p>
+<p class="lyric-line" data-time="142.80">我是自己的太阳</p>
+<p class="lyric-line" data-time="144.90">我是自己的月亮</p>
+<p class="lyric-line" data-time="146.58">我是 我唯一的 标签 与规范</p>
 <p>我即宇宙，我即法则。对一切外界定义、贴标签、设规范行为的彻底否决。</p>
 
-<p class="lyric-line">活该我 如此灿烂<br>活该我 又争又抢 又不慌不忙<br>活该我 终于长成 一株<br>迎着烈日 拔节作响的<br>——野生的光</p>
+<p class="lyric-line" data-time="150.75">活该我 如此灿烂</p>
+<p class="lyric-line" data-time="153.99">活该我 又争又抢 又不慌不忙</p>
+<p class="lyric-line" data-time="160.41">活该我 终于长成 一株</p>
+<p class="lyric-line" data-time="163.02">迎着烈日 拔节作响的</p>
+<p class="lyric-line" data-time="165.48">——野生的光</p>
 <p>"又争又抢又不慌不忙"是强者的从容节奏。从前规则总夸"好女孩"不争不抢，等着被王子拯救。可是我不想等着别人来赦免来救赎了。我就要有野心地活着，我就要又争又抢，还不担心流言蜚语，不慌不忙地寻觅我的快乐宝藏。</p>
 <p>"迎着烈日"是环境严酷，但我不仅生存，而且"拔节作响"，你能听到我生长的声音。同时，也是作为不死鸟燃烧时噼里啪啦的向上生长的声音。</p>
 <p>"野生的光"——不是被驯养的，不是被点亮的，而是自己从土地里长出来的光明。</p>
@@ -375,7 +393,7 @@
 <p><strong>[小提琴独奏]</strong></p>
 <p>挣脱一切语言束缚的自由之舞，所有情绪的纯音乐化释放。</p>
 
-<p class="lyric-line">
+<p class="lyric-line" data-time="199.41">
 【少年】Oh captain my captain<br>
 【成年】Oh captain my captain<br>
 【老年】Oh captain my captain
@@ -385,7 +403,7 @@
 <p>第三声，是老年时期。声音最辽阔，最平静，带着笑意。像对着整片海面宣告，让声音自然扩散、衰减。那时候你已经劫持了足够多的黑暗，这艘写满补丁的船还在航行，而你终于可以笑着对自己说——我活过了，我盛开过了。</p>
 <p>三声递进，不是三个不同的人，是同一个你，在不同时间里，依次为自己加冕。这是整首歌从"个人作品"升华为"生命仪式"的时刻。</p>
 
-<p class="lyric-line">不等谁 送花来<br>这朵玫瑰 我自己摘<br>活该 我<br>盛<br>开…</p>
+<p class="lyric-line" data-time="212.61">不等谁 送花来<br>这朵玫瑰 我自己摘<br>活该 我<br>盛<br>开…</p>
 <p>结尾从"活该"的宣言，回归到"摘玫瑰"这一个安静而具体的动作。最后的"开"字，如涟漪般扩散、减弱，像一个永不结束的仪式，一个向世界持续打开自己的、无限的游戏。</p>
 
 <hr>
@@ -575,7 +593,7 @@
 
 <script>
 (function() {
-    // ========== 1. 播放器悬浮逻辑（只移动 audio 元素） ==========
+    // ========== 1. 播放器悬浮逻辑 ==========
     var playerContainer = document.getElementById('player-container');
     var stickyContainer = document.getElementById('sticky-audio-container');
     var audio = document.getElementById('song');
@@ -583,28 +601,23 @@
     var placeholder = null;
 
     function handleScroll() {
-        var rect = playerContainer.getBoundingClientRect();
         var audioRect = audio.getBoundingClientRect();
         
         if (audioRect.bottom <= 0 && !isSticky) {
             isSticky = true;
-            
             placeholder = document.createElement('div');
             placeholder.className = 'audio-placeholder active';
             placeholder.style.height = audio.offsetHeight + 'px';
             audio.parentNode.insertBefore(placeholder, audio);
-            
             stickyContainer.appendChild(audio);
             stickyContainer.classList.add('active');
         } else if (isSticky) {
             var placeholderRect = placeholder.getBoundingClientRect();
             if (placeholderRect.top >= 0) {
                 isSticky = false;
-                
                 placeholder.parentNode.insertBefore(audio, placeholder);
                 placeholder.parentNode.removeChild(placeholder);
                 placeholder = null;
-                
                 stickyContainer.classList.remove('active');
             }
         }
@@ -613,12 +626,26 @@
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
 
-    // ========== 2. 歌词高亮与自动滚动 ==========
+    // ========== 2. 高亮逻辑（正文 + 侧边歌词面板） ==========
     var lyricScroll = document.getElementById('lyricScroll');
-    var allLines = lyricScroll.querySelectorAll('.line[data-time]');
-    var currentLyric = null;
+    var panelLines = lyricScroll.querySelectorAll('.line[data-time]');
+    var bodyLines = document.querySelectorAll('.lyric-line[data-time]');
+    var currentPanelLyric = null;
+    var currentBodyLyric = null;
 
-    allLines.forEach(function(line) {
+    // 给正文歌词绑定点击跳转
+    bodyLines.forEach(function(line) {
+        line.addEventListener('click', function() {
+            var time = parseFloat(this.getAttribute('data-time'));
+            if (!isNaN(time)) {
+                audio.currentTime = time;
+                audio.play();
+            }
+        });
+    });
+
+    // 给侧边歌词绑定点击跳转
+    panelLines.forEach(function(line) {
         line.addEventListener('click', function() {
             var time = parseFloat(this.getAttribute('data-time'));
             if (!isNaN(time)) {
@@ -630,100 +657,85 @@
 
     audio.addEventListener('timeupdate', function() {
         var t = audio.currentTime;
-        var active = null;
 
-        for (var i = allLines.length - 1; i >= 0; i--) {
-            var lineTime = parseFloat(allLines[i].getAttribute('data-time'));
+        // 正文歌词高亮（不滚动）
+        var activeBody = null;
+        for (var i = bodyLines.length - 1; i >= 0; i--) {
+            var lineTime = parseFloat(bodyLines[i].getAttribute('data-time'));
             if (t >= lineTime) {
-                active = allLines[i];
+                activeBody = bodyLines[i];
                 break;
             }
         }
+        if (activeBody && activeBody !== currentBodyLyric) {
+            if (currentBodyLyric) currentBodyLyric.classList.remove('active-lyric');
+            activeBody.classList.add('active-lyric');
+            currentBodyLyric = activeBody;
+        }
 
-        if (active && active !== currentLyric) {
-            if (currentLyric) {
-                currentLyric.classList.remove('active-lyric');
+        // 侧边歌词高亮（滚动居中）
+        var activePanel = null;
+        for (var j = panelLines.length - 1; j >= 0; j--) {
+            var panelTime = parseFloat(panelLines[j].getAttribute('data-time'));
+            if (t >= panelTime) {
+                activePanel = panelLines[j];
+                break;
             }
-            active.classList.add('active-lyric');
-            currentLyric = active;
+        }
+        if (activePanel && activePanel !== currentPanelLyric) {
+            if (currentPanelLyric) currentPanelLyric.classList.remove('active-lyric');
+            activePanel.classList.add('active-lyric');
+            currentPanelLyric = activePanel;
 
-            var lineTop = active.offsetTop;
+            var lineTop = activePanel.offsetTop;
             var containerHeight = lyricScroll.clientHeight;
-            var lineHeight = active.offsetHeight;
+            var lineHeight = activePanel.offsetHeight;
             var targetScroll = lineTop - (containerHeight / 2) + (lineHeight / 2);
-
-            lyricScroll.scrollTo({
-                top: targetScroll,
-                behavior: 'smooth'
-            });
+            lyricScroll.scrollTo({ top: targetScroll, behavior: 'smooth' });
         }
     });
 
     // ========== 3. 歌词面板拖拽逻辑 ==========
     var lyricPanel = document.getElementById('lyricPanel');
     var lyricPanelHeader = document.getElementById('lyricPanelHeader');
-
     var isDragging = false;
     var startX, startY, initialLeft, initialTop;
-    var currentLeft, currentTop;
     var initialPanelLeft = 20;
     var initialPanelTop = 10;
     var maxRightLimit;
 
-    // 初始化位置
     lyricPanel.style.left = initialPanelLeft + 'px';
     lyricPanel.style.top = initialPanelTop + 'vh';
-    currentLeft = initialPanelLeft;
-    currentTop = window.innerHeight * (initialPanelTop / 100);
 
     function updateMaxLimit() {
         var bodyStyle = window.getComputedStyle(document.body);
         var paddingLeft = parseFloat(bodyStyle.paddingLeft);
         var maxWidth = 720;
         var windowWidth = window.innerWidth;
-        
-        var contentLeft;
-        if (windowWidth > maxWidth + paddingLeft * 2) {
-            contentLeft = (windowWidth - maxWidth) / 2;
-        } else {
-            contentLeft = paddingLeft;
-        }
-        
+        var contentLeft = (windowWidth > maxWidth + paddingLeft * 2) ? (windowWidth - maxWidth) / 2 : paddingLeft;
         maxRightLimit = contentLeft - lyricPanel.offsetWidth - 20;
     }
 
     function isBlockingContent() {
         updateMaxLimit();
-        var panelRight = lyricPanel.offsetLeft + lyricPanel.offsetWidth;
-        return panelRight > maxRightLimit;
+        return (lyricPanel.offsetLeft + lyricPanel.offsetWidth) > maxRightLimit;
     }
 
     function setPanelToInitialPosition() {
         lyricPanel.style.left = initialPanelLeft + 'px';
         lyricPanel.style.top = initialPanelTop + 'vh';
-        currentLeft = initialPanelLeft;
-        currentTop = window.innerHeight * (initialPanelTop / 100);
     }
 
     function onMouseMove(e) {
         if (!isDragging) return;
         e.preventDefault();
-
-        var deltaX = e.clientX - startX;
-        var deltaY = e.clientY - startY;
-        
-        var newLeft = initialLeft + deltaX;
-        var newTop = initialTop + deltaY;
-        
+        var newLeft = initialLeft + (e.clientX - startX);
+        var newTop = initialTop + (e.clientY - startY);
         var panelWidth = lyricPanel.offsetWidth;
         var panelHeight = lyricPanel.offsetHeight;
-        var windowWidth = window.innerWidth;
-        var windowHeight = window.innerHeight;
-        
         if (newLeft < 0) newLeft = 0;
         if (newTop < 0) newTop = 0;
-        if (newTop + panelHeight > windowHeight) newTop = windowHeight - panelHeight;
-        
+        if (newTop + panelHeight > window.innerHeight) newTop = window.innerHeight - panelHeight;
         lyricPanel.style.left = newLeft + 'px';
         lyricPanel.style.top = newTop + 'px';
     }
@@ -731,14 +743,9 @@
     function onMouseUp(e) {
         if (!isDragging) return;
         isDragging = false;
-        
         if (isBlockingContent()) {
             setPanelToInitialPosition();
-        } else {
-            currentLeft = lyricPanel.offsetLeft;
-            currentTop = lyricPanel.offsetTop;
         }
-        
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
     }
@@ -750,18 +757,13 @@
         initialLeft = lyricPanel.offsetLeft;
         initialTop = lyricPanel.offsetTop;
         updateMaxLimit();
-        
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
-        
         e.preventDefault();
     });
 
     window.addEventListener('resize', function() {
-        updateMaxLimit();
-        if (isBlockingContent()) {
-            setPanelToInitialPosition();
-        }
+        if (isBlockingContent()) setPanelToInitialPosition();
     });
 
 })();
