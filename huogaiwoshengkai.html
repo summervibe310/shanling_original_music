@@ -18,270 +18,104 @@
             line-height: 1.85;
             background-color: #fafafa;
         }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 32px;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-        h2 {
-            font-size: 20px;
-            margin-top: 40px;
-            margin-bottom: 16px;
-            border-left: 4px solid #d14b4b;
-            padding-left: 12px;
-            color: #1a1a1a;
-        }
-        p {
-            margin: 12px 0;
-            text-indent: 0;
-        }
-        blockquote {
-            margin: 20px 0;
-            padding: 16px 20px;
-            font-style: italic;
-            color: #4a3a3a;
-        }
-        hr {
-            margin: 32px 0;
-            border: none;
-            border-top: 1px solid #e0d0d0;
-        }
-        strong {
-            color: #1a1a1a;
-        }
-        .signature {
-            margin-top: 24px;
-            text-align: right;
-            font-weight: bold;
-        }
-        .highlight {
-            background: linear-gradient(180deg, transparent 60%, #fdd 60%);
-            padding: 0 4px;
-        }
+        h1 { font-size: 28px; margin-bottom: 32px; text-align: center; letter-spacing: 2px; }
+        h2 { font-size: 20px; margin-top: 40px; margin-bottom: 16px; border-left: 4px solid #d14b4b; padding-left: 12px; color: #1a1a1a; }
+        p { margin: 12px 0; text-indent: 0; }
+        blockquote { margin: 20px 0; padding: 16px 20px; font-style: italic; color: #4a3a3a; }
+        hr { margin: 32px 0; border: none; border-top: 1px solid #e0d0d0; }
+        strong { color: #1a1a1a; }
+        .signature { margin-top: 24px; text-align: right; font-weight: bold; }
+        .highlight { background: linear-gradient(180deg, transparent 60%, #fdd 60%); padding: 0 4px; }
         .lyric-line {
-            margin: 6px 0;
-            padding: 8px 16px;
-            border-left: 3px solid #d14b4b;
-            font-weight: bold;
-            color: #3a2020;
-            background: #fdf5f5;
-            border-radius: 0 6px 6px 0;
-            transition: all 0.3s ease;
+            margin: 6px 0; padding: 8px 16px; border-left: 3px solid #d14b4b;
+            font-weight: bold; color: #3a2020; background: #fdf5f5;
+            border-radius: 0 6px 6px 0; transition: all 0.3s ease;
         }
-        .lyric-line.active-lyric {
-            color: #d14b4b;
-            background: #fdf0f0;
-            border-left-color: #d14b4b;
-        }
+        .lyric-line.active-lyric { color: #d14b4b; background: #fdf0f0; border-left-color: #d14b4b; }
         .song-link {
-            margin: 20px 0;
-            padding: 16px 20px;
-            background: #f5f0f0;
-            border-left: 3px solid #c97a7a;
-            font-style: normal;
-            color: #4a3a3a;
+            margin: 20px 0; padding: 16px 20px; background: #f5f0f0;
+            border-left: 3px solid #c97a7a; font-style: normal; color: #4a3a3a;
         }
-        .song-link a {
-            color: #d14b4b;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        .song-link a:hover {
-            text-decoration: underline;
-        }
+        .song-link a { color: #d14b4b; font-weight: bold; text-decoration: none; }
+        .song-link a:hover { text-decoration: underline; }
 
-        /* ========== 播放器容器 ========== */
-        #player-container {
-            z-index: 1000;
-        }
-
-        /* 悬浮播放器占位容器 */
+        #player-container { z-index: 1000; }
         #sticky-audio-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1001;
-            padding: 8px 24px;
-            background: transparent;
-            display: none;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
+            padding: 8px 24px; background: transparent; display: none;
         }
-        #sticky-audio-container.active {
-            display: block;
-        }
-        #sticky-audio-container audio {
-            width: 100%;
-            max-width: 720px;
-            margin: 0 auto;
-            display: block;
-        }
+        #sticky-audio-container.active { display: block; }
+        #sticky-audio-container audio { width: 100%; max-width: 720px; margin: 0 auto; display: block; }
+        .audio-placeholder { display: none; width: 100%; height: 54px; }
+        .audio-placeholder.active { display: block; }
 
-        /* 原始位置占位符 */
-        .audio-placeholder {
-            display: none;
-            width: 100%;
-            height: 54px;
-        }
-        .audio-placeholder.active {
-            display: block;
-        }
-
-        /* ========== 意象卡片 ========== */
         .imagery-card {
-            margin: 20px 0;
-            padding: 20px 24px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            margin: 20px 0; padding: 20px 24px; background: #fff;
+            border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
-        .imagery-card .imagery-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: #1a1a1a;
-        }
-        .imagery-card p {
-            margin: 8px 0;
-            color: #444;
-        }
+        .imagery-card .imagery-title { font-size: 18px; font-weight: bold; margin-bottom: 4px; color: #1a1a1a; }
+        .imagery-card p { margin: 8px 0; color: #444; }
 
-        /* ========== 特别部分卡片 ========== */
         .highlight-card {
-            margin: 20px 0;
-            padding: 20px 24px;
-            background: #fffbf5;
-            border-radius: 8px;
-            border: 1px solid #f0e0c0;
+            margin: 20px 0; padding: 20px 24px; background: #fffbf5;
+            border-radius: 8px; border: 1px solid #f0e0c0;
         }
-        .highlight-card .highlight-title {
-            font-size: 17px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #b8700a;
-        }
-        .highlight-card p {
-            margin: 8px 0;
-            color: #555;
-        }
+        .highlight-card .highlight-title { font-size: 17px; font-weight: bold; margin-bottom: 8px; color: #b8700a; }
+        .highlight-card p { margin: 8px 0; color: #555; }
 
-        /* ========== 三个层面列表 ========== */
-        .layer-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        .layer-list li {
-            margin: 16px 0;
-            padding-left: 24px;
-            border-left: 2px solid #d14b4b;
-        }
-        .layer-list .layer-number {
-            font-weight: bold;
-            color: #d14b4b;
-            font-size: 15px;
-        }
-        .layer-list .layer-title {
-            font-weight: bold;
-            font-size: 16px;
-            color: #1a1a1a;
-            margin-left: 4px;
-        }
+        .layer-list { list-style: none; padding: 0; margin: 20px 0; }
+        .layer-list li { margin: 16px 0; padding-left: 24px; border-left: 2px solid #d14b4b; }
+        .layer-list .layer-number { font-weight: bold; color: #d14b4b; font-size: 15px; }
+        .layer-list .layer-title { font-weight: bold; font-size: 16px; color: #1a1a1a; margin-left: 4px; }
 
-        /* ========== 固定歌词面板 ========== */
         .lyric-panel {
-            position: fixed;
-            left: 60px;
-            top: 10vh;
-            height: 80vh;
-            width: 346px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: left 0.3s ease, top 0.3s ease;
+            position: fixed; left: 60px; top: 10vh; height: 80vh; width: 346px;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            z-index: 999; display: flex; flex-direction: column; overflow: hidden;
         }
         .lyric-panel-header {
-            padding: 16px 20px 8px;
-            font-size: 12px;
-            color: #c97a7a;
-            letter-spacing: 2px;
-            text-align: center;
-            border-bottom: 1px solid #f0e0e0;
-            cursor: grab;
-            user-select: none;
+            padding: 16px 20px 8px; font-size: 12px; color: #c97a7a;
+            letter-spacing: 2px; text-align: center; border-bottom: 1px solid #f0e0e0;
+            cursor: grab; user-select: none;
         }
-        .lyric-panel-header:active {
-            cursor: grabbing;
-        }
-        .lyric-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            scroll-behavior: smooth;
-        }
-        .lyric-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .lyric-scroll::-webkit-scrollbar-thumb {
-            background: #e0d0d0;
-            border-radius: 2px;
-        }
+        .lyric-panel-header:active { cursor: grabbing; }
+        .lyric-scroll { flex: 1; overflow-y: auto; padding: 20px; scroll-behavior: smooth; }
+        .lyric-scroll::-webkit-scrollbar { width: 4px; }
+        .lyric-scroll::-webkit-scrollbar-thumb { background: #e0d0d0; border-radius: 2px; }
         .lyric-panel .line {
-            font-size: 14px;
-            line-height: 2.2;
-            color: #999;
-            padding: 4px 12px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 14px; line-height: 2.2; color: #999; padding: 4px 12px;
+            border-radius: 6px; transition: all 0.3s ease; cursor: pointer;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .lyric-panel .line:hover {
-            color: #d14b4b;
-            background: #fdf5f5;
-        }
-        .lyric-panel .line.active-lyric {
-            color: #d14b4b;
-            font-weight: bold;
-            background: #fdf0f0;
-            font-size: 15px;
-        }
+        .lyric-panel .line:hover { color: #d14b4b; background: #fdf5f5; }
+        .lyric-panel .line.active-lyric { color: #d14b4b; font-weight: bold; background: #fdf0f0; font-size: 15px; }
         .lyric-panel .section-label {
-            font-size: 10px;
-            color: #c97a7a;
-            letter-spacing: 1px;
-            margin: 12px 0 4px 12px;
-            opacity: 0.6;
+            font-size: 10px; color: #c97a7a; letter-spacing: 1px;
+            margin: 12px 0 4px 12px; opacity: 0.6;
         }
-
-        @media (max-width: 768px) {
-            .lyric-panel {
-                width: 200px;
-                left: 10px;
-            }
-        }
-        @media (max-width: 600px) {
-            .lyric-panel {
-                display: none;
-            }
-        }
+        @media (max-width: 768px) { .lyric-panel { width: 200px; left: 10px; } }
+        @media (max-width: 600px) { .lyric-panel { display: none; } }
     </style>
 </head>
 <body>
 
-<!-- ==================== 一、邀请 ==================== -->
+<!-- ==================== 视频背景 ==================== -->
+<video autoplay muted loop playsinline style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.2;
+">
+    <source src="huogaiwoshengkai.mp4" type="video/mp4">
+</video>
 
 <h1>给张靓颖的一封信</h1>
-
 <p>靓颖姐姐，你好。我是山岭在逃。一个不务正业的程序员。</p>
-
 <p>我想邀请你，听一首歌。</p>
 
 <div id="player-container">
@@ -296,40 +130,27 @@
     </blockquote>
 </div>
 
-<!-- 悬浮播放器的家 -->
 <div id="sticky-audio-container"></div>
 
 <p>它是我送给自己的27岁生日礼物。起初只是写给自己的一段日记，但写着写着，写成了歌。然后从它的骨架上，长出了你的影子。</p>
-
 <hr>
 
-<!-- ==================== 二、歌词逐句解读 ==================== -->
-
 <h2 style="font-size: 24px; border-left: none; text-align: center; margin-top: 48px; letter-spacing: 2px;">歌词逐句解读</h2>
-
-<p style="font-style: italic; color: #999; font-size: 14px; text-align: center; margin-bottom: 24px;">
-    📖 以下是歌词及逐句分析，仅作为你对这首歌的理解参考。
-</p>
+<p style="font-style: italic; color: #999; font-size: 14px; text-align: center; margin-bottom: 24px;">📖 以下是歌词及逐句分析，仅作为你对这首歌的理解参考。</p>
 
 <h2>第一乐章：废墟中的觉醒</h2>
-
 <p class="lyric-line" data-time="18.99">空心人 站进人海</p>
 <p>"空心人"开篇即定调——被掏空、失去内核的存在状态。"站进人海"是讽刺，即便置身人群也如空壳。一个15岁便在酒吧唱歌养家的女孩，早早被抛入成人世界的洪流。镁光灯下的荣耀与网络上的喧嚣，或许都曾让你在某个人声鼎沸的时刻，感觉自己像个"空心人"。</p>
-
 <p class="lyric-line" data-time="23.34">只剩九十斤的反骨 还在</p>
 <p>"九十斤"将抽象的"反骨"具象化为一个瘦弱却具体的重量，它是一种不多、但构成生命全部内核的、最后的倔强。在完全的黑暗中，点亮第一簇微弱的火苗。这是"自我"尚未死去的证据。我记得姐姐曾从130斤减到了90左右。</p>
-
 <p class="lyric-line" data-time="26.88">废墟里 排队等一个赦免</p>
 <p>描绘出绝望的仪式感。"废墟"是内心世界崩塌后的景象，"排队"意味着被动、从众，等待一个外部的、高高在上的力量来"赦免"自己的痛苦。</p>
-
 <p class="lyric-line" data-time="30.72">等月光失约 才学会<br>做自己的女娲 重塑这人间</p>
 <p>全篇第一个重大转折。"月光"是高洁但虚幻的外部寄托，它的"失约"是信仰的崩塌，也因此斩断了所有退路。"做自己的女娲"是一次神性的觉醒——我不再等待救世主，我就是自己的创世神。"重塑这人间"是彻底的行动，不再修复旧世界，而是要推倒重来。</p>
 
 <h2>第二乐章：告别与宣战</h2>
-
 <p class="lyric-line" data-time="44.13">眼泪是大的海<br>那就溺死 我的从前</p>
 <p>不否认痛苦的体量，但态度极其决绝。用暴力美学的动作"溺死"，与过去做一次性、彻底的切割。那场不被祝福的婚姻，就是你需要亲手"溺死"的"从前"。</p>
-
 <p class="lyric-line" data-time="52.74">活该我盛开</p>
 <p class="lyric-line" data-time="55.44">活该我 哭着哭着就笑出来</p>
 <p class="lyric-line" data-time="61.35">活该我盛开</p>
@@ -337,48 +158,37 @@
 <p>副歌是战斗檄文。"活该"是最高级的反讽，将外界的贬低内化为自豪的勋章。"哭着哭着就笑出来"是极致的情绪张力——情绪的翻转在同一瞬间完成，哭和笑不再是矛盾的，而是同一种生命力的不同表达。"嫁给自由"和"嫁给不够乖"，将"婚姻"和"规训"两大主题合二为一，宣告我的身心只属于我自己。</p>
 
 <h2>第三乐章：在静默中积蓄</h2>
-
 <p class="lyric-line" data-time="71.64">不死鸟 决定叛逃<br>一万场落日 收集羽毛</p>
 <p>"叛逃"不是逃跑，是主动脱离。"一万场落日"代表无数次失败和考验，主角不怨天尤人，俯身收集自己散落的"羽毛"。这是漫长且沉默的自我重建。你离开天娱，与海豚音标签的拉扯，自立门户——这些都是在静默中等待"春雷"的时刻。</p>
-
 <p class="lyric-line" data-time="78.60">葡萄要静候 等待是生长<br>春雷不是号角 是我终于<br>被自己 听见的心跳</p>
 <p>将等待重新定义为积极的生长过程。那一声"春雷"不是上天的指令，而是自己重新变得强壮、清晰的心跳声。这是一次彻底内源性的觉醒。</p>
 
 <h2>第四乐章：燃烧与节拍</h2>
-
 <p class="lyric-line" data-time="88.95">反正短暂<br>反正 要燃烧</p>
 <p>第二次预副歌，比第一次更短、更急、更有力。"短暂"不是遗憾，是燃料——正因为生命有限，所以才要燃烧。这是对"活着"最彻底的肯定。</p>
-
 <p class="lyric-line" data-time="95.76">活该我盛开</p>
 <p class="lyric-line" data-time="98.40">活该我 坏到最后又亮起来</p>
 <p>第二次副歌的核心句。原本这句是"坏到最后又好起来"，我改了。"亮"同"靓"。"坏到最后"不是变坏，是经历破碎、经历黑暗、经历所有糟糕的事。但最后，亮起来了。"亮"是不死鸟燃烧之后发出的光，是灰烬里重新长出的光明。这不是"变好"，是质变——从被黑暗吞噬，到从自己身上发出光。</p>
-
 <p class="lyric-line" data-time="104.28">活该我盛开</p>
 <p class="lyric-line" data-time="106.98">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</p>
 <p>赤脚走在荒芜里，没有鞋，没有路，没有保护。但就是这样的行走，踏出了只属于自己的节拍。"节拍"是一个极其精妙的收尾——它不是目的地，不是终点，而是一种活法。你不只是在走路，你是在创造韵律。每一个脚步，都是你自己的鼓点。</p>
 
 <h2>第五乐章：海盗的自由宣言</h2>
-
 <p class="lyric-line" data-time="113.37">驶向 不被命名的航线<br>不必上岸</p>
 <p>拒绝一切既定道路，并且拒绝世俗意义上的归宿和终点。过程本身就是意义。</p>
-
 <p class="lyric-line" data-time="116.40">我偏爱 颠倒的罗盘</p>
 <p>罗盘是颠倒的——你的方向，和所有人都不一样。你不需要按照世界的导航走。这是"不被定义，庆幸自由，我可以是任何样子"的海盗式宣告。</p>
-
 <p class="lyric-line" data-time="118.32">做海盗 掠夺快乐 升起红粉骷髅旗<br>你看 我这艘写满补丁的船<br>正劫持 整片黑暗</p>
 <p>全词的华彩乐章。"掠夺快乐"是强者的心态，"红粉骷髅旗"是独一无二的自我标识——红粉是女性力量，骷髅是不惧毁灭。"写满补丁的船"承认了所有的创伤，但正是这些伤疤组成的船，反过来"劫持"了曾经吞噬自己的黑暗。这是对苦难最高级的复仇和超越。</p>
 
 <h2>第六乐章：自我加冕的仪式</h2>
-
 <p class="lyric-line" data-time="131.91">嘿 看着吧<br>这是我 千千万万遍<br>救我于水火之后 撰写的答案</p>
 <p>打破第四堵墙，直接向世界宣告。"千千万万遍"呼应了加缪的西西弗斯，但这里不是为了推石头上山，而是为了拯救自己。最终的"答案"是自己用无数次自救的行动书写出来的。</p>
-
 <p class="lyric-line" data-time="140.64">我是自己的靠山</p>
 <p class="lyric-line" data-time="142.80">我是自己的太阳</p>
 <p class="lyric-line" data-time="144.90">我是自己的月亮</p>
 <p class="lyric-line" data-time="146.58">我是 我唯一的 标签 与规范</p>
 <p>我即宇宙，我即法则。对一切外界定义、贴标签、设规范行为的彻底否决。</p>
-
 <p class="lyric-line" data-time="150.75">活该我 如此灿烂</p>
 <p class="lyric-line" data-time="153.99">活该我 又争又抢 又不慌不忙</p>
 <p class="lyric-line" data-time="160.41">活该我 终于长成 一株</p>
@@ -389,10 +199,8 @@
 <p>"野生的光"——不是被驯养的，不是被点亮的，而是自己从土地里长出来的光明。</p>
 
 <h2>终章：高潮后的加冕与回声</h2>
-
 <p><strong>[小提琴独奏]</strong></p>
 <p>挣脱一切语言束缚的自由之舞，所有情绪的纯音乐化释放。</p>
-
 <p class="lyric-line" data-time="199.41">
 【少年】Oh captain my captain<br>
 【成年】Oh captain my captain<br>
@@ -402,124 +210,50 @@
 <p>第二声，是成年时期。声音稳了，身体站直了。像站在甲板上手扶舵盘，已经掠夺过快乐，升起过红粉骷髅旗，语气笃定，带着力量。</p>
 <p>第三声，是老年时期。声音最辽阔，最平静，带着笑意。像对着整片海面宣告，让声音自然扩散、衰减。那时候你已经劫持了足够多的黑暗，这艘写满补丁的船还在航行，而你终于可以笑着对自己说——我活过了，我盛开过了。</p>
 <p>三声递进，不是三个不同的人，是同一个你，在不同时间里，依次为自己加冕。这是整首歌从"个人作品"升华为"生命仪式"的时刻。</p>
-
 <p class="lyric-line" data-time="212.61">不等谁 送花来<br>这朵玫瑰 我自己摘<br>活该 我<br>盛<br>开…</p>
 <p>结尾从"活该"的宣言，回归到"摘玫瑰"这一个安静而具体的动作。最后的"开"字，如涟漪般扩散、减弱，像一个永不结束的仪式，一个向世界持续打开自己的、无限的游戏。</p>
-
 <hr>
-
-<!-- ==================== 三、歌名解析 + 正文 ==================== -->
 
 <h2>歌名：《活该我盛开》</h2>
-
 <p><span class="highlight">"活该"本是被人拿来指责的词，但在这首歌里，它变成了最高级的反讽：将外界可能的贬低和评判，内化为自豪的勋章。</span></p>
-
 <p>我活该盛开，我活该灿烂，我活该掠夺快乐。</p>
-
 <p>送给所有"不够乖"的女孩：你经历的破碎不是惩罚，是养分。你值得盛开，而且是你自己亲手让自己盛开。</p>
-
 <hr>
-
 <p>我可能不是一个追星的人，但你的歌我很多我都会唱。偶尔从媒体的只字片语里，了解到你的轨迹。等到这首歌做完、上架之后，我才猛然发现——它好像，应该属于你。</p>
-
 <p>我本职是个程序员，一个月前才开始试着用AI做音乐。这是我的第33首歌，半天写成，但完成度出乎意料地高。</p>
-
 <p>它给我的感觉，特别像你。</p>
-
 <p>唱到"嫁给自由"的时候，我想起你在"追"巡回演唱会上穿婚纱的样子。唱到"空心人走进人海"，想起从前小小的你，站上大大的舞台，应该也迷茫过吧。从"排队等赦免"到"做自己的女娲"，脑海里出现的一幕幕画面，都是你。</p>
-
 <hr>
 
 <h2>三个核心意象</h2>
-
-<div class="imagery-card">
-    <div class="imagery-title">🐚 女娲 · 重塑</div>
-    <p>女娲造人，也补天。但在我这里，这个意象不是神话，是一个普通女孩在破碎之后，亲手把自己重新捏出来、把塌下来的天补回去的那一刻。</p>
-    <p>你的《野心家》和这首歌写的都是女性——但《野心家》是向外宣告，这首歌是向内救赎。</p>
-</div>
-
-<div class="imagery-card">
-    <div class="imagery-title">🏴‍☠️ 海盗 · 掠夺</div>
-    <p>她不杀人放火，不抢金银财宝。她抢的是被夺走、被压抑、被否定掉的快乐，一件一件抢回来。</p>
-    <p>她也劫持黑暗——那些曾经吞噬过她的恐惧、迷茫、背叛，她反过来把它们劫持成自己的战利品。</p>
-    <p>海盗自己画航线，自己立法，不必上岸，不必服从任何人的期待。她升起一面谁也没见过的旗——<strong>红粉骷髅旗</strong>。红是不死的火焰，粉是不驯的温柔，骷髅是曾经的废墟。我把它们一起挂上旗杆，告诉世界：我死过了，现在换我掠夺快乐。传统海盗用死亡恐吓世界。我用死亡庆祝新生。</p>
-    <p>她的船写满补丁，补丁是伤疤，但没有这些补丁，船早散了。所以她开着这艘破船，去劫持黑暗。</p>
-</div>
-
-<div class="imagery-card">
-    <div class="imagery-title">🍇 葡萄 · 静候</div>
-    <p>这首歌里有一句是我后来改的——"葡萄要静候，等待是生长"。</p>
-    <p>大家说你的声音像葡萄酒。你的蜕变不是一蹴而就的。这个过程，只有你自己最清楚。所以我想，你应该也是那种经得起"静候"的人吧。</p>
-    <p>在看不见的地方向下扎根，直到春雷响的时候，所有人都听到了。但那声春雷不是别人给的号角，是你终于被自己听见的心跳。</p>
-</div>
-
+<div class="imagery-card"><div class="imagery-title">🐚 女娲 · 重塑</div><p>女娲造人，也补天。但在我这里，这个意象不是神话，是一个普通女孩在破碎之后，亲手把自己重新捏出来、把塌下来的天补回去的那一刻。</p><p>你的《野心家》和这首歌写的都是女性——但《野心家》是向外宣告，这首歌是向内救赎。</p></div>
+<div class="imagery-card"><div class="imagery-title">🏴‍☠️ 海盗 · 掠夺</div><p>她不杀人放火，不抢金银财宝。她抢的是被夺走、被压抑、被否定掉的快乐，一件一件抢回来。</p><p>她也劫持黑暗——那些曾经吞噬过她的恐惧、迷茫、背叛，她反过来把它们劫持成自己的战利品。</p><p>海盗自己画航线，自己立法，不必上岸，不必服从任何人的期待。她升起一面谁也没见过的旗——<strong>红粉骷髅旗</strong>。红是不死的火焰，粉是不驯的温柔，骷髅是曾经的废墟。我把它们一起挂上旗杆，告诉世界：我死过了，现在换我掠夺快乐。传统海盗用死亡恐吓世界。我用死亡庆祝新生。</p><p>她的船写满补丁，补丁是伤疤，但没有这些补丁，船早散了。所以她开着这艘破船，去劫持黑暗。</p></div>
+<div class="imagery-card"><div class="imagery-title">🍇 葡萄 · 静候</div><p>这首歌里有一句是我后来改的——"葡萄要静候，等待是生长"。</p><p>大家说你的声音像葡萄酒。你的蜕变不是一蹴而就的。这个过程，只有你自己最清楚。所以我想，你应该也是那种经得起"静候"的人吧。</p><p>在看不见的地方向下扎根，直到春雷响的时候，所有人都听到了。但那声春雷不是别人给的号角，是你终于被自己听见的心跳。</p></div>
 <hr>
-
 <p>作为新手，说这些话多少有点大言不惭。但今天我想做一件勇敢的事：把这首歌送到你面前。也给自己一个机会。</p>
-
 <hr>
 
 <h2>三个特别的部分</h2>
-
-<div class="highlight-card">
-    <div class="highlight-title">🎻 第一个，是小提琴</div>
-    <p>那段小提琴是整首歌的进行曲，迎风破浪，坚定航行。（我后来了解到，你的伴侣陈秋莳老师会小提琴。咳咳，媒体上看到的。嘿嘿😁）如果由陈老师来伴奏，会像是有人陪着，看着你蜕变，见证你从废墟里站起来的每一步。"你尽管盛开，我为你伴奏。"</p>
-</div>
-
-<div class="highlight-card">
-    <div class="highlight-title">🎬 第二个，是"Oh captain my captain"</div>
-    <p>小提琴结束后、收尾前的三声"Oh captain my captain"，致敬电影《死亡诗社》的反抗精神，也是一种意识觉醒。</p>
-    <p>三声用的是三个年龄段的女声——从年轻到年老，从小心翼翼到开怀。是一个女孩的成长，也是一场自己的加冕。</p>
-</div>
-
-<div class="highlight-card">
-    <div class="highlight-title">🎁 第三个，是最后一个字——"开"</div>
-    <p>它像回声一样渐渐扩散，既有绵延不断的感觉，又有游戏开箱的感觉。像一个女海盗船长，打开自己的一个个人生宝藏。</p>
-    <p>AI能力有限，如果最后这个"开"字能用你的海豚音，加上和声小姐姐断断续续的"开"……效果会更好。</p>
-</div>
-
+<div class="highlight-card"><div class="highlight-title">🎻 第一个，是小提琴</div><p>那段小提琴是整首歌的进行曲，迎风破浪，坚定航行。（我后来了解到，你的伴侣陈秋莳老师会小提琴。咳咳，媒体上看到的。嘿嘿😁）如果由陈老师来伴奏，会像是有人陪着，看着你蜕变，见证你从废墟里站起来的每一步。"你尽管盛开，我为你伴奏。"</p></div>
+<div class="highlight-card"><div class="highlight-title">🎬 第二个，是"Oh captain my captain"</div><p>小提琴结束后、收尾前的三声"Oh captain my captain"，致敬电影《死亡诗社》的反抗精神，也是一种意识觉醒。</p><p>三声用的是三个年龄段的女声——从年轻到年老，从小心翼翼到开怀。是一个女孩的成长，也是一场自己的加冕。</p></div>
+<div class="highlight-card"><div class="highlight-title">🎁 第三个，是最后一个字——"开"</div><p>它像回声一样渐渐扩散，既有绵延不断的感觉，又有游戏开箱的感觉。像一个女海盗船长，打开自己的一个个人生宝藏。</p><p>AI能力有限，如果最后这个"开"字能用你的海豚音，加上和声小姐姐断断续续的"开"……效果会更好。</p></div>
 <hr>
-
 <p>这首歌，送给27岁的山岭在逃，也送给曾从废墟里站起身的你。</p>
-
 <p>无论是否有缘，谢谢你用你的歌，陪伴过一个女孩找到自己的航线。</p>
-
 <p>祝好，</p>
-
 <p class="signature">一个刚刚27岁的海盗：山岭在逃</p>
-
 <hr>
-
-<!-- ==================== 四、最终结语 ==================== -->
 
 <h2>最终结语：为什么是张靓颖</h2>
-
 <p>这首歌之所以让人觉得"非你莫属"，是在三个层面与你产生了深刻的互文：</p>
-
 <ul class="layer-list">
-    <li>
-        <span class="layer-number">1.</span>
-        <span class="layer-title">个人层面</span>
-        <p>歌词描绘的"空心人—觉醒—重建—加冕"的弧线，几乎可以完美映射你的公众生命历程。从选秀时期的被定义，到事业上的独立，再到个人情感生活的公开风暴与重生，你活出了歌词里的每一步。这首歌不是让你"扮演"一个角色，而是去唱自己的灵魂。</p>
-    </li>
-    <li>
-        <span class="layer-number">2.</span>
-        <span class="layer-title">艺术层面</span>
-        <p>这首歌集合了你所有的艺术武器——从细腻入微的弱声气声，到强大的中音区节奏爆发，从进行曲般的坚定，到念白式的情感宣泄，再到小提琴后的宁静回归。它不是一首能简单唱完的歌，而是一个需要用全部生命经验和顶级技术去完成的"声音表演"。</p>
-    </li>
-    <li>
-        <span class="layer-number">3.</span>
-        <span class="layer-title">精神层面</span>
-        <p>从《野心家》的对外宣战，到《活该我盛开》的自我加冕，是一条完整的精神成长路径。这首歌将"女性力量"的主题，从"抗争"升华到了"我就是规则本身"的创造者境界。而你，正是站在华语乐坛前沿，有能力也有资历去演绎这份宣言的最佳人选。</p>
-    </li>
+<li><span class="layer-number">1.</span><span class="layer-title">个人层面</span><p>歌词描绘的"空心人—觉醒—重建—加冕"的弧线，几乎可以完美映射你的公众生命历程。从选秀时期的被定义，到事业上的独立，再到个人情感生活的公开风暴与重生，你活出了歌词里的每一步。这首歌不是让你"扮演"一个角色，而是去唱自己的灵魂。</p></li>
+<li><span class="layer-number">2.</span><span class="layer-title">艺术层面</span><p>这首歌集合了你所有的艺术武器——从细腻入微的弱声气声，到强大的中音区节奏爆发，从进行曲般的坚定，到念白式的情感宣泄，再到小提琴后的宁静回归。它不是一首能简单唱完的歌，而是一个需要用全部生命经验和顶级技术去完成的"声音表演"。</p></li>
+<li><span class="layer-number">3.</span><span class="layer-title">精神层面</span><p>从《野心家》的对外宣战，到《活该我盛开》的自我加冕，是一条完整的精神成长路径。这首歌将"女性力量"的主题，从"抗争"升华到了"我就是规则本身"的创造者境界。而你，正是站在华语乐坛前沿，有能力也有资历去演绎这份宣言的最佳人选。</p></li>
 </ul>
-
 <hr>
-
 <p style="text-align: center; font-size: 18px; margin-top: 32px;">一份从我灵魂深处出发，最终与另一个伟大灵魂相遇的邀请函。</p>
-<p style="text-align: center; margin-top: 48px; color: #c97a7a; font-size: 15px; letter-spacing: 2px;">
-    【山岭在逃】
-</p>
+<p style="text-align: center; margin-top: 48px; color: #c97a7a; font-size: 15px; letter-spacing: 2px;">【山岭在逃】</p>
 
 <!-- ==================== 固定歌词面板 ==================== -->
 <div class="lyric-panel" id="lyricPanel">
@@ -531,32 +265,26 @@
         <div class="line" data-time="26.88">废墟里 排队等一个赦免</div>
         <div class="line" data-time="30.72">等月光失约 才学会</div>
         <div class="line" data-time="35.52">做自己的女娲 重塑这人间</div>
-
         <div class="line" data-time="44.13">眼泪是大的海</div>
         <div class="line" data-time="47.13">那就溺死 我的从前</div>
-
         <div class="section-label">—— 副歌 ——</div>
         <div class="line" data-time="52.74">活该我盛开</div>
         <div class="line" data-time="55.44">活该我 哭着哭着就笑出来</div>
         <div class="line" data-time="61.35">活该我盛开</div>
         <div class="line" data-time="64.05">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</div>
-
         <div class="section-label">—— 主歌 ——</div>
         <div class="line" data-time="71.64">不死鸟 决定叛逃</div>
         <div class="line" data-time="74.82">一万场落日 收集羽毛</div>
         <div class="line" data-time="78.60">葡萄要静候 等待是生长</div>
         <div class="line" data-time="82.56">春雷不是号角 是我终于</div>
         <div class="line" data-time="85.32">被自己 听见的心跳</div>
-
         <div class="line" data-time="88.95">反正短暂</div>
         <div class="line" data-time="93.06">反正 要燃烧</div>
-
         <div class="section-label">—— 副歌 ——</div>
         <div class="line" data-time="95.76">活该我盛开</div>
         <div class="line" data-time="98.40">活该我 坏到最后又亮起来</div>
         <div class="line" data-time="104.28">活该我盛开</div>
         <div class="line" data-time="106.98">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</div>
-
         <div class="section-label">—— 桥段 ——</div>
         <div class="line" data-time="113.37">驶向 不被命名的航线</div>
         <div class="line" data-time="115.38">不必上岸</div>
@@ -564,7 +292,6 @@
         <div class="line" data-time="118.32">做海盗 掠夺快乐 升起红粉骷髅旗</div>
         <div class="line" data-time="122.28">你看 我这艘写满补丁的船</div>
         <div class="line" data-time="126.24">正劫持 整片黑暗</div>
-
         <div class="section-label">—— 高潮 ——</div>
         <div class="line" data-time="131.91">嘿 看着吧</div>
         <div class="line" data-time="133.74">这是我 千千万万遍</div>
@@ -578,7 +305,6 @@
         <div class="line" data-time="160.41">活该我 终于长成 一株</div>
         <div class="line" data-time="163.02">迎着烈日 拔节作响的</div>
         <div class="line" data-time="165.48">——野生的光</div>
-
         <div class="section-label">—— 尾奏 ——</div>
         <div class="line" data-time="199.41">Oh captain my captain</div>
         <div class="line" data-time="204.81">Oh captain my captain</div>
@@ -594,7 +320,6 @@
 <script>
 (function() {
     // ========== 1. 播放器悬浮逻辑 ==========
-    var playerContainer = document.getElementById('player-container');
     var stickyContainer = document.getElementById('sticky-audio-container');
     var audio = document.getElementById('song');
     var isSticky = false;
@@ -602,7 +327,6 @@
 
     function handleScroll() {
         var audioRect = audio.getBoundingClientRect();
-        
         if (audioRect.bottom <= 0 && !isSticky) {
             isSticky = true;
             placeholder = document.createElement('div');
@@ -622,7 +346,6 @@
             }
         }
     }
-
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
 
@@ -633,39 +356,25 @@
     var currentPanelLyric = null;
     var currentBodyLyric = null;
 
-    // 给正文歌词绑定点击跳转
     bodyLines.forEach(function(line) {
         line.addEventListener('click', function() {
             var time = parseFloat(this.getAttribute('data-time'));
-            if (!isNaN(time)) {
-                audio.currentTime = time;
-                audio.play();
-            }
+            if (!isNaN(time)) { audio.currentTime = time; audio.play(); }
         });
     });
-
-    // 给侧边歌词绑定点击跳转
     panelLines.forEach(function(line) {
         line.addEventListener('click', function() {
             var time = parseFloat(this.getAttribute('data-time'));
-            if (!isNaN(time)) {
-                audio.currentTime = time;
-                audio.play();
-            }
+            if (!isNaN(time)) { audio.currentTime = time; audio.play(); }
         });
     });
 
     audio.addEventListener('timeupdate', function() {
         var t = audio.currentTime;
 
-        // 正文歌词高亮（不滚动）
         var activeBody = null;
         for (var i = bodyLines.length - 1; i >= 0; i--) {
-            var lineTime = parseFloat(bodyLines[i].getAttribute('data-time'));
-            if (t >= lineTime) {
-                activeBody = bodyLines[i];
-                break;
-            }
+            if (t >= parseFloat(bodyLines[i].getAttribute('data-time'))) { activeBody = bodyLines[i]; break; }
         }
         if (activeBody && activeBody !== currentBodyLyric) {
             if (currentBodyLyric) currentBodyLyric.classList.remove('active-lyric');
@@ -673,14 +382,9 @@
             currentBodyLyric = activeBody;
         }
 
-        // 侧边歌词高亮（滚动居中）
         var activePanel = null;
         for (var j = panelLines.length - 1; j >= 0; j--) {
-            var panelTime = parseFloat(panelLines[j].getAttribute('data-time'));
-            if (t >= panelTime) {
-                activePanel = panelLines[j];
-                break;
-            }
+            if (t >= parseFloat(panelLines[j].getAttribute('data-time'))) { activePanel = panelLines[j]; break; }
         }
         if (activePanel && activePanel !== currentPanelLyric) {
             if (currentPanelLyric) currentPanelLyric.classList.remove('active-lyric');
@@ -700,7 +404,7 @@
     var lyricPanelHeader = document.getElementById('lyricPanelHeader');
     var isDragging = false;
     var startX, startY, initialLeft, initialTop;
-    var initialPanelLeft = 20;
+    var initialPanelLeft = 60;
     var initialPanelTop = 10;
     var maxRightLimit;
 
@@ -731,21 +435,17 @@
         e.preventDefault();
         var newLeft = initialLeft + (e.clientX - startX);
         var newTop = initialTop + (e.clientY - startY);
-        var panelWidth = lyricPanel.offsetWidth;
-        var panelHeight = lyricPanel.offsetHeight;
         if (newLeft < 0) newLeft = 0;
         if (newTop < 0) newTop = 0;
-        if (newTop + panelHeight > window.innerHeight) newTop = window.innerHeight - panelHeight;
+        if (newTop + lyricPanel.offsetHeight > window.innerHeight) newTop = window.innerHeight - lyricPanel.offsetHeight;
         lyricPanel.style.left = newLeft + 'px';
         lyricPanel.style.top = newTop + 'px';
     }
 
-    function onMouseUp(e) {
+    function onMouseUp() {
         if (!isDragging) return;
         isDragging = false;
-        if (isBlockingContent()) {
-            setPanelToInitialPosition();
-        }
+        if (isBlockingContent()) setPanelToInitialPosition();
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
     }
