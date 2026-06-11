@@ -584,30 +584,23 @@
 
     function handleScroll() {
         var rect = playerContainer.getBoundingClientRect();
-        // 获取 audio 元素在 player-container 中的位置
         var audioRect = audio.getBoundingClientRect();
         
         if (audioRect.bottom <= 0 && !isSticky) {
-            // 播放器完全滚出视口 → 移到悬浮容器
             isSticky = true;
             
-            // 在原位置插入占位符，防止页面跳动
             placeholder = document.createElement('div');
             placeholder.className = 'audio-placeholder active';
             placeholder.style.height = audio.offsetHeight + 'px';
             audio.parentNode.insertBefore(placeholder, audio);
             
-            // 移动播放器到悬浮容器
             stickyContainer.appendChild(audio);
             stickyContainer.classList.add('active');
         } else if (isSticky) {
-            // 检查原始占位符是否回到视口
             var placeholderRect = placeholder.getBoundingClientRect();
             if (placeholderRect.top >= 0) {
-                // 原始位置回到视口 → 放回去
                 isSticky = false;
                 
-                // 把播放器放回原位
                 placeholder.parentNode.insertBefore(audio, placeholder);
                 placeholder.parentNode.removeChild(placeholder);
                 placeholder = null;
@@ -672,9 +665,16 @@
 
     var isDragging = false;
     var startX, startY, initialLeft, initialTop;
+    var currentLeft, currentTop;
     var initialPanelLeft = 20;
     var initialPanelTop = 10;
     var maxRightLimit;
+
+    // 初始化位置
+    lyricPanel.style.left = initialPanelLeft + 'px';
+    lyricPanel.style.top = initialPanelTop + 'vh';
+    currentLeft = initialPanelLeft;
+    currentTop = window.innerHeight * (initialPanelTop / 100);
 
     function updateMaxLimit() {
         var bodyStyle = window.getComputedStyle(document.body);
@@ -692,9 +692,17 @@
         maxRightLimit = contentLeft - lyricPanel.offsetWidth - 20;
     }
 
+    function isBlockingContent() {
+        updateMaxLimit();
+        var panelRight = lyricPanel.offsetLeft + lyricPanel.offsetWidth;
+        return panelRight > maxRightLimit;
+    }
+
     function setPanelToInitialPosition() {
         lyricPanel.style.left = initialPanelLeft + 'px';
         lyricPanel.style.top = initialPanelTop + 'vh';
+        currentLeft = initialPanelLeft;
+        currentTop = window.innerHeight * (initialPanelTop / 100);
     }
 
     function onMouseMove(e) {
@@ -724,11 +732,11 @@
         if (!isDragging) return;
         isDragging = false;
         
-        updateMaxLimit();
-        var currentRight = lyricPanel.offsetLeft + lyricPanel.offsetWidth;
-        
-        if (currentRight > maxRightLimit) {
+        if (isBlockingContent()) {
             setPanelToInitialPosition();
+        } else {
+            currentLeft = lyricPanel.offsetLeft;
+            currentTop = lyricPanel.offsetTop;
         }
         
         document.removeEventListener('mousemove', onMouseMove);
@@ -749,11 +757,9 @@
         e.preventDefault();
     });
 
-    setPanelToInitialPosition();
     window.addEventListener('resize', function() {
         updateMaxLimit();
-        var currentRight = lyricPanel.offsetLeft + lyricPanel.offsetWidth;
-        if (currentRight > maxRightLimit) {
+        if (isBlockingContent()) {
             setPanelToInitialPosition();
         }
     });
