@@ -177,14 +177,19 @@
             font-size: 16px;
             line-height: 2;
             color: #2c2c2c;
+            padding: 2px 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .lyrics-display .line a {
-            color: #2c2c2c;
-            text-decoration: none;
-        }
-        .lyrics-display .line a:hover {
+        .lyrics-display .line:hover {
             color: #d14b4b;
             text-decoration: underline;
+        }
+        .lyrics-display .line.active-lyric {
+            color: #d14b4b;
+            font-weight: bold;
+            background: #fdf0f0;
         }
     </style>
 </head>
@@ -314,83 +319,83 @@
 
     <div class="lyric-block">
         <div class="section-label">—— 主歌 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=18.99">空心人 站进人海</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=23.34">只剩九十斤的反骨 还在</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=26.88">废墟里 排队等一个赦免</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=30.72">等月光失约 才学会</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=35.52">做自己的女娲 重塑这人间</a></div>
+        <div class="line" id="lyric-0">空心人 站进人海</div>
+        <div class="line" id="lyric-1">只剩九十斤的反骨 还在</div>
+        <div class="line" id="lyric-2">废墟里 排队等一个赦免</div>
+        <div class="line" id="lyric-3">等月光失约 才学会</div>
+        <div class="line" id="lyric-4">做自己的女娲 重塑这人间</div>
     </div>
 
     <div class="lyric-block">
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=44.13">眼泪是大的海</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=47.13">那就溺死 我的从前</a></div>
+        <div class="line" id="lyric-5">眼泪是大的海</div>
+        <div class="line" id="lyric-6">那就溺死 我的从前</div>
     </div>
 
     <div class="lyric-block">
         <div class="section-label">—— 副歌 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=52.74">活该我盛开</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=55.44">活该我 哭着哭着就笑出来</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=61.35">活该我盛开</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=64.05">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</a></div>
+        <div class="line" id="lyric-7">活该我盛开</div>
+        <div class="line" id="lyric-8">活该我 哭着哭着就笑出来</div>
+        <div class="line" id="lyric-9">活该我盛开</div>
+        <div class="line" id="lyric-10">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</div>
     </div>
 
     <div class="lyric-block">
         <div class="section-label">—— 主歌 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=71.64">不死鸟 决定叛逃</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=74.82">一万场落日 收集羽毛</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=78.60">葡萄要静候 等待是生长</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=82.56">春雷不是号角 是我终于</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=85.32">被自己 听见的心跳</a></div>
+        <div class="line" id="lyric-11">不死鸟 决定叛逃</div>
+        <div class="line" id="lyric-12">一万场落日 收集羽毛</div>
+        <div class="line" id="lyric-13">葡萄要静候 等待是生长</div>
+        <div class="line" id="lyric-14">春雷不是号角 是我终于</div>
+        <div class="line" id="lyric-15">被自己 听见的心跳</div>
     </div>
 
     <div class="lyric-block">
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=88.95">反正短暂</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=93.06">反正 要燃烧</a></div>
+        <div class="line" id="lyric-16">反正短暂</div>
+        <div class="line" id="lyric-17">反正 要燃烧</div>
     </div>
 
     <div class="lyric-block">
         <div class="section-label">—— 副歌 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=95.76">活该我盛开</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=98.40">活该我 坏到最后又亮起来</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=104.28">活该我盛开</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=106.98">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</a></div>
+        <div class="line" id="lyric-18">活该我盛开</div>
+        <div class="line" id="lyric-19">活该我 坏到最后又亮起来</div>
+        <div class="line" id="lyric-20">活该我盛开</div>
+        <div class="line" id="lyric-21">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</div>
     </div>
 
     <div class="lyric-block">
         <div class="section-label">—— 桥段 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=113.37">驶向 不被命名的航线</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=115.38">不必上岸</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=116.40">我偏爱 颠倒的罗盘</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=118.32">做海盗 掠夺快乐 升起红粉骷髅旗</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=122.28">你看 我这艘写满补丁的船</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=126.24">正劫持 整片黑暗</a></div>
+        <div class="line" id="lyric-22">驶向 不被命名的航线</div>
+        <div class="line" id="lyric-23">不必上岸</div>
+        <div class="line" id="lyric-24">我偏爱 颠倒的罗盘</div>
+        <div class="line" id="lyric-25">做海盗 掠夺快乐 升起红粉骷髅旗</div>
+        <div class="line" id="lyric-26">你看 我这艘写满补丁的船</div>
+        <div class="line" id="lyric-27">正劫持 整片黑暗</div>
     </div>
 
     <div class="lyric-block">
         <div class="section-label">—— 高潮 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=131.91">嘿 看着吧</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=133.74">这是我 千千万万遍</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=136.89">救我于水火之后 撰写的答案</a></div>
+        <div class="line" id="lyric-28">嘿 看着吧</div>
+        <div class="line" id="lyric-29">这是我 千千万万遍</div>
+        <div class="line" id="lyric-30">救我于水火之后 撰写的答案</div>
         <div class="line">&nbsp;</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=140.64">我是自己的靠山</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=142.80">我是自己的太阳</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=144.90">我是自己的月亮</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=146.58">我是 我唯一的 标签 与规范</a></div>
+        <div class="line" id="lyric-31">我是自己的靠山</div>
+        <div class="line" id="lyric-32">我是自己的太阳</div>
+        <div class="line" id="lyric-33">我是自己的月亮</div>
+        <div class="line" id="lyric-34">我是 我唯一的 标签 与规范</div>
         <div class="line">&nbsp;</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=150.75">活该我 如此灿烂</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=153.99">活该我 又争又抢 又不慌不忙</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=160.41">活该我 终于长成 一株</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=163.02">迎着烈日 拔节作响的</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=165.48">——野生的光</a></div>
+        <div class="line" id="lyric-35">活该我 如此灿烂</div>
+        <div class="line" id="lyric-36">活该我 又争又抢 又不慌不忙</div>
+        <div class="line" id="lyric-37">活该我 终于长成 一株</div>
+        <div class="line" id="lyric-38">迎着烈日 拔节作响的</div>
+        <div class="line" id="lyric-39">——野生的光</div>
     </div>
 
     <div class="lyric-block">
         <div class="section-label">—— 尾奏 ——</div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=192.64">不等谁 送花来</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=195.94">这朵玫瑰 我自己摘</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=201.46">活该 我</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=203.32">盛</a></div>
-        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=203.71">开</a></div>
+        <div class="line" id="lyric-40">不等谁 送花来</div>
+        <div class="line" id="lyric-41">这朵玫瑰 我自己摘</div>
+        <div class="line" id="lyric-42">活该 我</div>
+        <div class="line" id="lyric-43">盛</div>
+        <div class="line" id="lyric-44">开</div>
     </div>
 
 </div>
@@ -509,6 +514,82 @@
 <p style="text-align: center; margin-top: 48px; color: #c97a7a; font-size: 15px; letter-spacing: 2px;">
     【山岭在逃】
 </p>
+
+<script>
+// 每句歌词的开始时间（秒），对应上面的 id
+var lyricTimes = [
+    18.99,  // 0: 空心人
+    23.34,  // 1: 只剩九十斤
+    26.88,  // 2: 废墟里
+    30.72,  // 3: 等月光失约
+    35.52,  // 4: 做自己的女娲
+    44.13,  // 5: 眼泪是大的海
+    47.13,  // 6: 那就溺死
+    52.74,  // 7: 活该我盛开
+    55.44,  // 8: 哭着哭着
+    61.35,  // 9: 活该我盛开
+    64.05,  // 10: 嫁给自由
+    71.64,  // 11: 不死鸟
+    74.82,  // 12: 一万场落日
+    78.60,  // 13: 葡萄要静候
+    82.56,  // 14: 春雷不是号角
+    85.32,  // 15: 被自己听见
+    88.95,  // 16: 反正短暂
+    93.06,  // 17: 反正要燃烧
+    95.76,  // 18: 活该我盛开
+    98.40,  // 19: 坏到最后
+    104.28, // 20: 活该我盛开
+    106.98, // 21: 踏过荒芜
+    113.37, // 22: 驶向
+    115.38, // 23: 不必上岸
+    116.40, // 24: 颠倒的罗盘
+    118.32, // 25: 做海盗
+    122.28, // 26: 写满补丁
+    126.24, // 27: 劫持整片黑暗
+    131.91, // 28: 嘿看着吧
+    133.74, // 29: 千千万万遍
+    136.89, // 30: 救我于水火
+    140.64, // 31: 我是自己的靠山
+    142.80, // 32: 太阳
+    144.90, // 33: 月亮
+    146.58, // 34: 标签与规范
+    150.75, // 35: 如此灿烂
+    153.99, // 36: 又争又抢
+    160.41, // 37: 终于长成一株
+    163.02, // 38: 迎着烈日
+    165.48, // 39: 野生的光
+    192.64, // 40: 不等谁送花来
+    195.94, // 41: 这朵玫瑰
+    201.46, // 42: 活该我
+    203.32, // 43: 盛
+    203.71  // 44: 开
+];
+
+var audio = document.getElementById('song2');
+var currentLyric = -1;
+
+audio.addEventListener('timeupdate', function() {
+    var t = audio.currentTime;
+    var active = -1;
+    for (var i = lyricTimes.length - 1; i >= 0; i--) {
+        if (t >= lyricTimes[i]) {
+            active = i;
+            break;
+        }
+    }
+    if (active !== currentLyric) {
+        // 清除上一个高亮
+        if (currentLyric >= 0) {
+            var prev = document.getElementById('lyric-' + currentLyric);
+            if (prev) prev.classList.remove('active-lyric');
+        }
+        // 设置新的高亮
+        var next = document.getElementById('lyric-' + active);
+        if (next) next.classList.add('active-lyric');
+        currentLyric = active;
+    }
+});
+</script>
 
 </body>
 </html>
