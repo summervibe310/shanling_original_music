@@ -1,1 +1,16 @@
-# shanling_original_music
+# 山岭在逃的音乐作品
+
+一个程序员的自学音乐创作记录，用 Suno AI 制作。
+
+## 作品列表
+
+- 🏴‍☠️ **[活该我盛开](./index.html)** — 写给张靓颖的邀请函，27岁生日礼物
+
+## 关于我
+
+本职程序员，一个月前开始用 Suno AI 做音乐。这是我的第 33 首歌。
+
+## 联系我
+
+- 📧 邮箱：zylstudy310@163.com / summervibe310@gmail.com
+- 🎵 网易云音乐：[山岭在逃](https://163cn.tv/8OWPUVm)
