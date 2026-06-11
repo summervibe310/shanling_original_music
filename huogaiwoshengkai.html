@@ -85,32 +85,30 @@
             text-decoration: underline;
         }
 
-        /* ========== 悬浮播放器 ========== */
-        .sticky-player-wrapper {
-            height: 80px; /* 占位高度 */
-            margin-bottom: 20px;
-        }
-        .sticky-player {
-            background: #fafafa;
-            padding: 12px 0;
+        /* ========== 播放器容器 ========== */
+        #player-container {
+            transition: all 0.3s ease;
             z-index: 1000;
-            transition: box-shadow 0.3s ease;
         }
-        .sticky-player.is-sticky {
+        #player-container.is-sticky {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            padding: 12px 24px;
             background: rgba(250, 250, 250, 0.95);
             backdrop-filter: blur(10px);
+            padding: 12px 24px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .sticky-player audio {
-            width: 100%;
-            max-width: 720px;
+        #player-container.is-sticky .song-link {
             margin: 0 auto;
-            display: block;
+            max-width: 720px;
+            background: transparent;
+            border-left: none;
+            padding: 0;
+        }
+        #player-container.is-sticky audio {
+            width: 100%;
         }
 
         /* ========== 意象卡片 ========== */
@@ -241,7 +239,6 @@
             opacity: 0.6;
         }
 
-        /* 移动端适配：歌词面板变小或隐藏 */
         @media (max-width: 768px) {
             .lyric-panel {
                 width: 200px;
@@ -257,16 +254,6 @@
 </head>
 <body>
 
-<!-- ==================== 悬浮播放器 ==================== -->
-<div class="sticky-player-wrapper" id="stickyWrapper">
-    <div class="sticky-player" id="stickyPlayer">
-        <audio id="song" controls style="width:100%; max-width:720px; margin:0 auto; display:block;">
-            <source src="活该我盛开.mp3" type="audio/mpeg">
-            你的浏览器不支持音频播放，请<a href="https://163cn.tv/8OWPUVm" target="_blank">点击这里跳转网易云收听</a>。
-        </audio>
-    </div>
-</div>
-
 <!-- ==================== 一、邀请 ==================== -->
 
 <h1>给张靓颖的一封信</h1>
@@ -275,10 +262,17 @@
 
 <p>我想邀请你，听一首歌。</p>
 
-<blockquote class="song-link">
-    🎵 我已经在<strong>网易云音乐</strong>上传了这首歌<br>
-    🔗 你可以点击这里的链接跳转到网易云音乐收听👉：<a href="https://163cn.tv/8OWPUVm" target="_blank">《活该我盛开》</a>
-</blockquote>
+<div id="player-container">
+    <blockquote class="song-link">
+        🎵 我已经在<strong>网易云音乐</strong>上传了这首歌<br>
+        🔗 你可以点击这里的链接跳转到网易云音乐收听👉：<a href="https://163cn.tv/8OWPUVm" target="_blank">《活该我盛开》</a><br>
+        🎧 也可以点击👇音频播放：<br><br>
+        <audio id="song" controls style="width:100%;">
+            <source src="活该我盛开.mp3" type="audio/mpeg">
+            你的浏览器不支持音频播放，请<a href="https://163cn.tv/8OWPUVm" target="_blank">点击这里跳转网易云收听</a>。
+        </audio>
+    </blockquote>
+</div>
 
 <p>它是我送给自己的27岁生日礼物。起初只是写给自己的一段日记，但写着写着，写成了歌。然后从它的骨架上，长出了你的影子。</p>
 
@@ -362,8 +356,15 @@
 <p><strong>[小提琴独奏]</strong></p>
 <p>挣脱一切语言束缚的自由之舞，所有情绪的纯音乐化释放。</p>
 
-<p><strong>[三声"Oh captain, my captain"]</strong></p>
-<p>这船长是自己，也是对一切引领你走向自由的精神的致敬。三声跨越年龄的呼喊，像是对自己过往每一个阶段的承认与拥抱。这是整首歌从"个人作品"升华为"生命仪式"的时刻。</p>
+<p class="lyric-line">
+【少年】Oh captain my captain<br>
+【成年】Oh captain my captain<br>
+【老年】Oh captain my captain
+</p>
+<p>第一声，是少年时期。声音轻一点，带气声，小心翼翼。像刚从废墟里爬出来，带着颤抖和试探，第一次对着镜子喊出这句话。</p>
+<p>第二声，是成年时期。声音稳了，身体站直了。像站在甲板上手扶舵盘，已经掠夺过快乐，升起过红粉骷髅旗，语气笃定，带着力量。</p>
+<p>第三声，是老年时期。声音最辽阔，最平静，带着笑意。像对着整片海面宣告，让声音自然扩散、衰减。那时候你已经劫持了足够多的黑暗，这艘写满补丁的船还在航行，而你终于可以笑着对自己说——我活过了，我盛开过了。</p>
+<p>三声递进，不是三个不同的人，是同一个你，在不同时间里，依次为自己加冕。这是整首歌从"个人作品"升华为"生命仪式"的时刻。</p>
 
 <p class="lyric-line">不等谁 送花来<br>这朵玫瑰 我自己摘<br>活该 我<br>盛<br>开…</p>
 <p>结尾从"活该"的宣言，回归到"摘玫瑰"这一个安静而具体的动作。最后的"开"字，如涟漪般扩散、减弱，像一个永不结束的仪式，一个向世界持续打开自己的、无限的游戏。</p>
@@ -542,36 +543,38 @@
         <div class="line" data-time="165.48">——野生的光</div>
 
         <div class="section-label">—— 尾奏 ——</div>
-        <div class="line" data-time="192.64">不等谁 送花来</div>
-        <div class="line" data-time="195.94">这朵玫瑰 我自己摘</div>
-        <div class="line" data-time="201.46">活该 我</div>
-        <div class="line" data-time="203.32">盛</div>
-        <div class="line" data-time="203.71">开</div>
+        <div class="line" data-time="199.41">Oh captain my captain</div>
+        <div class="line" data-time="204.81">Oh captain my captain</div>
+        <div class="line" data-time="211.23">Oh captain my captain</div>
+        <div class="line" data-time="212.61">不等谁 送花来</div>
+        <div class="line" data-time="215.94">这朵玫瑰 我自己摘</div>
+        <div class="line" data-time="221.46">活该 我</div>
+        <div class="line" data-time="223.32">盛</div>
+        <div class="line" data-time="223.71">开</div>
     </div>
 </div>
 
 <script>
 (function() {
     // ========== 1. 播放器悬浮逻辑 ==========
-    var stickyWrapper = document.getElementById('stickyWrapper');
-    var stickyPlayer = document.getElementById('stickyPlayer');
-    var wrapperTop = stickyWrapper.offsetTop;
-    var wrapperHeight = stickyWrapper.offsetHeight;
+    var playerContainer = document.getElementById('player-container');
+    var containerOffsetTop = playerContainer.offsetTop;
+    var containerHeight = playerContainer.offsetHeight;
 
     function handleScroll() {
-        if (window.scrollY > wrapperTop) {
-            stickyPlayer.classList.add('is-sticky');
-            stickyWrapper.style.height = wrapperHeight + 'px';
+        if (window.scrollY > containerOffsetTop) {
+            playerContainer.classList.add('is-sticky');
+            playerContainer.style.height = containerHeight + 'px';
         } else {
-            stickyPlayer.classList.remove('is-sticky');
-            stickyWrapper.style.height = 'auto';
+            playerContainer.classList.remove('is-sticky');
+            playerContainer.style.height = 'auto';
         }
     }
 
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', function() {
-        wrapperTop = stickyWrapper.offsetTop;
-        wrapperHeight = stickyWrapper.offsetHeight;
+        containerOffsetTop = playerContainer.offsetTop;
+        containerHeight = playerContainer.offsetHeight;
         handleScroll();
     });
 
@@ -606,15 +609,12 @@
         }
 
         if (active && active !== currentLyric) {
-            // 清除上一个高亮
             if (currentLyric) {
                 currentLyric.classList.remove('active-lyric');
             }
-            // 设置新的高亮
             active.classList.add('active-lyric');
             currentLyric = active;
 
-            // 滚动到垂直居中
             var scrollContainer = lyricScroll;
             var lineTop = active.offsetTop;
             var containerHeight = scrollContainer.clientHeight;
