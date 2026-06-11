@@ -231,7 +231,7 @@
 <p>"空心人"开篇即定调——被掏空、失去内核的存在状态。"站进人海"是讽刺，即便置身人群也如空壳。一个15岁便在酒吧唱歌养家的女孩，早早被抛入成人世界的洪流。镁光灯下的荣耀与网络上的喧嚣，或许都曾让你在某个人声鼎沸的时刻，感觉自己像个"空心人"。</p>
 
 <p class="lyric-line">只剩九十斤的反骨 还在</p>
-<p>"九十斤"将抽象的"反骨"具象化为一个瘦弱却具体的重量，它是一种不多、但构成生命全部内核的、最后的倔强。在完全的黑暗中，点亮第一簇微弱的火苗。这是"自我"尚未死去的证据。</p>
+<p>"九十斤"将抽象的"反骨"具象化为一个瘦弱却具体的重量，它是一种不多、但构成生命全部内核的、最后的倔强。在完全的黑暗中，点亮第一簇微弱的火苗。这是"自我"尚未死去的证据。我记得姐姐曾从130斤减到了90左右。</p>
 
 <p class="lyric-line">废墟里 排队等一个赦免</p>
 <p>描绘出绝望的仪式感。"废墟"是内心世界崩塌后的景象，"排队"意味着被动、从众，等待一个外部的、高高在上的力量来"赦免"自己的痛苦。</p>
@@ -516,79 +516,56 @@
 </p>
 
 <script>
-// 每句歌词的开始时间（秒），对应上面的 id
-var lyricTimes = [
-    18.99,  // 0: 空心人
-    23.34,  // 1: 只剩九十斤
-    26.88,  // 2: 废墟里
-    30.72,  // 3: 等月光失约
-    35.52,  // 4: 做自己的女娲
-    44.13,  // 5: 眼泪是大的海
-    47.13,  // 6: 那就溺死
-    52.74,  // 7: 活该我盛开
-    55.44,  // 8: 哭着哭着
-    61.35,  // 9: 活该我盛开
-    64.05,  // 10: 嫁给自由
-    71.64,  // 11: 不死鸟
-    74.82,  // 12: 一万场落日
-    78.60,  // 13: 葡萄要静候
-    82.56,  // 14: 春雷不是号角
-    85.32,  // 15: 被自己听见
-    88.95,  // 16: 反正短暂
-    93.06,  // 17: 反正要燃烧
-    95.76,  // 18: 活该我盛开
-    98.40,  // 19: 坏到最后
-    104.28, // 20: 活该我盛开
-    106.98, // 21: 踏过荒芜
-    113.37, // 22: 驶向
-    115.38, // 23: 不必上岸
-    116.40, // 24: 颠倒的罗盘
-    118.32, // 25: 做海盗
-    122.28, // 26: 写满补丁
-    126.24, // 27: 劫持整片黑暗
-    131.91, // 28: 嘿看着吧
-    133.74, // 29: 千千万万遍
-    136.89, // 30: 救我于水火
-    140.64, // 31: 我是自己的靠山
-    142.80, // 32: 太阳
-    144.90, // 33: 月亮
-    146.58, // 34: 标签与规范
-    150.75, // 35: 如此灿烂
-    153.99, // 36: 又争又抢
-    160.41, // 37: 终于长成一株
-    163.02, // 38: 迎着烈日
-    165.48, // 39: 野生的光
-    192.64, // 40: 不等谁送花来
-    195.94, // 41: 这朵玫瑰
-    201.46, // 42: 活该我
-    203.32, // 43: 盛
-    203.71  // 44: 开
-];
+window.onload = function() {
+    var lyricTimes = [
+        18.99, 23.34, 26.88, 30.72, 35.52,
+        44.13, 47.13, 52.74, 55.44, 61.35,
+        64.05, 71.64, 74.82, 78.60, 82.56,
+        85.32, 88.95, 93.06, 95.76, 98.40,
+        104.28, 106.98, 113.37, 115.38, 116.40,
+        118.32, 122.28, 126.24, 131.91, 133.74,
+        136.89, 140.64, 142.80, 144.90, 146.58,
+        150.75, 153.99, 160.41, 163.02, 165.48,
+        192.64, 195.94, 201.46, 203.32, 203.71
+    ];
 
-var audio = document.getElementById('song2');
-var currentLyric = -1;
+    var audio = document.getElementById('song2');
+    var currentLyric = -1;
 
-audio.addEventListener('timeupdate', function() {
-    var t = audio.currentTime;
-    var active = -1;
-    for (var i = lyricTimes.length - 1; i >= 0; i--) {
-        if (t >= lyricTimes[i]) {
-            active = i;
-            break;
+    // 点击歌词跳转
+    var allLines = document.querySelectorAll('.line[id^="lyric-"]');
+    allLines.forEach(function(line) {
+        line.addEventListener('click', function() {
+            var id = this.getAttribute('id');
+            var index = parseInt(id.replace('lyric-', ''));
+            if (index >= 0 && index < lyricTimes.length) {
+                audio.currentTime = lyricTimes[index];
+                audio.play();
+            }
+        });
+    });
+
+    // 播放时自动高亮
+    audio.addEventListener('timeupdate', function() {
+        var t = audio.currentTime;
+        var active = -1;
+        for (var i = lyricTimes.length - 1; i >= 0; i--) {
+            if (t >= lyricTimes[i]) {
+                active = i;
+                break;
+            }
         }
-    }
-    if (active !== currentLyric) {
-        // 清除上一个高亮
-        if (currentLyric >= 0) {
-            var prev = document.getElementById('lyric-' + currentLyric);
-            if (prev) prev.classList.remove('active-lyric');
+        if (active !== currentLyric) {
+            if (currentLyric >= 0) {
+                var prev = document.getElementById('lyric-' + currentLyric);
+                if (prev) prev.classList.remove('active-lyric');
+            }
+            var next = document.getElementById('lyric-' + active);
+            if (next) next.classList.add('active-lyric');
+            currentLyric = active;
         }
-        // 设置新的高亮
-        var next = document.getElementById('lyric-' + active);
-        if (next) next.classList.add('active-lyric');
-        currentLyric = active;
-    }
-});
+    });
+};
 </script>
 
 </body>
