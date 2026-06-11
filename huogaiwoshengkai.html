@@ -90,25 +90,29 @@
             transition: all 0.3s ease;
             z-index: 1000;
         }
-        #player-container.is-sticky {
+        
+        /* 悬浮的音频播放器 */
+        .sticky-audio {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(250, 250, 250, 0.95);
-            backdrop-filter: blur(10px);
             padding: 12px 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        #player-container.is-sticky .song-link {
-            margin: 0 auto;
-            max-width: 720px;
+            z-index: 1001;
+            display: none;
+            /* 完全透明，无背景，无模糊 */
             background: transparent;
-            border-left: none;
-            padding: 0;
+            backdrop-filter: none;
+            box-shadow: none;
         }
-        #player-container.is-sticky audio {
+        .sticky-audio.active {
+            display: block;
+        }
+        .sticky-audio audio {
             width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            display: block;
         }
 
         /* ========== 意象卡片 ========== */
@@ -187,6 +191,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: left 0.3s ease, top 0.3s ease;
         }
         .lyric-panel-header {
             padding: 16px 20px 8px;
@@ -195,6 +200,11 @@
             letter-spacing: 2px;
             text-align: center;
             border-bottom: 1px solid #f0e0e0;
+            cursor: grab;
+            user-select: none;
+        }
+        .lyric-panel-header:active {
+            cursor: grabbing;
         }
         .lyric-scroll {
             flex: 1;
@@ -272,6 +282,13 @@
             你的浏览器不支持音频播放，请<a href="https://163cn.tv/8OWPUVm" target="_blank">点击这里跳转网易云收听</a>。
         </audio>
     </blockquote>
+</div>
+
+<!-- 悬浮的音频播放器（仅播放器本身，透明背景） -->
+<div class="sticky-audio" id="stickyAudio">
+    <audio id="stickySong" controls style="width:100%; max-width:720px; margin:0 auto; display:block;">
+        <source src="活该我盛开.mp3" type="audio/mpeg">
+    </audio>
 </div>
 
 <p>它是我送给自己的27岁生日礼物。起初只是写给自己的一段日记，但写着写着，写成了歌。然后从它的骨架上，长出了你的影子。</p>
@@ -486,7 +503,7 @@
 
 <!-- ==================== 固定歌词面板 ==================== -->
 <div class="lyric-panel" id="lyricPanel">
-    <div class="lyric-panel-header">🎧 实时歌词</div>
+    <div class="lyric-panel-header" id="lyricPanelHeader">🎧 实时歌词 (可拖拽)</div>
     <div class="lyric-scroll" id="lyricScroll">
         <div class="section-label">—— 主歌 ——</div>
         <div class="line" data-time="18.99">空心人 站进人海</div>
@@ -558,77 +575,63 @@
 (function() {
     // ========== 1. 播放器悬浮逻辑 ==========
     var playerContainer = document.getElementById('player-container');
-    var containerOffsetTop = playerContainer.offsetTop;
-    var containerHeight = playerContainer.offsetHeight;
-
-    function handleScroll() {
-        if (window.scrollY > containerOffsetTop) {
-            playerContainer.classList.add('is-sticky');
-            playerContainer.style.height = containerHeight + 'px';
+    var stickyAudio = document.getElementById('stickyAudio');
+    var mainAudio = document.getElementById('song');
+    var stickyAudioPlayer = document.getElementById('stickySong');
+    
+    // 同步两个播放器的状态
+    function syncAudio() {
+        stickyAudioPlayer.currentTime = mainAudio.currentTime;
+        if (!mainAudio.paused) {
+            stickyAudioPlayer.play();
         } else {
-            playerContainer.classList.remove('is-sticky');
-            playerContainer.style.height = 'auto';
+            stickyAudioPlayer.pause();
+        }
+        stickyAudioPlayer.volume = mainAudio.volume;
+    }
+    
+    mainAudio.addEventListener('play', function() {
+        stickyAudioPlayer.currentTime = mainAudio.currentTime;
+        stickyAudioPlayer.play();
+    });
+    mainAudio.addEventListener('pause', function() {
+        stickyAudioPlayer.pause();
+    });
+    mainAudio.addEventListener('timeupdate', function() {
+        if (Math.abs(stickyAudioPlayer.currentTime - mainAudio.currentTime) > 0.5) {
+            stickyAudioPlayer.currentTime = mainAudio.currentTime;
+        }
+    });
+    mainAudio.addEventListener('volumechange', function() {
+        stickyAudioPlayer.volume = mainAudio.volume;
+    });
+    
+    stickyAudioPlayer.addEventListener('play', function() {
+        mainAudio.currentTime = stickyAudioPlayer.currentTime;
+        mainAudio.play();
+    });
+    stickyAudioPlayer.addEventListener('pause', function() {
+        mainAudio.pause();
+    });
+    stickyAudioPlayer.addEventListener('timeupdate', function() {
+        if (Math.abs(mainAudio.currentTime - stickyAudioPlayer.currentTime) > 0.5) {
+            mainAudio.currentTime = stickyAudioPlayer.currentTime;
+        }
+    });
+    
+    function handleScroll() {
+        var containerRect = playerContainer.getBoundingClientRect();
+        // 当原始播放器容器完全滚出视口时，显示悬浮播放器
+        if (containerRect.bottom < 0) {
+            stickyAudio.classList.add('active');
+        } else {
+            stickyAudio.classList.remove('active');
         }
     }
-
+    
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', function() {
-        containerOffsetTop = playerContainer.offsetTop;
-        containerHeight = playerContainer.offsetHeight;
-        handleScroll();
-    });
+    window.addEventListener('resize', handleScroll);
 
     // ========== 2. 歌词高亮与自动滚动 ==========
-    var audio = document.getElementById('song');
     var lyricScroll = document.getElementById('lyricScroll');
-    var allLines = lyricScroll.querySelectorAll('.line[data-time]');
-    var currentLyric = null;
-
-    // 点击歌词跳转
-    allLines.forEach(function(line) {
-        line.addEventListener('click', function() {
-            var time = parseFloat(this.getAttribute('data-time'));
-            if (!isNaN(time)) {
-                audio.currentTime = time;
-                audio.play();
-            }
-        });
-    });
-
-    // 播放时自动高亮并居中
-    audio.addEventListener('timeupdate', function() {
-        var t = audio.currentTime;
-        var active = null;
-
-        for (var i = allLines.length - 1; i >= 0; i--) {
-            var lineTime = parseFloat(allLines[i].getAttribute('data-time'));
-            if (t >= lineTime) {
-                active = allLines[i];
-                break;
-            }
-        }
-
-        if (active && active !== currentLyric) {
-            if (currentLyric) {
-                currentLyric.classList.remove('active-lyric');
-            }
-            active.classList.add('active-lyric');
-            currentLyric = active;
-
-            var scrollContainer = lyricScroll;
-            var lineTop = active.offsetTop;
-            var containerHeight = scrollContainer.clientHeight;
-            var lineHeight = active.offsetHeight;
-            var targetScroll = lineTop - (containerHeight / 2) + (lineHeight / 2);
-
-            scrollContainer.scrollTo({
-                top: targetScroll,
-                behavior: 'smooth'
-            });
-        }
-    });
-})();
-</script>
-
-</body>
-</html>
+    var allLines = lyricScroll.querySelectorAll('.line[data-time
