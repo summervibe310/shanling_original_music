@@ -91,17 +91,6 @@
             text-decoration: underline;
         }
 
-        /* ========== 备注块 ========== */
-        .note-block {
-            background: #fdf5f5;
-            border-left: 3px solid #c97a7a;
-            font-style: normal;
-            color: #888;
-            font-size: 14px;
-            padding: 12px 16px;
-            margin-bottom: 24px;
-        }
-
         /* ========== 意象卡片 ========== */
         .imagery-card {
             margin: 20px 0;
@@ -189,6 +178,14 @@
             line-height: 2;
             color: #2c2c2c;
         }
+        .lyrics-display .line a {
+            color: #2c2c2c;
+            text-decoration: none;
+        }
+        .lyrics-display .line a:hover {
+            color: #d14b4b;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -205,7 +202,7 @@
     🎵 我已经在<strong>网易云音乐</strong>上传了这首歌<br>
     🔗 你可以点击这里的链接跳转到网易云音乐收听👉：<a href="https://163cn.tv/8OWPUVm" target="_blank">《活该我盛开》</a><br>
     🎧 也可以点击👇音频播放：<br><br>
-    <audio controls style="width:100%;">
+    <audio id="song" controls style="width:100%;">
         <source src="活该我盛开.mp3" type="audio/mpeg">
         你的浏览器不支持音频播放，请<a href="https://163cn.tv/8OWPUVm" target="_blank">点击这里跳转网易云收听</a>。
     </audio>
@@ -301,16 +298,106 @@
 
 <hr>
 
+<!-- ==================== 三、可点击时间戳的完整歌词 ==================== -->
+
+<h2 style="font-size: 24px; border-left: none; text-align: center; margin-top: 48px; letter-spacing: 2px;">🎧 点击歌词跳转播放</h2>
+
 <blockquote class="song-link">
-    🎧 点击播放：<strong>《活该我盛开》</strong><br><br>
-    <audio controls style="width:100%;">
+    <audio id="song2" controls style="width:100%;">
         <source src="活该我盛开.mp3" type="audio/mpeg">
         你的浏览器不支持音频播放，请<a href="https://163cn.tv/8OWPUVm" target="_blank">点击这里跳转网易云收听</a>。
     </audio>
-    <br>📎 备用链接：<a href="https://163cn.tv/8OWPUVm" target="_blank">在网易云音乐收听</a>
+    <br>📎 <a href="https://163cn.tv/8OWPUVm" target="_blank">在网易云音乐收听</a>
 </blockquote>
 
-<!-- ==================== 三、歌名解析 + 正文 ==================== -->
+<div class="lyrics-display">
+
+    <div class="lyric-block">
+        <div class="section-label">—— 主歌 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=18.99">空心人 站进人海</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=23.34">只剩九十斤的反骨 还在</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=26.88">废墟里 排队等一个赦免</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=30.72">等月光失约 才学会</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=35.52">做自己的女娲 重塑这人间</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=44.13">眼泪是大的海</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=47.13">那就溺死 我的从前</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="section-label">—— 副歌 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=52.74">活该我盛开</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=55.44">活该我 哭着哭着就笑出来</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=61.35">活该我盛开</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=64.05">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="section-label">—— 主歌 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=71.64">不死鸟 决定叛逃</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=74.82">一万场落日 收集羽毛</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=78.60">葡萄要静候 等待是生长</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=82.56">春雷不是号角 是我终于</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=85.32">被自己 听见的心跳</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=88.95">反正短暂</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=93.06">反正 要燃烧</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="section-label">—— 副歌 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=95.76">活该我盛开</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=98.40">活该我 坏到最后又亮起来</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=104.28">活该我盛开</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=106.98">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="section-label">—— 桥段 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=113.37">驶向 不被命名的航线</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=115.38">不必上岸</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=116.40">我偏爱 颠倒的罗盘</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=118.32">做海盗 掠夺快乐 升起红粉骷髅旗</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=122.28">你看 我这艘写满补丁的船</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=126.24">正劫持 整片黑暗</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="section-label">—— 高潮 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=131.91">嘿 看着吧</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=133.74">这是我 千千万万遍</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=136.89">救我于水火之后 撰写的答案</a></div>
+        <div class="line">&nbsp;</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=140.64">我是自己的靠山</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=142.80">我是自己的太阳</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=144.90">我是自己的月亮</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=146.58">我是 我唯一的 标签 与规范</a></div>
+        <div class="line">&nbsp;</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=150.75">活该我 如此灿烂</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=153.99">活该我 又争又抢 又不慌不忙</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=160.41">活该我 终于长成 一株</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=163.02">迎着烈日 拔节作响的</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=165.48">——野生的光</a></div>
+    </div>
+
+    <div class="lyric-block">
+        <div class="section-label">—— 尾奏 ——</div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=192.64">不等谁 送花来</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=195.94">这朵玫瑰 我自己摘</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=201.46">活该 我</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=203.32">盛</a></div>
+        <div class="line"><a href="javascript:void(0)" onclick="document.getElementById('song2').currentTime=203.71">开</a></div>
+    </div>
+
+</div>
+
+<hr>
+
+<!-- ==================== 四、歌名解析 + 正文 ==================== -->
 
 <h2>歌名：《活该我盛开》</h2>
 
@@ -365,7 +452,7 @@
 
 <div class="highlight-card">
     <div class="highlight-title">🎻 第一个，是小提琴</div>
-    <p>那段小提琴是整首歌的进行曲，迎风破浪，坚定航行。（我后来了解到，你的伴侣陈秋莳老师会小提琴。咳咳，媒体上看到的。嘿嘿😁。当然无论是伴侣还是朋友，靓颖姐姐幸福最重要）如果由陈老师来伴奏，会像是有人陪着，看着你蜕变，见证你从废墟里站起来的每一步。"你尽管盛开，我为你伴奏。"</p>
+    <p>那段小提琴是整首歌的进行曲，迎风破浪，坚定航行。（我后来了解到，你的伴侣陈秋莳老师会小提琴。咳咳，媒体上看到的。嘿嘿😁）如果由陈老师来伴奏，会像是有人陪着，看着你蜕变，见证你从废墟里站起来的每一步。"你尽管盛开，我为你伴奏。"</p>
 </div>
 
 <div class="highlight-card">
@@ -392,11 +479,11 @@
 
 <hr>
 
-<!-- ==================== 四、最终结语 ==================== -->
+<!-- ==================== 五、最终结语 ==================== -->
 
 <h2>最终结语：为什么是张靓颖</h2>
 
-<p>这首歌之所以让我觉得"非你莫属"，是在三个层面与你产生了深刻的互文：</p>
+<p>这首歌之所以让人觉得"非你莫属"，是在三个层面与你产生了深刻的互文：</p>
 
 <ul class="layer-list">
     <li>
@@ -418,9 +505,6 @@
 
 <hr>
 
-<p style="text-align: center; margin-top: 48px; color: #c97a7a; font-size: 15px; letter-spacing: 2px;">
-    【姐姐最棒】【姐姐要开心】【姐姐要幸福】
-</p>
 <p style="text-align: center; font-size: 18px; margin-top: 32px;">一份从我灵魂深处出发，最终与另一个伟大灵魂相遇的邀请函。</p>
 <p style="text-align: center; margin-top: 48px; color: #c97a7a; font-size: 15px; letter-spacing: 2px;">
     【山岭在逃】
