@@ -87,31 +87,18 @@
 
         /* ========== 播放器容器 ========== */
         #player-container {
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        /* 悬浮的音频播放器 */
-        .sticky-audio {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            padding: 12px 24px;
-            z-index: 1001;
-            display: none;
-            background-color: rgba(250, 250, 250, 0.8); /* 淡淡的背景，与页面融合 */
-            backdrop-filter: blur(5px); /* 轻微的模糊，增加层次感 */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* 极淡的阴影 */
+            z-index: 1000;
+            background: transparent;
+            padding: 0;
+            margin: 0;
         }
-        .sticky-audio.active {
-            display: block;
-        }
-        .sticky-audio audio {
-            width: 100%;
-            max-width: 720px;
-            margin: 0 auto;
-            display: block;
+        #player-container .song-link {
+            background: transparent;
+            border-left: none;
+            padding: 8px 0;
+            margin: 0;
         }
 
         /* ========== 意象卡片 ========== */
@@ -273,21 +260,11 @@
 
 <div id="player-container">
     <blockquote class="song-link">
-        🎵 我已经在<strong>网易云音乐</strong>上传了这首歌<br>
-        🔗 你可以点击这里的链接跳转到网易云音乐收听👉：<a href="https://163cn.tv/8OWPUVm" target="_blank">《活该我盛开》</a><br>
-        🎧 也可以点击👇音频播放：<br><br>
         <audio id="song" controls style="width:100%;">
             <source src="活该我盛开.mp3" type="audio/mpeg">
             你的浏览器不支持音频播放，请<a href="https://163cn.tv/8OWPUVm" target="_blank">点击这里跳转网易云收听</a>。
         </audio>
     </blockquote>
-</div>
-
-<!-- 悬浮的音频播放器（仅播放器本身，透明背景） -->
-<div class="sticky-audio" id="stickyAudio">
-    <audio id="stickySong" controls style="width:100%; max-width:720px; margin:0 auto; display:block;">
-        <source src="活该我盛开.mp3" type="audio/mpeg">
-    </audio>
 </div>
 
 <p>它是我送给自己的27岁生日礼物。起初只是写给自己的一段日记，但写着写着，写成了歌。然后从它的骨架上，长出了你的影子。</p>
@@ -572,53 +549,147 @@
 
 <script>
 (function() {
-    // ========== 1. 播放器悬浮逻辑 ==========
-    var playerContainer = document.getElementById('player-container');
-    var stickyAudio = document.getElementById('stickyAudio');
-    var mainAudio = document.getElementById('song');
-    var stickyAudioPlayer = document.getElementById('stickySong');
-    
-    // 同步两个播放器的状态
-    mainAudio.addEventListener('play', function() {
-        stickyAudioPlayer.currentTime = mainAudio.currentTime;
-        stickyAudioPlayer.play();
-    });
-    mainAudio.addEventListener('pause', function() {
-        stickyAudioPlayer.pause();
-    });
-    mainAudio.addEventListener('timeupdate', function() {
-        if (Math.abs(stickyAudioPlayer.currentTime - mainAudio.currentTime) > 0.5) {
-            stickyAudioPlayer.currentTime = mainAudio.currentTime;
-        }
-    });
-    mainAudio.addEventListener('volumechange', function() {
-        stickyAudioPlayer.volume = mainAudio.volume;
-    });
-    
-    stickyAudioPlayer.addEventListener('play', function() {
-        mainAudio.currentTime = stickyAudioPlayer.currentTime;
-        mainAudio.play();
-    });
-    stickyAudioPlayer.addEventListener('pause', function() {
-        mainAudio.pause();
-    });
-    stickyAudioPlayer.addEventListener('timeupdate', function() {
-        if (Math.abs(mainAudio.currentTime - stickyAudioPlayer.currentTime) > 0.5) {
-            mainAudio.currentTime = stickyAudioPlayer.currentTime;
-        }
-    });
-    
-    function handleScroll() {
-        var containerRect = playerContainer.getBoundingClientRect();
-        // 当原始播放器容器的底部开始离开屏幕时，显示悬浮播放器
-        if (containerRect.bottom <= 0) {
-            stickyAudio.classList.add('active');
-        } else {
-            stickyAudio.classList.remove('active');
-        }
-    }
-    
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
+    // ========== 1. 歌词高亮与自动滚动 ==========
+    var audio = document.getElementById('song');
+    var lyricScroll = document.getElementById('lyricScroll');
+    var allLines = lyricScroll.querySelectorAll('.line[data-time]');
+    var currentLyric = null;
 
-    // ========== 2. 歌词高亮与
+    allLines.forEach(function(line) {
+        line.addEventListener('click', function() {
+            var time = parseFloat(this.getAttribute('data-time'));
+            if (!isNaN(time)) {
+                audio.currentTime = time;
+                audio.play();
+            }
+        });
+    });
+
+    audio.addEventListener('timeupdate', function() {
+        var t = audio.currentTime;
+        var active = null;
+
+        for (var i = allLines.length - 1; i >= 0; i--) {
+            var lineTime = parseFloat(allLines[i].getAttribute('data-time'));
+            if (t >= lineTime) {
+                active = allLines[i];
+                break;
+            }
+        }
+
+        if (active && active !== currentLyric) {
+            if (currentLyric) {
+                currentLyric.classList.remove('active-lyric');
+            }
+            active.classList.add('active-lyric');
+            currentLyric = active;
+
+            var lineTop = active.offsetTop;
+            var containerHeight = lyricScroll.clientHeight;
+            var lineHeight = active.offsetHeight;
+            var targetScroll = lineTop - (containerHeight / 2) + (lineHeight / 2);
+
+            lyricScroll.scrollTo({
+                top: targetScroll,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    // ========== 2. 歌词面板拖拽逻辑 ==========
+    var lyricPanel = document.getElementById('lyricPanel');
+    var lyricPanelHeader = document.getElementById('lyricPanelHeader');
+
+    var isDragging = false;
+    var startX, startY, initialLeft, initialTop;
+    var initialPanelLeft = 20;
+    var initialPanelTop = 10;
+    var maxRightLimit;
+
+    function updateMaxLimit() {
+        var bodyStyle = window.getComputedStyle(document.body);
+        var paddingLeft = parseFloat(bodyStyle.paddingLeft);
+        var maxWidth = 720;
+        var windowWidth = window.innerWidth;
+        
+        var contentLeft;
+        if (windowWidth > maxWidth + paddingLeft * 2) {
+            contentLeft = (windowWidth - maxWidth) / 2;
+        } else {
+            contentLeft = paddingLeft;
+        }
+        
+        maxRightLimit = contentLeft - lyricPanel.offsetWidth - 20;
+    }
+
+    function setPanelToInitialPosition() {
+        lyricPanel.style.left = initialPanelLeft + 'px';
+        lyricPanel.style.top = initialPanelTop + 'vh';
+    }
+
+    function onMouseMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        var deltaX = e.clientX - startX;
+        var deltaY = e.clientY - startY;
+        
+        var newLeft = initialLeft + deltaX;
+        var newTop = initialTop + deltaY;
+        
+        var panelWidth = lyricPanel.offsetWidth;
+        var panelHeight = lyricPanel.offsetHeight;
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+        
+        if (newLeft < 0) newLeft = 0;
+        if (newTop < 0) newTop = 0;
+        if (newTop + panelHeight > windowHeight) newTop = windowHeight - panelHeight;
+        
+        lyricPanel.style.left = newLeft + 'px';
+        lyricPanel.style.top = newTop + 'px';
+    }
+
+    function onMouseUp(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        updateMaxLimit();
+        var currentRight = lyricPanel.offsetLeft + lyricPanel.offsetWidth;
+        
+        if (currentRight > maxRightLimit) {
+            setPanelToInitialPosition();
+        }
+        
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    lyricPanelHeader.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = lyricPanel.offsetLeft;
+        initialTop = lyricPanel.offsetTop;
+        updateMaxLimit();
+        
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        
+        e.preventDefault();
+    });
+
+    setPanelToInitialPosition();
+    window.addEventListener('resize', function() {
+        updateMaxLimit();
+        var currentRight = lyricPanel.offsetLeft + lyricPanel.offsetWidth;
+        if (currentRight > maxRightLimit) {
+            setPanelToInitialPosition();
+        }
+    });
+
+})();
+</script>
+
+</body>
+</html>
