@@ -99,16 +99,37 @@
             font-size: 10px; color: #c97a7a; letter-spacing: 1px;
             margin: 12px 0 4px 12px; opacity: 0.6;
         }
-        @media (max-width: 768px) { .lyric-panel { width: 200px; left: 10px; } }
-        @media (max-width: 600px) { .lyric-panel { display: none; } }
+
+        /* 移动端背景回退 */
+        .mobile-bg { display: none; }
+        @media (max-width: 768px) {
+            video[preload="auto"] { display: none; }
+            .mobile-bg { display: block !important; }
+            .lyric-panel { width: 200px; left: 10px; }
+        }
+        @media (max-width: 600px) {
+            .lyric-panel { display: none; }
+        }
     </style>
 </head>
 <body>
 
-<!-- ==================== 视频背景（优先加载） ==================== -->
+<!-- ==================== 视频背景（桌面端优先加载） ==================== -->
 <video autoplay muted loop playsinline preload="auto" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 80%; z-index: -1; opacity: 0.2;">
     <source src="huogaiwoshengkai.mp4" type="video/mp4">
 </video>
+
+<!-- ==================== 移动端背景图片回退 ==================== -->
+<img src="huogaiwoshengkai.jpg" class="mobile-bg" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.2;
+">
 
 <!-- ==================== 右下角女海盗视频（WebM透明背景，延迟加载） ==================== -->
 <video autoplay muted loop playsinline preload="none" style="
