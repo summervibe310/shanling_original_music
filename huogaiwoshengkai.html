@@ -40,16 +40,9 @@
         .song-link a { color: #d14b4b; font-weight: bold; text-decoration: none; }
         .song-link a:hover { text-decoration: underline; }
 
-        /* 音频播放器自定义滑块光标 */
-        audio::-webkit-media-controls-panel {
-            cursor: url('corsair.png'), auto;
-        }
-        audio::-webkit-media-controls-timeline {
-            cursor: url('corsair.png') 16 16, pointer;
-        }
-        audio::-webkit-media-controls-volume-slider {
-            cursor: url('corsair.png') 16 16, pointer;
-        }
+        audio::-webkit-media-controls-panel { cursor: url('corsair.png'), auto; }
+        audio::-webkit-media-controls-timeline { cursor: url('corsair.png') 16 16, pointer; }
+        audio::-webkit-media-controls-volume-slider { cursor: url('corsair.png') 16 16, pointer; }
 
         #player-container { z-index: 1000; }
         #sticky-audio-container {
@@ -115,6 +108,20 @@
 <!-- ==================== 视频背景 ==================== -->
 <video autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 80%; z-index: -1; opacity: 0.2;">
     <source src="huogaiwoshengkai.mp4" type="video/mp4">
+</video>
+
+<!-- ==================== 右下角女海盗视频 ==================== -->
+<video autoplay muted loop playsinline style="
+    position: fixed;
+    right: 60px;
+    bottom: 10vh;
+    height: 60vh;
+    width: auto;
+    z-index: 998;
+    pointer-events: none;
+    opacity: 0.9;
+">
+    <source src="captain.webm" type="video/webm">
 </video>
 
 <h1>给张靓颖的一封信</h1>
