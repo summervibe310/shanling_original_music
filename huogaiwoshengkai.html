@@ -17,6 +17,7 @@
             color: #2c2c2c;
             line-height: 1.85;
             background-color: #fafafa;
+            cursor: url('anchor.png'), auto;
         }
         h1 { font-size: 28px; margin-bottom: 32px; text-align: center; letter-spacing: 2px; }
         h2 { font-size: 20px; margin-top: 40px; margin-bottom: 16px; border-left: 4px solid #d14b4b; padding-left: 12px; color: #1a1a1a; }
@@ -38,6 +39,14 @@
         }
         .song-link a { color: #d14b4b; font-weight: bold; text-decoration: none; }
         .song-link a:hover { text-decoration: underline; }
+
+        /* 音频进度条自定义滑块 */
+        audio::-webkit-media-controls-timeline {
+            cursor: url('corsair.png'), pointer;
+        }
+        audio::-webkit-media-controls-volume-slider {
+            cursor: url('corsair.png'), pointer;
+        }
 
         #player-container { z-index: 1000; }
         #sticky-audio-container {
@@ -336,9 +345,23 @@
 
 <script>
 (function() {
+    // ========== 0. 自动播放 ==========
+    var audio = document.getElementById('song');
+    var autoplayDone = false;
+    function tryAutoplay() {
+        if (autoplayDone) return;
+        if (audio && audio.paused) {
+            audio.play().then(function() {
+                autoplayDone = true;
+            }).catch(function() {});
+        }
+    }
+    document.addEventListener('click', tryAutoplay);
+    document.addEventListener('scroll', tryAutoplay);
+    document.addEventListener('touchstart', tryAutoplay);
+
     // ========== 1. 播放器悬浮逻辑 ==========
     var stickyContainer = document.getElementById('sticky-audio-container');
-    var audio = document.getElementById('song');
     var isSticky = false;
     var placeholder = null;
 
