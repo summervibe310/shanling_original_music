@@ -30,10 +30,10 @@
 
         .phone-bg-video {
             position: absolute;
-            top: -30%;
+            top: -80%;
             left: 0;
             width: 100%;
-            height: 160%;
+            height: 260%;
             object-fit: cover;
             z-index: 0;
             opacity: 0.8;
@@ -71,11 +71,10 @@
             letter-spacing: 4px;
             margin-bottom: 8px;
         }
-        .playing-status {
+        .song-artist {
             font-size: clamp(14px, 3.5vw, 18px);
             color: rgba(255, 150, 150, 0.8);
             letter-spacing: 1px;
-            min-height: 24px;
         }
 
         .pirate-section {
@@ -260,7 +259,7 @@
         <div class="phone-content">
             <div class="title-section">
                 <div class="song-title">活该我盛开</div>
-                <div class="playing-status" id="playingStatus"></div>
+                <div class="song-artist">山岭在逃 · 《第三行》</div>
             </div>
 
             <div class="pirate-section">
@@ -369,7 +368,6 @@
             var prevLineEl = document.getElementById('prevLine');
             var currentLineEl = document.getElementById('currentLine');
             var nextLineEl = document.getElementById('nextLine');
-            var playingStatus = document.getElementById('playingStatus');
             var currentIndex = -1;
             var isPlaying = false;
 
@@ -412,14 +410,15 @@
                     audio.play().then(function() {
                         isPlaying = true;
                         playBtn.textContent = '⏸';
-                        playingStatus.textContent = '正在播放 - 山岭在逃';
+                        if (currentIndex < 0) {
+                            currentLineEl.textContent = '正在播放';
+                        }
                         updateLyrics();
                     }).catch(function() {});
                 } else {
                     audio.pause();
                     isPlaying = false;
                     playBtn.textContent = '▶';
-                    playingStatus.textContent = '';
                 }
             }
 
@@ -460,28 +459,26 @@
             audio.addEventListener('play', function() {
                 isPlaying = true;
                 playBtn.textContent = '⏸';
-                playingStatus.textContent = '正在播放 - 山岭在逃';
-                updateLyrics();
+                if (currentIndex < 0) {
+                    currentLineEl.textContent = '正在播放';
+                }
             });
 
             audio.addEventListener('pause', function() {
                 isPlaying = false;
                 playBtn.textContent = '▶';
-                playingStatus.textContent = '';
             });
 
             audio.addEventListener('ended', function() {
                 isPlaying = false;
                 playBtn.textContent = '▶';
-                playingStatus.textContent = '';
                 currentIndex = -1;
                 prevLineEl.textContent = '';
-                currentLineEl.textContent = '🎵 播放完毕';
+                currentLineEl.textContent = '🎵 点击播放';
                 nextLineEl.textContent = '';
             });
 
             currentLineEl.textContent = '🎵 点击播放';
-            playingStatus.textContent = '';
             totalTimeEl.textContent = '03:43';
 
         })();
