@@ -315,7 +315,7 @@
         background: #fef0f0;
       }
       .mobile-pirate-bottom {
-        display: flex;
+        display: flex !important;
         justify-content: center;
         margin-top: 32px;
         height: 200px;
@@ -619,7 +619,7 @@
 
 <!-- ========== 移动端：女海盗视频（底部） ========== -->
 <div class="mobile-pirate-bottom">
-  <video autoplay muted loop playsinline preload="none" style="height: 100%; max-width: 70%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(200, 150, 150, 0.4));">
+  <video autoplay muted loop playsinline preload="auto" style="height: 100%; max-width: 70%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(200, 150, 150, 0.4));">
     <source src="captain.webm" type="video/webm">
   </video>
 </div>
