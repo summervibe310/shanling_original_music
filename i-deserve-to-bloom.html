@@ -253,11 +253,6 @@
       opacity: 0.9;
     }
 
-    /* 移动端组件 */
-    .mobile-lyrics-top, .mobile-pirate-bottom {
-      display: none;
-    }
-
     .bg-video, .bg-image {
       position: fixed;
       top: 0;
@@ -268,69 +263,12 @@
       z-index: -1;
       opacity: 0.15;
     }
-    .bg-image {
-      display: none;
-    }
 
     @media (max-width: 768px) {
-      .bg-video {
-        display: none;
-      }
-      .bg-image {
-        display: block !important;
-      }
-      .lyric-panel {
-        display: none;
-      }
-      .pirate-desktop {
-        display: none;
-      }
-      .mobile-lyrics-top {
-        display: block;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        border-radius: 14px;
-        padding: 14px 10px;
-        margin-bottom: 24px;
-        max-height: 200px;
-        overflow-y: auto;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-        border: 1px solid rgba(200,150,150,0.15);
-        scroll-behavior: smooth;
-      }
-      .mobile-lyrics-top .line {
-        font-size: 13px;
-        line-height: 2;
-        color: #999;
-        padding: 3px 10px;
-        border-radius: 6px;
-        cursor: pointer;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .mobile-lyrics-top .line.active-lyric {
-        color: #d14b4b;
-        font-weight: bold;
-        background: #fef0f0;
-      }
-      .mobile-pirate-bottom {
-        display: flex !important;
-        justify-content: center;
-        margin-top: 32px;
-        height: 200px;
-      }
-      .mobile-pirate-bottom video {
-        height: 100%;
-        max-width: 70%;
-        object-fit: contain;
-        filter: drop-shadow(0 0 20px rgba(200, 150, 150, 0.4));
-      }
-    }
-    @media (max-width: 600px) {
-      body {
-        padding: 20px 16px;
-      }
+      .bg-video { display: none; }
+      .lyric-panel { display: none; }
+      .pirate-desktop { display: none; }
+      body { padding: 20px 16px; }
     }
   </style>
 </head>
@@ -339,7 +277,7 @@
 <video class="bg-video" autoplay muted loop playsinline preload="auto">
   <source src="huogaiwoshengkai.mp4" type="video/mp4">
 </video>
-<img src="huogaiwoshengkai.jpg" class="bg-image" alt="背景">
+<img src="huogaiwoshengkai.jpg" id="mobileBg" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:0.15;">
 
 <!-- ========== 电脑端：女海盗视频（右下角固定） ========== -->
 <video class="pirate-desktop" autoplay muted loop playsinline preload="none">
@@ -423,56 +361,56 @@
 </div>
 
 <!-- ========== 移动端：实时歌词（正文上方） ========== -->
-<div class="mobile-lyrics-top" id="mobileLyricsTop">
+<div id="mobileLyricsTop" style="display:none; background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); border-radius:14px; padding:14px 10px; margin-bottom:24px; max-height:200px; overflow-y:auto; box-shadow:0 4px 16px rgba(0,0,0,0.05); border:1px solid rgba(200,150,150,0.15); scroll-behavior:smooth;">
   <div class="section-label" style="text-align:center;margin-bottom:6px;">🎧 实时歌词</div>
-  <div class="line" data-time="18.99">空心人 站进人海</div>
-  <div class="line" data-time="23.34">只剩九十斤的反骨 还在</div>
-  <div class="line" data-time="26.88">废墟里 排队等一个赦免</div>
-  <div class="line" data-time="30.72">等月光失约 才学会</div>
-  <div class="line" data-time="35.52">做自己的女娲 重塑这人间</div>
-  <div class="line" data-time="44.13">眼泪是大的海</div>
-  <div class="line" data-time="47.13">那就溺死 我的从前</div>
-  <div class="line" data-time="52.74">活该我盛开</div>
-  <div class="line" data-time="55.44">活该我 哭着哭着就笑出来</div>
-  <div class="line" data-time="61.35">活该我盛开</div>
-  <div class="line" data-time="64.05">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</div>
-  <div class="line" data-time="71.64">不死鸟 决定叛逃</div>
-  <div class="line" data-time="74.82">一万场落日 收集羽毛</div>
-  <div class="line" data-time="78.60">葡萄要静候 等待是生长</div>
-  <div class="line" data-time="82.56">春雷不是号角 是我终于</div>
-  <div class="line" data-time="85.32">被自己 听见的心跳</div>
-  <div class="line" data-time="88.95">反正短暂</div>
-  <div class="line" data-time="93.06">反正 要燃烧</div>
-  <div class="line" data-time="95.76">活该我盛开</div>
-  <div class="line" data-time="98.40">活该我 坏到最后又亮起来</div>
-  <div class="line" data-time="104.28">活该我盛开</div>
-  <div class="line" data-time="106.98">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</div>
-  <div class="line" data-time="113.37">驶向 不被命名的航线</div>
-  <div class="line" data-time="115.38">不必上岸</div>
-  <div class="line" data-time="116.40">我偏爱 颠倒的罗盘</div>
-  <div class="line" data-time="118.32">做海盗 掠夺快乐 升起红粉骷髅旗</div>
-  <div class="line" data-time="122.28">你看 我这艘写满补丁的船</div>
-  <div class="line" data-time="126.24">正劫持 整片黑暗</div>
-  <div class="line" data-time="131.91">嘿 看着吧</div>
-  <div class="line" data-time="133.74">这是我 千千万万遍</div>
-  <div class="line" data-time="136.89">救我于水火之后 撰写的答案</div>
-  <div class="line" data-time="140.64">我是自己的靠山</div>
-  <div class="line" data-time="142.80">我是自己的太阳</div>
-  <div class="line" data-time="144.90">我是自己的月亮</div>
-  <div class="line" data-time="146.58">我是 我唯一的 标签 与规范</div>
-  <div class="line" data-time="150.75">活该我 如此灿烂</div>
-  <div class="line" data-time="153.99">活该我 又争又抢 又不慌不忙</div>
-  <div class="line" data-time="160.41">活该我 终于长成 一株</div>
-  <div class="line" data-time="163.02">迎着烈日 拔节作响的</div>
-  <div class="line" data-time="165.48">——野生的光</div>
-  <div class="line" data-time="199.41">Oh captain my captain</div>
-  <div class="line" data-time="204.81">Oh captain my captain</div>
-  <div class="line" data-time="211.23">Oh captain my captain</div>
-  <div class="line" data-time="212.61">不等谁 送花来</div>
-  <div class="line" data-time="215.94">这朵玫瑰 我自己摘</div>
-  <div class="line" data-time="221.46">活该 我</div>
-  <div class="line" data-time="223.32">盛</div>
-  <div class="line" data-time="223.71">开</div>
+  <div class="line" data-time="18.99" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">空心人 站进人海</div>
+  <div class="line" data-time="23.34" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">只剩九十斤的反骨 还在</div>
+  <div class="line" data-time="26.88" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">废墟里 排队等一个赦免</div>
+  <div class="line" data-time="30.72" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">等月光失约 才学会</div>
+  <div class="line" data-time="35.52" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">做自己的女娲 重塑这人间</div>
+  <div class="line" data-time="44.13" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">眼泪是大的海</div>
+  <div class="line" data-time="47.13" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">那就溺死 我的从前</div>
+  <div class="line" data-time="52.74" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我盛开</div>
+  <div class="line" data-time="55.44" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 哭着哭着就笑出来</div>
+  <div class="line" data-time="61.35" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我盛开</div>
+  <div class="line" data-time="64.05" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</div>
+  <div class="line" data-time="71.64" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">不死鸟 决定叛逃</div>
+  <div class="line" data-time="74.82" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">一万场落日 收集羽毛</div>
+  <div class="line" data-time="78.60" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">葡萄要静候 等待是生长</div>
+  <div class="line" data-time="82.56" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">春雷不是号角 是我终于</div>
+  <div class="line" data-time="85.32" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">被自己 听见的心跳</div>
+  <div class="line" data-time="88.95" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">反正短暂</div>
+  <div class="line" data-time="93.06" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">反正 要燃烧</div>
+  <div class="line" data-time="95.76" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我盛开</div>
+  <div class="line" data-time="98.40" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 坏到最后又亮起来</div>
+  <div class="line" data-time="104.28" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我盛开</div>
+  <div class="line" data-time="106.98" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 赤着脚 踏过荒芜 踏成我自己的 节拍</div>
+  <div class="line" data-time="113.37" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">驶向 不被命名的航线</div>
+  <div class="line" data-time="115.38" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">不必上岸</div>
+  <div class="line" data-time="116.40" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">我偏爱 颠倒的罗盘</div>
+  <div class="line" data-time="118.32" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">做海盗 掠夺快乐 升起红粉骷髅旗</div>
+  <div class="line" data-time="122.28" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">你看 我这艘写满补丁的船</div>
+  <div class="line" data-time="126.24" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">正劫持 整片黑暗</div>
+  <div class="line" data-time="131.91" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">嘿 看着吧</div>
+  <div class="line" data-time="133.74" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">这是我 千千万万遍</div>
+  <div class="line" data-time="136.89" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">救我于水火之后 撰写的答案</div>
+  <div class="line" data-time="140.64" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">我是自己的靠山</div>
+  <div class="line" data-time="142.80" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">我是自己的太阳</div>
+  <div class="line" data-time="144.90" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">我是自己的月亮</div>
+  <div class="line" data-time="146.58" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">我是 我唯一的 标签 与规范</div>
+  <div class="line" data-time="150.75" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 如此灿烂</div>
+  <div class="line" data-time="153.99" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 又争又抢 又不慌不忙</div>
+  <div class="line" data-time="160.41" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该我 终于长成 一株</div>
+  <div class="line" data-time="163.02" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">迎着烈日 拔节作响的</div>
+  <div class="line" data-time="165.48" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">——野生的光</div>
+  <div class="line" data-time="199.41" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Oh captain my captain</div>
+  <div class="line" data-time="204.81" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Oh captain my captain</div>
+  <div class="line" data-time="211.23" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Oh captain my captain</div>
+  <div class="line" data-time="212.61" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">不等谁 送花来</div>
+  <div class="line" data-time="215.94" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">这朵玫瑰 我自己摘</div>
+  <div class="line" data-time="221.46" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">活该 我</div>
+  <div class="line" data-time="223.32" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">盛</div>
+  <div class="line" data-time="223.71" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">开</div>
 </div>
 
 <p style="font-style: italic; color: #777; margin-top: 24px;">以下解读聚焦于歌词文本自身的意象、结构与精神内核。</p>
@@ -618,8 +556,8 @@
 </p>
 
 <!-- ========== 移动端：女海盗视频（底部） ========== -->
-<div class="mobile-pirate-bottom">
-  <video autoplay muted loop playsinline preload="auto" style="height: 100%; max-width: 70%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(200, 150, 150, 0.4));">
+<div id="mobilePirate" style="display:none; justify-content:center; margin-top:32px; height:200px;">
+  <video autoplay muted loop playsinline preload="auto" style="height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
     <source src="captain.webm" type="video/webm">
   </video>
 </div>
@@ -629,12 +567,25 @@
     var audio = document.getElementById('song');
     var lyricScroll = document.getElementById('lyricScroll');
     var mobileLyricsTop = document.getElementById('mobileLyricsTop');
+    var mobilePirate = document.getElementById('mobilePirate');
+    var mobileBg = document.getElementById('mobileBg');
     var panelLines = document.querySelectorAll('#lyricScroll .line[data-time]');
     var bodyLines = document.querySelectorAll('.lyric-line[data-time]');
     var mobileLines = document.querySelectorAll('#mobileLyricsTop .line[data-time]');
     var currentPanelLyric = null;
     var currentBodyLyric = null;
     var currentMobileLyric = null;
+
+    // 移动端初始化
+    function initMobile() {
+      if (window.innerWidth <= 768) {
+        if (mobileLyricsTop) mobileLyricsTop.style.display = 'block';
+        if (mobilePirate) mobilePirate.style.display = 'flex';
+        if (mobileBg) mobileBg.style.display = 'block';
+      }
+    }
+    initMobile();
+    window.addEventListener('resize', initMobile);
 
     function addClickListeners(lines) {
       lines.forEach(function(line) {
@@ -695,8 +646,12 @@
         }
       }
       if (activeMobile && activeMobile !== currentMobileLyric) {
-        if (currentMobileLyric) currentMobileLyric.classList.remove('active-lyric');
-        activeMobile.classList.add('active-lyric');
+        if (currentMobileLyric) currentMobileLyric.style.color = '#999';
+        if (currentMobileLyric) currentMobileLyric.style.fontWeight = 'normal';
+        if (currentMobileLyric) currentMobileLyric.style.background = 'transparent';
+        activeMobile.style.color = '#d14b4b';
+        activeMobile.style.fontWeight = 'bold';
+        activeMobile.style.background = '#fef0f0';
         currentMobileLyric = activeMobile;
         if (mobileLyricsTop) {
           var mLineTop = activeMobile.offsetTop;
