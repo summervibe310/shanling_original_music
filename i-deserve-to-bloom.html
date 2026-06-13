@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -254,7 +253,7 @@
       opacity: 0.9;
     }
 
-    /* 移动端：歌词面板和女海盗视频默认隐藏，改为流式布局 */
+    /* 移动端组件 */
     .mobile-lyrics-top, .mobile-pirate-bottom {
       display: none;
     }
@@ -268,13 +267,11 @@
       object-fit: cover;
       z-index: -1;
       opacity: 0.15;
-      pointer-events: none;
     }
     .bg-image {
       display: none;
     }
 
-    /* 平板/手机端：上中下布局 */
     @media (max-width: 768px) {
       .bg-video {
         display: none;
@@ -282,14 +279,12 @@
       .bg-image {
         display: block !important;
       }
-      /* 隐藏电脑端的固定面板和女海盗 */
       .lyric-panel {
         display: none;
       }
       .pirate-desktop {
         display: none;
       }
-      /* 显示移动端歌词（在正文上方）和女海盗（在底部） */
       .mobile-lyrics-top {
         display: block;
         background: rgba(255, 255, 255, 0.85);
@@ -297,10 +292,11 @@
         border-radius: 14px;
         padding: 14px 10px;
         margin-bottom: 24px;
-        max-height: 180px;
+        max-height: 200px;
         overflow-y: auto;
         box-shadow: 0 4px 16px rgba(0,0,0,0.05);
         border: 1px solid rgba(200,150,150,0.15);
+        scroll-behavior: smooth;
       }
       .mobile-lyrics-top .line {
         font-size: 13px;
@@ -623,7 +619,7 @@
 
 <!-- ========== 移动端：女海盗视频（底部） ========== -->
 <div class="mobile-pirate-bottom">
-  <video autoplay muted loop playsinline preload="none">
+  <video autoplay muted loop playsinline preload="none" style="height: 100%; max-width: 70%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(200, 150, 150, 0.4));">
     <source src="captain.webm" type="video/webm">
   </video>
 </div>
@@ -632,6 +628,7 @@
   (function() {
     var audio = document.getElementById('song');
     var lyricScroll = document.getElementById('lyricScroll');
+    var mobileLyricsTop = document.getElementById('mobileLyricsTop');
     var panelLines = document.querySelectorAll('#lyricScroll .line[data-time]');
     var bodyLines = document.querySelectorAll('.lyric-line[data-time]');
     var mobileLines = document.querySelectorAll('#mobileLyricsTop .line[data-time]');
@@ -657,7 +654,6 @@
     audio.addEventListener('timeupdate', function() {
       var t = audio.currentTime;
 
-      // 正文歌词高亮
       var activeBody = null;
       for (var i = bodyLines.length - 1; i >= 0; i--) {
         if (t >= parseFloat(bodyLines[i].getAttribute('data-time'))) {
@@ -671,7 +667,6 @@
         currentBodyLyric = activeBody;
       }
 
-      // 电脑端固定面板歌词高亮
       var activePanel = null;
       for (var j = panelLines.length - 1; j >= 0; j--) {
         if (t >= parseFloat(panelLines[j].getAttribute('data-time'))) {
@@ -692,7 +687,6 @@
         }
       }
 
-      // 移动端歌词高亮
       var activeMobile = null;
       for (var k = mobileLines.length - 1; k >= 0; k--) {
         if (t >= parseFloat(mobileLines[k].getAttribute('data-time'))) {
@@ -704,10 +698,16 @@
         if (currentMobileLyric) currentMobileLyric.classList.remove('active-lyric');
         activeMobile.classList.add('active-lyric');
         currentMobileLyric = activeMobile;
+        if (mobileLyricsTop) {
+          var mLineTop = activeMobile.offsetTop;
+          var mContainerHeight = mobileLyricsTop.clientHeight;
+          var mLineHeight = activeMobile.offsetHeight;
+          var mTargetScroll = mLineTop - (mContainerHeight / 2) + (mLineHeight / 2);
+          mobileLyricsTop.scrollTo({ top: mTargetScroll, behavior: 'smooth' });
+        }
       }
     });
 
-    // 电脑端歌词面板拖拽
     var lyricPanel = document.getElementById('lyricPanel');
     var lyricPanelHeader = document.getElementById('lyricPanelHeader');
     if (lyricPanel && lyricPanelHeader) {
