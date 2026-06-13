@@ -555,9 +555,10 @@
   <a href="https://163cn.tv/8OWPUVm" target="_blank" style="color: #c97a7a; text-decoration: none;">🎧 在网易云音乐收听《活该我盛开》</a>
 </p>
 
-<!-- ========== 移动端：女海盗视频（底部，MP4，延迟加载） ========== -->
+<!-- ========== 移动端：女海盗视频（底部，MP4，图片回退） ========== -->
 <div id="mobilePirate" style="display:none; justify-content:center; margin-top:32px; height:200px;">
-  <video autoplay muted loop playsinline preload="none" style="height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
+  <img id="captainFallback" src="captain.jpg" style="height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
+  <video id="captainVideo" autoplay muted loop playsinline preload="auto" style="display:none; height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
     <source src="captain.mp4" type="video/mp4">
   </video>
 </div>
@@ -580,14 +581,19 @@
       if (window.innerWidth <= 768) {
         if (mobileLyricsTop) mobileLyricsTop.style.display = 'block';
         if (mobileBg) mobileBg.style.display = 'block';
-        // 延迟加载女海盗视频，不阻塞背景图片
         if (mobilePirate) {
           mobilePirate.style.display = 'flex';
-          var video = mobilePirate.querySelector('video');
-          if (video && video.getAttribute('preload') === 'none') {
-            setTimeout(function() {
-              video.load();
-            }, 1500);
+          var video = document.getElementById('captainVideo');
+          var fallback = document.getElementById('captainFallback');
+          if (video && fallback) {
+            video.addEventListener('loadeddata', function() {
+              fallback.style.display = 'none';
+              video.style.display = 'block';
+            });
+            video.addEventListener('error', function() {
+              fallback.style.display = 'block';
+              video.style.display = 'none';
+            });
           }
         }
       }
