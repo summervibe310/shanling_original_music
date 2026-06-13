@@ -279,7 +279,7 @@
 </video>
 <img src="huogaiwoshengkai.jpg" id="mobileBg" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:0.15;">
 
-<!-- ========== 电脑端：女海盗视频（右下角固定） ========== -->
+<!-- ========== 电脑端：女海盗视频（右下角固定，WebM） ========== -->
 <video class="pirate-desktop" autoplay muted loop playsinline preload="none">
   <source src="captain.webm" type="video/webm">
 </video>
@@ -555,10 +555,10 @@
   <a href="https://163cn.tv/8OWPUVm" target="_blank" style="color: #c97a7a; text-decoration: none;">🎧 在网易云音乐收听《活该我盛开》</a>
 </p>
 
-<!-- ========== 移动端：女海盗视频（底部） ========== -->
+<!-- ========== 移动端：女海盗视频（底部，MP4，延迟加载） ========== -->
 <div id="mobilePirate" style="display:none; justify-content:center; margin-top:32px; height:200px;">
-  <video autoplay muted loop playsinline preload="auto" style="height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
-    <source src="captain.webm" type="video/webm">
+  <video autoplay muted loop playsinline preload="none" style="height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
+    <source src="captain.mp4" type="video/mp4">
   </video>
 </div>
 
@@ -576,12 +576,20 @@
     var currentBodyLyric = null;
     var currentMobileLyric = null;
 
-    // 移动端初始化
     function initMobile() {
       if (window.innerWidth <= 768) {
         if (mobileLyricsTop) mobileLyricsTop.style.display = 'block';
-        if (mobilePirate) mobilePirate.style.display = 'flex';
         if (mobileBg) mobileBg.style.display = 'block';
+        // 延迟加载女海盗视频，不阻塞背景图片
+        if (mobilePirate) {
+          mobilePirate.style.display = 'flex';
+          var video = mobilePirate.querySelector('video');
+          if (video && video.getAttribute('preload') === 'none') {
+            setTimeout(function() {
+              video.load();
+            }, 1500);
+          }
+        }
       }
     }
     initMobile();
