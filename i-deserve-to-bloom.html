@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -20,6 +19,7 @@
       color: #2c2c2c;
       line-height: 1.85;
       background-color: #fafafa;
+      cursor: url('anchor.png') 16 16, auto;
     }
     h1 {
       font-size: 28px;
@@ -101,6 +101,10 @@
     .song-link a:hover {
       text-decoration: underline;
     }
+
+    audio::-webkit-media-controls-panel { cursor: url('corsair.png'), auto; }
+    audio::-webkit-media-controls-timeline { cursor: url('corsair.png') 16 16, pointer; }
+    audio::-webkit-media-controls-volume-slider { cursor: url('corsair.png') 16 16, pointer; }
 
     #player-container {
       z-index: 1000;
@@ -236,7 +240,28 @@
       text-transform: uppercase;
     }
 
+    .bg-video, .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .bg-image {
+      display: none;
+    }
+
     @media (max-width: 768px) {
+      .bg-video {
+        display: none;
+      }
+      .bg-image {
+        display: block !important;
+      }
       .lyric-panel {
         width: 180px;
         left: 10px;
@@ -250,18 +275,6 @@
         padding: 20px 16px;
       }
     }
-
-    .bg-video, .bg-image {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.15;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body>
@@ -269,7 +282,7 @@
 <video class="bg-video" autoplay muted loop playsinline preload="auto">
   <source src="huogaiwoshengkai.mp4" type="video/mp4">
 </video>
-<img src="huogaiwoshengkai.png" class="bg-image" style="display:none;" onerror="this.style.display='none'">
+<img src="huogaiwoshengkai.jpg" class="bg-image" alt="背景">
 
 <!-- 右下角女海盗视频 -->
 <video autoplay muted loop playsinline preload="none" style="
