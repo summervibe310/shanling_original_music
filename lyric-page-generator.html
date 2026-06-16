@@ -15,10 +15,7 @@
       height: 100vh;
     }
 
-    .app-container {
-      display: flex;
-      height: 100vh;
-    }
+    .app-container { display: flex; height: 100vh; }
 
     /* ========== Star 弹窗 ========== */
     .star-modal-overlay {
@@ -29,497 +26,116 @@
     }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
     .star-modal {
-      background: #1e1e1e;
-      border: 2px solid #e8734a;
-      border-radius: 20px;
-      padding: 44px 36px 36px;
-      text-align: center;
-      max-width: 440px;
-      width: 90%;
-      animation: slideUp 0.4s ease;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(232,115,74,0.15);
+      background: #1e1e1e; border: 2px solid #e8734a; border-radius: 20px;
+      padding: 44px 36px 36px; text-align: center; max-width: 440px; width: 90%;
+      animation: slideUp 0.4s ease; box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(232,115,74,0.15);
     }
+    .star-modal .star-icon { font-size: 56px; margin-bottom: 12px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+    .star-modal h2 { color: #fff; font-size: 22px; margin-bottom: 8px; letter-spacing: 1px; }
+    .star-modal .repo-name { color: #e8734a; font-size: 14px; font-family: monospace; background: #2a2a2a; display: inline-block; padding: 6px 14px; border-radius: 6px; margin: 8px 0 16px; }
+    .star-modal p { color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 28px; }
+    .star-modal .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .star-modal .btn-star { background: linear-gradient(135deg, #e8734a, #d1653d); color: #fff; padding: 13px 32px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; letter-spacing: 1px; }
+    .star-modal .btn-star:hover { background: linear-gradient(135deg, #f0805a, #e8734a); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,115,74,0.4); }
+    .star-modal .btn-close { background: #333; color: #ccc; border: 1px solid #555; padding: 13px 28px; border-radius: 10px; cursor: pointer; font-size: 15px; transition: all 0.25s; letter-spacing: 1px; }
+    .star-modal .btn-close:hover { background: #444; color: #fff; border-color: #777; }
+    .star-modal .hint-text { color: #555; font-size: 11px; margin-top: 20px; line-height: 1.5; }
 
-    .star-modal .star-icon {
-      font-size: 56px;
-      margin-bottom: 12px;
-      animation: pulse 2s infinite;
+    /* ========== 录制进度弹窗 ========== */
+    .recording-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
+    .recording-modal {
+      background: #1e1e1e; border: 2px solid #e8734a; border-radius: 16px;
+      padding: 32px; text-align: center; max-width: 400px; width: 90%;
     }
-
-    .star-modal h2 {
-      color: #fff;
-      font-size: 22px;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
-
-    .star-modal .repo-name {
-      color: #e8734a;
-      font-size: 14px;
-      font-family: monospace;
-      background: #2a2a2a;
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 6px;
-      margin: 8px 0 16px;
-    }
-
-    .star-modal p {
-      color: #aaa;
-      font-size: 13px;
-      line-height: 1.7;
-      margin-bottom: 28px;
-    }
-
-    .star-modal .btn-row {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .star-modal .btn-star {
-      background: linear-gradient(135deg, #e8734a, #d1653d);
-      color: #fff;
-      padding: 13px 32px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.25s;
-      letter-spacing: 1px;
-    }
-
-    .star-modal .btn-star:hover {
-      background: linear-gradient(135deg, #f0805a, #e8734a);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(232,115,74,0.4);
-    }
-
-    .star-modal .btn-close {
-      background: #333;
-      color: #ccc;
-      border: 1px solid #555;
-      padding: 13px 28px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 15px;
-      transition: all 0.25s;
-      letter-spacing: 1px;
-    }
-
-    .star-modal .btn-close:hover {
-      background: #444;
-      color: #fff;
-      border-color: #777;
-    }
-
-    .star-modal .hint-text {
-      color: #555;
-      font-size: 11px;
-      margin-top: 20px;
-      line-height: 1.5;
-    }
+    .recording-modal h3 { color: #fff; font-size: 18px; margin-bottom: 8px; }
+    .recording-modal .recording-icon { font-size: 40px; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .recording-modal .progress-bar { width: 100%; height: 6px; background: #333; border-radius: 3px; margin: 16px 0; overflow: hidden; }
+    .recording-modal .progress-fill { height: 100%; background: #e8734a; border-radius: 3px; transition: width 0.3s; }
+    .recording-modal .progress-text { color: #aaa; font-size: 12px; }
+    .recording-modal .btn-cancel { background: #333; color: #ccc; border: 1px solid #555; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 12px; }
 
     /* ========== 左侧控制面板 ========== */
-    .control-panel {
-      width: 380px;
-      min-width: 380px;
-      background: #222;
-      padding: 20px;
-      overflow-y: auto;
-      height: 100vh;
-      border-right: 1px solid #333;
-    }
-
-    .control-panel h2 {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: #e8734a;
-      border-left: 3px solid #e8734a;
-      padding-left: 10px;
-      letter-spacing: 1px;
-    }
-
-    .section {
-      background: #2a2a2a;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .section h3 {
-      font-size: 13px;
-      color: #ccc;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #444;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: inherit;
-      background: #1a1a1a;
-      color: #e0e0e0;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: #e8734a;
-    }
-
-    .form-group textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .form-row .form-group {
-      flex: 1;
-    }
-
-    .file-input-wrapper input[type="file"] {
-      width: 100%;
-      font-size: 11px;
-      color: #999;
-    }
-
-    .file-input-wrapper input[type="file"]::file-selector-button {
-      background: #333;
-      border: 1px solid #555;
-      color: #ddd;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 11px;
-      margin-right: 8px;
-    }
-
-    .file-input-wrapper input[type="file"]::file-selector-button:hover {
-      background: #e8734a;
-      border-color: #e8734a;
-      color: #fff;
-    }
-
-    .file-status {
-      font-size: 11px;
-      color: #4caf50;
-      margin-top: 4px;
-      display: none;
-    }
-
+    .control-panel { width: 380px; min-width: 380px; background: #222; padding: 20px; overflow-y: auto; height: 100vh; border-right: 1px solid #333; }
+    .control-panel h2 { font-size: 18px; margin-bottom: 20px; color: #e8734a; border-left: 3px solid #e8734a; padding-left: 10px; letter-spacing: 1px; }
+    .section { background: #2a2a2a; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+    .section h3 { font-size: 13px; color: #ccc; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; color: #999; margin-bottom: 4px; letter-spacing: 0.5px; }
+    .form-group input[type="text"], .form-group input[type="number"], .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #444; border-radius: 6px; font-size: 13px; font-family: inherit; background: #1a1a1a; color: #e0e0e0; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #e8734a; }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-row { display: flex; gap: 10px; }
+    .form-row .form-group { flex: 1; }
+    .file-input-wrapper input[type="file"] { width: 100%; font-size: 11px; color: #999; }
+    .file-input-wrapper input[type="file"]::file-selector-button { background: #333; border: 1px solid #555; color: #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 8px; }
+    .file-input-wrapper input[type="file"]::file-selector-button:hover { background: #e8734a; border-color: #e8734a; color: #fff; }
+    .file-status { font-size: 11px; color: #4caf50; margin-top: 4px; display: none; }
     .file-status.show { display: block; }
-
-    .hint {
-      font-size: 10px;
-      color: #666;
-      margin-top: 3px;
-    }
-
-    .color-picker-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .color-picker-row input[type="color"] {
-      width: 32px;
-      height: 32px;
-      border: 1px solid #444;
-      border-radius: 4px;
-      cursor: pointer;
-      background: transparent;
-      padding: 2px;
-    }
-
-    .size-presets {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .size-preset {
-      padding: 4px 10px;
-      border: 1px solid #444;
-      background: #1a1a1a;
-      border-radius: 4px;
-      font-size: 10px;
-      cursor: pointer;
-      color: #999;
-      transition: all 0.2s;
-    }
-
-    .size-preset:hover {
-      border-color: #e8734a;
-      color: #e8734a;
-    }
-
-    .size-preset.active {
-      background: #e8734a;
-      color: #fff;
-      border-color: #e8734a;
-    }
-
-    .device-selectors {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .device-selector-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .device-selector-row label {
-      font-size: 11px;
-      color: #999;
-      min-width: 32px;
-      white-space: nowrap;
-    }
-
-    .device-selector-row select {
-      flex: 1;
-      padding: 6px 8px;
-      border: 1px solid #444;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: inherit;
-      background: #1a1a1a;
-      color: #e0e0e0;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-
-    .device-selector-row select:focus {
-      outline: none;
-      border-color: #e8734a;
-    }
-
-    .device-info {
-      font-size: 10px;
-      color: #e8734a;
-      margin-top: 4px;
-      text-align: right;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      flex: 1;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 1px;
-    }
-
-    .btn-play { background: #4caf50; color: #fff; }
-    .btn-play:hover { background: #45a049; }
-    .btn-pause { background: #ff9800; color: #fff; }
-    .btn-pause:hover { background: #f08900; }
-    .btn-refresh { background: #333; color: #e8734a; border: 1px solid #e8734a; }
-    .btn-refresh:hover { background: #e8734a; color: #fff; }
-    .btn-download { background: #e8734a; color: #fff; width: 100%; margin-top: 8px; }
-    .btn-download:hover { background: #d1653d; }
-    .btn-reset { background: #333; color: #999; border: 1px solid #555; width: 100%; margin-top: 6px; }
-    .btn-reset:hover { background: #444; color: #fff; }
-
-    .status {
-      margin-top: 12px;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      text-align: center;
-      display: none;
-    }
-
+    .hint { font-size: 10px; color: #666; margin-top: 3px; }
+    .color-picker-row { display: flex; align-items: center; gap: 8px; }
+    .color-picker-row input[type="color"] { width: 32px; height: 32px; border: 1px solid #444; border-radius: 4px; cursor: pointer; background: transparent; padding: 2px; }
+    .size-presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .size-preset { padding: 4px 10px; border: 1px solid #444; background: #1a1a1a; border-radius: 4px; font-size: 10px; cursor: pointer; color: #999; transition: all 0.2s; }
+    .size-preset:hover { border-color: #e8734a; color: #e8734a; }
+    .size-preset.active { background: #e8734a; color: #fff; border-color: #e8734a; }
+    .device-selectors { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .device-selector-row { display: flex; align-items: center; gap: 8px; }
+    .device-selector-row label { font-size: 11px; color: #999; min-width: 32px; white-space: nowrap; }
+    .device-selector-row select { flex: 1; padding: 6px 8px; border: 1px solid #444; border-radius: 4px; font-size: 11px; font-family: inherit; background: #1a1a1a; color: #e0e0e0; cursor: pointer; transition: border-color 0.2s; }
+    .device-selector-row select:focus { outline: none; border-color: #e8734a; }
+    .device-info { font-size: 10px; color: #e8734a; margin-top: 4px; text-align: right; }
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    .btn { flex: 1; padding: 10px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s; letter-spacing: 1px; }
+    .btn-play { background: #4caf50; color: #fff; } .btn-play:hover { background: #45a049; }
+    .btn-pause { background: #ff9800; color: #fff; } .btn-pause:hover { background: #f08900; }
+    .btn-refresh { background: #333; color: #e8734a; border: 1px solid #e8734a; } .btn-refresh:hover { background: #e8734a; color: #fff; }
+    .btn-download { background: #e8734a; color: #fff; width: 100%; margin-top: 8px; } .btn-download:hover { background: #d1653d; }
+    .btn-download:disabled { background: #555; color: #999; cursor: not-allowed; }
+    .btn-reset { background: #333; color: #999; border: 1px solid #555; width: 100%; margin-top: 6px; } .btn-reset:hover { background: #444; color: #fff; }
+    .status { margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; display: none; }
     .status.success { display: block; background: #1a3a1a; color: #4caf50; border: 1px solid #2d5a2d; }
     .status.error { display: block; background: #3a1a1a; color: #f44336; border: 1px solid #5a2d2d; }
     .status.info { display: block; background: #1a2a3a; color: #64b5f6; border: 1px solid #2d405a; }
 
     /* ========== 右侧预览区 ========== */
-    .preview-area {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .preview-wrapper {
-      position: relative;
-      transform-origin: center center;
-      transition: transform 0.15s ease-out;
-    }
-
-    .preview-container {
-      position: relative;
-      overflow: hidden;
-      background: #111;
-    }
-
+    .preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; position: relative; overflow: hidden; }
+    .preview-wrapper { position: relative; transform-origin: center center; transition: transform 0.15s ease-out; }
+    .preview-container { position: relative; overflow: hidden; background: #111; }
     .preview-container.size-16-9 { width: 853px; height: 480px; }
     .preview-container.size-9-16 { width: 270px; height: 480px; }
     .preview-container.size-4-3 { width: 640px; height: 480px; }
     .preview-container.size-1-1 { width: 480px; height: 480px; }
     .preview-container.size-21-9 { width: 1120px; height: 480px; }
     .preview-container.size-custom { }
-
-    .preview-bg {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; z-index: 1;
-    }
-
-    .preview-overlay {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%; z-index: 2;
-    }
-
-    .preview-content {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%; z-index: 3;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 20px; pointer-events: none;
-    }
-
-    .preview-title {
-      font-weight: bold; text-align: center;
-      letter-spacing: 2px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .preview-subtitle {
-      text-align: center; letter-spacing: 1px;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-      margin-top: 6px;
-    }
-
-    .preview-credits {
-      text-align: center; letter-spacing: 1px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-      margin-top: 8px; opacity: 0.85;
-    }
-
-    .preview-figure {
-      margin: 10px 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .preview-figure video,
-    .preview-figure img {
-      object-fit: contain;
-      filter: drop-shadow(0 0 20px rgba(0,0,0,0.4));
-      max-width: 100%; max-height: 100%;
-    }
-
-    .preview-lyrics {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 4px;
-      margin-top: 8px; max-height: 40%; overflow: hidden;
-    }
-
-    .preview-lyric-line {
-      text-align: center;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-      transition: all 0.3s ease;
-      opacity: 0.5; white-space: nowrap;
-      letter-spacing: 1px; cursor: pointer; pointer-events: auto;
-    }
-
+    .preview-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    .preview-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
+    .preview-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; pointer-events: none; }
+    .preview-title { font-weight: bold; text-align: center; letter-spacing: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+    .preview-subtitle { text-align: center; letter-spacing: 1px; text-shadow: 0 1px 6px rgba(0,0,0,0.5); margin-top: 6px; }
+    .preview-credits { text-align: center; letter-spacing: 1px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); margin-top: 8px; opacity: 0.85; }
+    .preview-figure { margin: 10px 0; display: flex; align-items: center; justify-content: center; }
+    .preview-figure video, .preview-figure img { object-fit: contain; filter: drop-shadow(0 0 20px rgba(0,0,0,0.4)); max-width: 100%; max-height: 100%; }
+    .preview-lyrics { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 8px; max-height: 40%; overflow: hidden; }
+    .preview-lyric-line { text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.6); transition: all 0.3s ease; opacity: 0.5; white-space: nowrap; letter-spacing: 1px; cursor: pointer; pointer-events: auto; }
     .preview-lyric-line.active { opacity: 1; transform: scale(1.08); }
-
-    /* 缩放控制条 */
-    .zoom-control {
-      position: absolute; bottom: 16px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(0,0,0,0.7);
-      padding: 8px 16px; border-radius: 20px;
-      z-index: 100; backdrop-filter: blur(8px);
-    }
-
-    .zoom-control input[type="range"] {
-      width: 150px; accent-color: #e8734a; cursor: pointer;
-    }
-
-    .zoom-control .zoom-value {
-      font-size: 11px; color: #e8734a; font-weight: bold; min-width: 36px; text-align: center;
-    }
-
-    .zoom-control .zoom-btn {
-      background: #444; border: none; color: #fff;
-      width: 24px; height: 24px; border-radius: 50%;
-      cursor: pointer; font-size: 14px;
-      display: flex; align-items: center; justify-content: center;
-      line-height: 1; transition: background 0.2s;
-    }
-
+    .zoom-control { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 20px; z-index: 100; backdrop-filter: blur(8px); }
+    .zoom-control input[type="range"] { width: 150px; accent-color: #e8734a; cursor: pointer; }
+    .zoom-control .zoom-value { font-size: 11px; color: #e8734a; font-weight: bold; min-width: 36px; text-align: center; }
+    .zoom-control .zoom-btn { background: #444; border: none; color: #fff; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.2s; }
     .zoom-control .zoom-btn:hover { background: #e8734a; }
-
-    .zoom-control .zoom-fit {
-      background: #333; border: 1px solid #555; color: #ccc;
-      padding: 4px 10px; border-radius: 10px;
-      cursor: pointer; font-size: 10px; transition: all 0.2s; white-space: nowrap;
-    }
-
+    .zoom-control .zoom-fit { background: #333; border: 1px solid #555; color: #ccc; padding: 4px 10px; border-radius: 10px; cursor: pointer; font-size: 10px; transition: all 0.2s; white-space: nowrap; }
     .zoom-control .zoom-fit:hover { background: #e8734a; border-color: #e8734a; color: #fff; }
 
     @media (max-width: 900px) {
       .app-container { flex-direction: column; }
-      .control-panel {
-        width: 100%; min-width: auto; height: auto;
-        max-height: 40vh; border-right: none; border-bottom: 1px solid #333;
-      }
+      .control-panel { width: 100%; min-width: auto; height: auto; max-height: 40vh; border-right: none; border-bottom: 1px solid #333; }
       .preview-area { flex: 1; min-height: 300px; }
       .preview-container.size-16-9 { width: 853px; height: 480px; }
       .preview-container.size-9-16 { width: 270px; height: 480px; }
@@ -532,39 +148,37 @@
 </head>
 <body>
 
-<!-- ========== Star 引导弹窗 ========== -->
+<!-- Star 弹窗 -->
 <div class="star-modal-overlay" id="starModal">
   <div class="star-modal">
     <div class="star-icon">⭐</div>
     <h2>喜欢这个工具吗？</h2>
     <div class="repo-name">Summervibe310 / shanling_original_music</div>
-    <p>
-      如果这个音乐视频生成器对你有帮助<br>
-      请在 GitHub 上给我们一颗 <strong style="color:#ffd700;">Star</strong> ⭐<br>
-      你的支持是我们持续更新的最大动力 💪
-    </p>
+    <p>如果这个音乐视频生成器对你有帮助<br>请在 GitHub 上给我们一颗 <strong style="color:#ffd700;">Star</strong> ⭐<br>你的支持是我们持续更新的最大动力 💪</p>
     <div class="btn-row">
-      <a href="https://github.com/Summervibe310/shanling_original_music" target="_blank" 
-         class="btn-star" id="starLink">
-        ⭐ 去 GitHub 点 Star
-      </a>
-      <button class="btn-close" onclick="closeStarModal()">
-        已 Star，开始使用 ✓
-      </button>
+      <a href="https://github.com/Summervibe310/shanling_original_music" target="_blank" class="btn-star">⭐ 去 GitHub 点 Star</a>
+      <button class="btn-close" onclick="closeStarModal()">已 Star，开始使用 ✓</button>
     </div>
-    <p class="hint-text">
-      点击「去 GitHub 点 Star」会打开新标签页<br>
-      点完 Star 后回到这里，点击「已 Star」即可开始使用<br>
-      <span style="color:#e8734a;">感谢你的每一次支持 ❤️</span>
-    </p>
+    <p class="hint-text">点击「去 GitHub 点 Star」会打开新标签页<br>点完 Star 后回到这里，点击「已 Star」即可开始使用<br><span style="color:#e8734a;">感谢你的每一次支持 ❤️</span></p>
+  </div>
+</div>
+
+<!-- 录制进度弹窗 -->
+<div class="recording-modal-overlay" id="recordingModal" style="display:none;">
+  <div class="recording-modal">
+    <div class="recording-icon">🔴</div>
+    <h3>正在录制视频...</h3>
+    <div class="progress-bar"><div class="progress-fill" id="recordingProgressFill"></div></div>
+    <div class="progress-text" id="recordingProgressText">0%</div>
+    <button class="btn-cancel" onclick="cancelRecording()">取消录制</button>
   </div>
 </div>
 
 <div class="app-container">
+  <!-- 左侧控制面板 -->
   <div class="control-panel">
     <h2>🎬 音乐视频生成器</h2>
 
-    <!-- 播放控制 -->
     <div class="section">
       <h3>▶ 播放控制</h3>
       <div class="btn-group">
@@ -572,12 +186,9 @@
         <button class="btn btn-pause" onclick="pausePreview()">⏸ 暂停</button>
         <button class="btn btn-refresh" onclick="updatePreview()">🔄 刷新</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:8px;">
-        当前时间: <span id="currentTime">00:00</span> / <span id="totalTime">00:00</span>
-      </div>
+      <div class="hint" style="text-align:center;margin-top:8px;">当前时间: <span id="currentTime">00:00</span> / <span id="totalTime">00:00</span></div>
     </div>
 
-    <!-- 容器尺寸 -->
     <div class="section">
       <h3>📐 视频容器尺寸</h3>
       <div class="size-presets" id="containerSizePresets">
@@ -593,84 +204,34 @@
           <label>📱 手机</label>
           <select id="phoneModel" onchange="applyDevicePreset('phone')">
             <option value="">选择手机型号</option>
-            <optgroup label="iPhone">
-              <option value="iphone15pm">iPhone 15 Pro Max (430×932)</option>
-              <option value="iphone15p">iPhone 15 Pro (393×852)</option>
-              <option value="iphone15">iPhone 15 (393×852)</option>
-              <option value="iphone14pm">iPhone 14 Pro Max (430×932)</option>
-              <option value="iphone14">iPhone 14 (390×844)</option>
-              <option value="iphone13pm">iPhone 13 Pro Max (428×926)</option>
-              <option value="iphone13">iPhone 13 (390×844)</option>
-              <option value="iphoneSE">iPhone SE (375×667)</option>
-              <option value="iphone12mini">iPhone 12 mini (360×780)</option>
-            </optgroup>
-            <optgroup label="Samsung">
-              <option value="s24ultra">Galaxy S24 Ultra (384×854)</option>
-              <option value="s24">Galaxy S24 (360×780)</option>
-              <option value="s23ultra">Galaxy S23 Ultra (384×854)</option>
-              <option value="zfold5">Galaxy Z Fold 5 (374×816)</option>
-              <option value="zflip5">Galaxy Z Flip 5 (360×780)</option>
-            </optgroup>
-            <optgroup label="Google">
-              <option value="pixel8pro">Pixel 8 Pro (384×856)</option>
-              <option value="pixel8">Pixel 8 (360×780)</option>
-              <option value="pixel7a">Pixel 7a (360×780)</option>
-            </optgroup>
-            <optgroup label="Xiaomi">
-              <option value="xiaomi14pro">Xiaomi 14 Pro (400×890)</option>
-              <option value="xiaomi14">Xiaomi 14 (393×852)</option>
-              <option value="redmiNote13">Redmi Note 13 (395×874)</option>
-            </optgroup>
-            <optgroup label="Huawei">
-              <option value="mate60pro">Mate 60 Pro (393×852)</option>
-              <option value="p60pro">P60 Pro (393×852)</option>
-            </optgroup>
-            <optgroup label="OnePlus">
-              <option value="oneplus12">OnePlus 12 (400×904)</option>
-              <option value="oneplus11">OnePlus 11 (395×874)</option>
-            </optgroup>
+            <optgroup label="iPhone 最新"><option value="iphone17promax">iPhone 17 Pro Max (440×956)</option><option value="iphone17pro">iPhone 17 Pro (402×874)</option><option value="iphone17">iPhone 17 (402×874)</option><option value="iphone17air">iPhone 17 Air (390×844)</option><option value="iphone16promax">iPhone 16 Pro Max (430×932)</option><option value="iphone16pro">iPhone 16 Pro (402×874)</option><option value="iphone16">iPhone 16 (402×874)</option><option value="iphone16e">iPhone 16e (390×844)</option><option value="iphone15promax">iPhone 15 Pro Max (430×932)</option><option value="iphoneSE4">iPhone SE 第4代 (390×844)</option></optgroup>
+            <optgroup label="Samsung"><option value="s25ultra">Galaxy S25 Ultra (400×904)</option><option value="s25plus">Galaxy S25+ (384×854)</option><option value="s25">Galaxy S25 (360×780)</option><option value="zfold6">Galaxy Z Fold 6 (374×816)</option><option value="zflip6">Galaxy Z Flip 6 (360×780)</option></optgroup>
+            <optgroup label="Google"><option value="pixel9proxl">Pixel 9 Pro XL (400×890)</option><option value="pixel9pro">Pixel 9 Pro (384×856)</option><option value="pixel9">Pixel 9 (360×780)</option><option value="pixelFold2">Pixel 9 Pro Fold (374×816)</option></optgroup>
+            <optgroup label="Xiaomi"><option value="xiaomi15ultra">Xiaomi 15 Ultra (400×890)</option><option value="xiaomi15">Xiaomi 15 (393×852)</option><option value="redmiNote14pro">Redmi Note 14 Pro+ (395×874)</option></optgroup>
+            <optgroup label="Huawei"><option value="mate70pro">Mate 70 Pro (400×904)</option><option value="pura80ultra">Pura 80 Ultra (393×852)</option></optgroup>
+            <optgroup label="其他"><option value="oneplus13">OnePlus 13 (400×904)</option><option value="oppoFindX8pro">OPPO Find X8 Pro (400×890)</option><option value="vivoX200pro">vivo X200 Pro (400×890)</option></optgroup>
           </select>
         </div>
         <div class="device-selector-row">
           <label>📋 平板</label>
           <select id="padModel" onchange="applyDevicePreset('pad')">
             <option value="">选择平板型号</option>
-            <optgroup label="iPad">
-              <option value="ipadpro129">iPad Pro 12.9" (1024×1366)</option>
-              <option value="ipadpro11">iPad Pro 11" (834×1194)</option>
-              <option value="ipadair">iPad Air (820×1180)</option>
-              <option value="ipad10">iPad 10.9" (820×1180)</option>
-              <option value="ipadmini">iPad mini (744×1133)</option>
-            </optgroup>
-            <optgroup label="Samsung">
-              <option value="tabs9ultra">Galaxy Tab S9 Ultra (926×1306)</option>
-              <option value="tabs9">Galaxy Tab S9 (800×1280)</option>
-              <option value="taba9">Galaxy Tab A9+ (800×1280)</option>
-            </optgroup>
-            <optgroup label="Xiaomi">
-              <option value="pad6max">Xiaomi Pad 6 Max (900×1340)</option>
-              <option value="pad6">Xiaomi Pad 6 (800×1280)</option>
-            </optgroup>
-            <optgroup label="Huawei">
-              <option value="matepadpro">MatePad Pro 13.2" (960×1440)</option>
-              <option value="matepad11">MatePad 11 (800×1280)</option>
-            </optgroup>
-            <optgroup label="Lenovo">
-              <option value="tabp12">Tab P12 (900×1340)</option>
-              <option value="tabm10">Tab M10 (800×1280)</option>
-            </optgroup>
+            <optgroup label="iPad 最新"><option value="ipadpro13m4">iPad Pro 13" M4 (1032×1376)</option><option value="ipadpro11m4">iPad Pro 11" M4 (834×1210)</option><option value="ipadair13m3">iPad Air 13" M3 (820×1180)</option><option value="ipadair11m3">iPad Air 11" M3 (820×1180)</option><option value="ipad11a16">iPad 11" A16 (820×1180)</option><option value="ipadmini7">iPad mini A17 Pro (744×1133)</option></optgroup>
+            <optgroup label="Samsung"><option value="tabs10ultra">Galaxy Tab S10 Ultra (926×1306)</option><option value="tabs10plus">Galaxy Tab S10+ (800×1280)</option><option value="taba9plus">Galaxy Tab A9+ (800×1280)</option></optgroup>
+            <optgroup label="其他"><option value="xiaomiPad7pro">Xiaomi Pad 7 Pro (900×1340)</option><option value="matepadpro132">MatePad Pro 13.2" (960×1440)</option><option value="oneplusPad2">OnePlus Pad 2 (900×1340)</option></optgroup>
           </select>
         </div>
         <div class="device-selector-row">
           <label>🖥️ 显示器</label>
           <select id="monitorModel" onchange="applyDevicePreset('monitor')">
             <option value="">选择显示器分辨率</option>
+            <optgroup label="Mac"><option value="macbookpro16m4">MacBook Pro 16" M4 (3456×2234)</option><option value="macbookpro14m4">MacBook Pro 14" M4 (3024×1964)</option><option value="macbookair15m4">MacBook Air 15" M4 (2880×1864)</option><option value="macbookair13m4">MacBook Air 13" M4 (2560×1664)</option><option value="imac24m4">iMac 24" M4 (4480×2520)</option><option value="studioDisplay">Studio Display 27" (5120×2880)</option><option value="proDisplayXDR">Pro Display XDR 32" (6016×3384)</option><option value="macminiM4">Mac mini M4 + QHD (2560×1440)</option><option value="macStudioM4">Mac Studio M4 Ultra + 5K (5120×2880)</option><option value="visionPro">Apple Vision Pro (3840×2160)</option></optgroup>
+            <optgroup label="Apple Watch"><option value="watchUltra3">Apple Watch Ultra 3 (396×484)</option><option value="watchS11_46mm">Apple Watch S11 46mm (396×484)</option></optgroup>
             <optgroup label="标清"><option value="720p">HD (1280×720)</option><option value="900p">HD+ (1600×900)</option></optgroup>
             <optgroup label="全高清"><option value="1080p">Full HD (1920×1080)</option><option value="1080puw">Full HD 超宽 (2560×1080)</option></optgroup>
             <optgroup label="2K"><option value="1440p">QHD (2560×1440)</option><option value="1440puw">QHD 超宽 (3440×1440)</option><option value="1440psuw">QHD 超级超宽 (5120×1440)</option></optgroup>
             <optgroup label="4K"><option value="4k">4K UHD (3840×2160)</option><option value="4kuw">4K 超宽 (5120×2160)</option><option value="4kcinema">4K DCI (4096×2160)</option></optgroup>
             <optgroup label="5K/6K/8K"><option value="5k">5K (5120×2880)</option><option value="6k">6K (6016×3384)</option><option value="8k">8K UHD (7680×4320)</option></optgroup>
-            <optgroup label="Mac"><option value="macbook14">MacBook Pro 14" (3024×1964)</option><option value="macbook16">MacBook Pro 16" (3456×2234)</option><option value="macair13">MacBook Air 13" (2560×1664)</option><option value="macair15">MacBook Air 15" (2880×1864)</option><option value="imac24">iMac 24" (4480×2520)</option><option value="studioDisplay">Studio Display (5120×2880)</option><option value="proDisplayXDR">Pro Display XDR (6016×3384)</option></optgroup>
           </select>
         </div>
         <div class="device-info" id="deviceInfo"></div>
@@ -683,21 +244,18 @@
       </div>
     </div>
 
-    <!-- 背景媒体 -->
     <div class="section">
       <h3>🖼️ 背景视频/图片</h3>
       <div class="form-group"><label>上传背景视频 (MP4)</label><div class="file-input-wrapper"><input type="file" id="bgVideoFile" accept="video/mp4"></div><div class="file-status" id="bgVideoFileStatus"></div></div>
       <div class="form-group"><label>上传背景图片</label><div class="file-input-wrapper"><input type="file" id="bgImageFile" accept="image/*"></div><div class="file-status" id="bgImageFileStatus"></div></div>
     </div>
 
-    <!-- 蒙版设置 -->
     <div class="section">
       <h3>🎨 蒙版设置</h3>
       <div class="form-group"><label>蒙版颜色</label><div class="color-picker-row"><input type="color" id="overlayColor" value="#000000"><input type="text" id="overlayColorText" value="#000000" style="flex:1;"></div></div>
       <div class="form-group"><label>蒙版透明度: <span id="overlayOpacityValue">50%</span></label><input type="range" id="overlayOpacity" min="0" max="100" value="50" style="width:100%;"></div>
     </div>
 
-    <!-- 文字信息 -->
     <div class="section">
       <h3>📝 文字信息</h3>
       <div class="form-group"><label>歌名</label><input type="text" id="songTitle" value="活该我盛开" placeholder="歌名"></div>
@@ -712,7 +270,6 @@
       <div class="form-group"><label>其他文字字号: <span id="textFontSizeValue">14px</span></label><input type="range" id="textFontSize" min="10" max="36" value="14" style="width:100%;"></div>
     </div>
 
-    <!-- 人物媒体 -->
     <div class="section">
       <h3>👤 人物视频/图片</h3>
       <div class="form-group"><label>上传人物视频 (WebM/MP4)</label><div class="file-input-wrapper"><input type="file" id="figureVideoFile" accept="video/webm,video/mp4"></div><div class="file-status" id="figureVideoFileStatus"></div></div>
@@ -720,10 +277,9 @@
       <div class="form-group"><label>人物尺寸</label><div class="size-presets" id="figureSizePresets"><button class="size-preset active" data-figure-size="medium">中</button><button class="size-preset" data-figure-size="small">小</button><button class="size-preset" data-figure-size="large">大</button></div></div>
     </div>
 
-    <!-- 歌词 -->
     <div class="section">
       <h3>🎤 歌词 (带时间戳)</h3>
-      <div class="form-group"><label>格式: [分:秒.毫秒]歌词</label><textarea id="lyricTimestamp" placeholder="[00:18.99]空心人 站进人海">[00:18.99]空心人 站进人海
+      <div class="form-group"><label>格式: [分:秒.毫秒]歌词</label><textarea id="lyricTimestamp">[00:18.99]空心人 站进人海
 [00:23.34]只剩九十斤的反骨 还在
 [00:26.88]废墟里 排队等一个赦免
 [00:30.72]等月光失约 才学会
@@ -738,14 +294,13 @@
       <div class="form-group"><label>歌词字号: <span id="lyricFontSizeValue">16px</span></label><input type="range" id="lyricFontSize" min="10" max="32" value="16" style="width:100%;"></div>
     </div>
 
-    <!-- 音频 -->
     <div class="section">
       <h3>🎵 音频</h3>
       <div class="form-group"><label>上传音频 (MP3/WAV)</label><div class="file-input-wrapper"><input type="file" id="audioFile" accept="audio/mpeg,audio/mp3,audio/wav,audio/wave,audio/x-wav,audio/*"></div><div class="file-status" id="audioFileStatus"></div></div>
       <div class="form-group"><label>或音频外链 URL</label><input type="text" id="audioUrl" placeholder="https://example.com/song.mp3"></div>
     </div>
 
-    <button class="btn btn-download" onclick="downloadPage()">⬇ 下载生成页面</button>
+    <button class="btn btn-download" id="downloadBtn" onclick="startRecording()">⬇ 导出视频 (WebM)</button>
     <button class="btn btn-reset" onclick="resetForm()">🔄 恢复默认值</button>
     <div class="status" id="status"></div>
     <audio id="audioPlayer" style="display:none;"></audio>
@@ -772,9 +327,9 @@
       </div>
     </div>
     <div class="zoom-control" id="zoomControl">
-      <button class="zoom-btn" onclick="zoomOut()" title="缩小">−</button>
+      <button class="zoom-btn" onclick="zoomOut()">−</button>
       <input type="range" id="zoomSlider" min="15" max="200" value="100" step="1">
-      <button class="zoom-btn" onclick="zoomIn()" title="放大">+</button>
+      <button class="zoom-btn" onclick="zoomIn()">+</button>
       <span class="zoom-value" id="zoomValue">100%</span>
       <button class="zoom-fit" onclick="fitToScreen()">适配窗口</button>
     </div>
@@ -782,25 +337,21 @@
 </div>
 
 <script>
-  // ========== Star 弹窗逻辑 ==========
+  // ========== Star 弹窗 ==========
   function closeStarModal() {
     document.getElementById('starModal').style.display = 'none';
     const now = Date.now();
     localStorage.setItem('github_star_closed', 'true');
     localStorage.setItem('github_star_closed_time', now.toString());
   }
-
   window.addEventListener('load', function() {
     const closed = localStorage.getItem('github_star_closed');
     const closedTime = localStorage.getItem('github_star_closed_time');
     const now = Date.now();
-    
-    // 如果已经关闭过且不到7天，不再弹窗
     if (closed && closedTime && (now - parseInt(closedTime)) < 604800000) {
       document.getElementById('starModal').style.display = 'none';
     } else {
       document.getElementById('starModal').style.display = 'flex';
-      // 清除旧记录，准备重新计时
       localStorage.removeItem('github_star_closed');
       localStorage.removeItem('github_star_closed_time');
     }
@@ -808,35 +359,39 @@
 
   // ========== 设备预设数据库 ==========
   const devicePresets = {
-    iphone15pm:{width:430,height:932,name:'iPhone 15 Pro Max'},iphone15p:{width:393,height:852,name:'iPhone 15 Pro'},
-    iphone15:{width:393,height:852,name:'iPhone 15'},iphone14pm:{width:430,height:932,name:'iPhone 14 Pro Max'},
-    iphone14:{width:390,height:844,name:'iPhone 14'},iphone13pm:{width:428,height:926,name:'iPhone 13 Pro Max'},
-    iphone13:{width:390,height:844,name:'iPhone 13'},iphoneSE:{width:375,height:667,name:'iPhone SE'},
-    iphone12mini:{width:360,height:780,name:'iPhone 12 mini'},s24ultra:{width:384,height:854,name:'Galaxy S24 Ultra'},
-    s24:{width:360,height:780,name:'Galaxy S24'},s23ultra:{width:384,height:854,name:'Galaxy S23 Ultra'},
-    zfold5:{width:374,height:816,name:'Galaxy Z Fold 5'},zflip5:{width:360,height:780,name:'Galaxy Z Flip 5'},
-    pixel8pro:{width:384,height:856,name:'Pixel 8 Pro'},pixel8:{width:360,height:780,name:'Pixel 8'},
-    pixel7a:{width:360,height:780,name:'Pixel 7a'},xiaomi14pro:{width:400,height:890,name:'Xiaomi 14 Pro'},
-    xiaomi14:{width:393,height:852,name:'Xiaomi 14'},redmiNote13:{width:395,height:874,name:'Redmi Note 13'},
-    mate60pro:{width:393,height:852,name:'Mate 60 Pro'},p60pro:{width:393,height:852,name:'P60 Pro'},
-    oneplus12:{width:400,height:904,name:'OnePlus 12'},oneplus11:{width:395,height:874,name:'OnePlus 11'},
-    ipadpro129:{width:1024,height:1366,name:'iPad Pro 12.9"'},ipadpro11:{width:834,height:1194,name:'iPad Pro 11"'},
-    ipadair:{width:820,height:1180,name:'iPad Air'},ipad10:{width:820,height:1180,name:'iPad 10.9"'},
-    ipadmini:{width:744,height:1133,name:'iPad mini'},tabs9ultra:{width:926,height:1306,name:'Galaxy Tab S9 Ultra'},
-    tabs9:{width:800,height:1280,name:'Galaxy Tab S9'},taba9:{width:800,height:1280,name:'Galaxy Tab A9+'},
-    pad6max:{width:900,height:1340,name:'Xiaomi Pad 6 Max'},pad6:{width:800,height:1280,name:'Xiaomi Pad 6'},
-    matepadpro:{width:960,height:1440,name:'MatePad Pro 13.2"'},matepad11:{width:800,height:1280,name:'MatePad 11'},
-    tabp12:{width:900,height:1340,name:'Tab P12'},tabm10:{width:800,height:1280,name:'Tab M10'},
+    iphone17promax:{width:440,height:956,name:'iPhone 17 Pro Max'},iphone17pro:{width:402,height:874,name:'iPhone 17 Pro'},
+    iphone17:{width:402,height:874,name:'iPhone 17'},iphone17air:{width:390,height:844,name:'iPhone 17 Air'},
+    iphone16promax:{width:430,height:932,name:'iPhone 16 Pro Max'},iphone16pro:{width:402,height:874,name:'iPhone 16 Pro'},
+    iphone16:{width:402,height:874,name:'iPhone 16'},iphone16e:{width:390,height:844,name:'iPhone 16e'},
+    iphone15promax:{width:430,height:932,name:'iPhone 15 Pro Max'},iphoneSE4:{width:390,height:844,name:'iPhone SE 第4代'},
+    s25ultra:{width:400,height:904,name:'Galaxy S25 Ultra'},s25plus:{width:384,height:854,name:'Galaxy S25+'},
+    s25:{width:360,height:780,name:'Galaxy S25'},zfold6:{width:374,height:816,name:'Galaxy Z Fold 6'},
+    zflip6:{width:360,height:780,name:'Galaxy Z Flip 6'},pixel9proxl:{width:400,height:890,name:'Pixel 9 Pro XL'},
+    pixel9pro:{width:384,height:856,name:'Pixel 9 Pro'},pixel9:{width:360,height:780,name:'Pixel 9'},
+    pixelFold2:{width:374,height:816,name:'Pixel 9 Pro Fold'},xiaomi15ultra:{width:400,height:890,name:'Xiaomi 15 Ultra'},
+    xiaomi15:{width:393,height:852,name:'Xiaomi 15'},redmiNote14pro:{width:395,height:874,name:'Redmi Note 14 Pro+'},
+    mate70pro:{width:400,height:904,name:'Mate 70 Pro'},pura80ultra:{width:393,height:852,name:'Pura 80 Ultra'},
+    oneplus13:{width:400,height:904,name:'OnePlus 13'},oppoFindX8pro:{width:400,height:890,name:'OPPO Find X8 Pro'},
+    vivoX200pro:{width:400,height:890,name:'vivo X200 Pro'},
+    ipadpro13m4:{width:1032,height:1376,name:'iPad Pro 13" M4'},ipadpro11m4:{width:834,height:1210,name:'iPad Pro 11" M4'},
+    ipadair13m3:{width:820,height:1180,name:'iPad Air 13" M3'},ipadair11m3:{width:820,height:1180,name:'iPad Air 11" M3'},
+    ipad11a16:{width:820,height:1180,name:'iPad 11" A16'},ipadmini7:{width:744,height:1133,name:'iPad mini A17 Pro'},
+    tabs10ultra:{width:926,height:1306,name:'Galaxy Tab S10 Ultra'},tabs10plus:{width:800,height:1280,name:'Galaxy Tab S10+'},
+    taba9plus:{width:800,height:1280,name:'Galaxy Tab A9+'},xiaomiPad7pro:{width:900,height:1340,name:'Xiaomi Pad 7 Pro'},
+    matepadpro132:{width:960,height:1440,name:'MatePad Pro 13.2"'},oneplusPad2:{width:900,height:1340,name:'OnePlus Pad 2'},
     '720p':{width:1280,height:720,name:'HD 720p'},'900p':{width:1600,height:900,name:'HD+ 900p'},
     '1080p':{width:1920,height:1080,name:'Full HD 1080p'},'1080puw':{width:2560,height:1080,name:'Full HD 超宽'},
     '1440p':{width:2560,height:1440,name:'QHD 1440p'},'1440puw':{width:3440,height:1440,name:'QHD 超宽'},
     '1440psuw':{width:5120,height:1440,name:'QHD 超级超宽'},'4k':{width:3840,height:2160,name:'4K UHD'},
     '4kuw':{width:5120,height:2160,name:'4K 超宽'},'4kcinema':{width:4096,height:2160,name:'4K DCI'},
     '5k':{width:5120,height:2880,name:'5K'},'6k':{width:6016,height:3384,name:'6K'},
-    '8k':{width:7680,height:4320,name:'8K UHD'},macbook14:{width:3024,height:1964,name:'MacBook Pro 14"'},
-    macbook16:{width:3456,height:2234,name:'MacBook Pro 16"'},macair13:{width:2560,height:1664,name:'MacBook Air 13"'},
-    macair15:{width:2880,height:1864,name:'MacBook Air 15"'},imac24:{width:4480,height:2520,name:'iMac 24"'},
-    studioDisplay:{width:5120,height:2880,name:'Studio Display'},proDisplayXDR:{width:6016,height:3384,name:'Pro Display XDR'}
+    '8k':{width:7680,height:4320,name:'8K UHD'},macbookpro16m4:{width:3456,height:2234,name:'MacBook Pro 16" M4'},
+    macbookpro14m4:{width:3024,height:1964,name:'MacBook Pro 14" M4'},macbookair15m4:{width:2880,height:1864,name:'MacBook Air 15" M4'},
+    macbookair13m4:{width:2560,height:1664,name:'MacBook Air 13" M4'},imac24m4:{width:4480,height:2520,name:'iMac 24" M4'},
+    studioDisplay:{width:5120,height:2880,name:'Studio Display 27"'},proDisplayXDR:{width:6016,height:3384,name:'Pro Display XDR 32"'},
+    macminiM4:{width:2560,height:1440,name:'Mac mini M4 + QHD'},macStudioM4:{width:5120,height:2880,name:'Mac Studio M4 Ultra + 5K'},
+    visionPro:{width:3840,height:2160,name:'Apple Vision Pro'},watchUltra3:{width:396,height:484,name:'Apple Watch Ultra 3'},
+    watchS11_46mm:{width:396,height:484,name:'Apple Watch S11 46mm'}
   };
 
   // ========== 全局状态 ==========
@@ -847,221 +402,413 @@
   let animationId = null;
   let currentZoom = 100;
   let currentDeviceType = null;
+  let mediaRecorder = null;
+  let recordingChunks = [];
+  let recordingCanvas = null;
+  let recordingCtx = null;
+  let recordingStartTime = 0;
+  let recordingDuration = 0;
+  let recordingAnimationId = null;
+  let isRecording = false;
 
-  const config = {
-    containerSize: '16-9', containerWidth: 853, containerHeight: 480,
-    overlayColor: '#000000', overlayOpacity: 50,
-    textColor: '#ffffff', titleFontSize: 28, textFontSize: 14,
-    figureSize: 'medium', lyricVisibleLines: 5, lyricFontSize: 16
-  };
+  const config = { containerSize: '16-9', containerWidth: 853, containerHeight: 480, overlayColor: '#000000', overlayOpacity: 50, textColor: '#ffffff', titleFontSize: 28, textFontSize: 14, figureSize: 'medium', lyricVisibleLines: 5, lyricFontSize: 16 };
+  const defaultValues = { songTitle: '活该我盛开', songSubtitle: '', creditsLyrics: '山岭在逃', creditsMusic: '山岭在逃', creditsArtist: '', lyricTimestamp: document.getElementById('lyricTimestamp').value };
 
-  const defaultValues = {
-    songTitle: '活该我盛开', songSubtitle: '',
-    creditsLyrics: '山岭在逃', creditsMusic: '山岭在逃', creditsArtist: '',
-    lyricTimestamp: document.getElementById('lyricTimestamp').value
-  };
+  function getContainerSize() {
+    const c = document.getElementById('previewContainer');
+    return { width: c.offsetWidth, height: c.offsetHeight };
+  }
 
-  // ========== 应用设备预设 ==========
+  // ========== 设备预设 ==========
   function applyDevicePreset(type) {
-    const selectId = type === 'phone' ? 'phoneModel' : type === 'pad' ? 'padModel' : 'monitorModel';
+    const selectId = type==='phone'?'phoneModel':type==='pad'?'padModel':'monitorModel';
     const select = document.getElementById(selectId);
     const key = select.value;
     if (!key || !devicePresets[key]) return;
     const preset = devicePresets[key];
-    if (type !== 'phone') document.getElementById('phoneModel').value = '';
-    if (type !== 'pad') document.getElementById('padModel').value = '';
-    if (type !== 'monitor') document.getElementById('monitorModel').value = '';
+    if (type!=='phone') document.getElementById('phoneModel').value='';
+    if (type!=='pad') document.getElementById('padModel').value='';
+    if (type!=='monitor') document.getElementById('monitorModel').value='';
     currentDeviceType = type;
-    document.querySelectorAll('#containerSizePresets .size-preset').forEach(b => b.classList.remove('active'));
-    config.containerSize = 'custom';
-    config.containerWidth = preset.width;
-    config.containerHeight = preset.height;
-    document.getElementById('containerCustomSize').style.display = 'block';
-    document.getElementById('containerWidth').value = preset.width;
-    document.getElementById('containerHeight').value = preset.height;
+    document.querySelectorAll('#containerSizePresets .size-preset').forEach(b=>b.classList.remove('active'));
+    config.containerSize='custom';
+    config.containerWidth=preset.width;
+    config.containerHeight=preset.height;
+    document.getElementById('containerCustomSize').style.display='block';
+    document.getElementById('containerWidth').value=preset.width;
+    document.getElementById('containerHeight').value=preset.height;
     const container = document.getElementById('previewContainer');
-    container.classList.remove('size-16-9', 'size-9-16', 'size-4-3', 'size-1-1', 'size-21-9', 'size-custom');
-    container.style.width = preset.width + 'px';
-    container.style.height = preset.height + 'px';
-    document.getElementById('deviceInfo').textContent = `已选择: ${preset.name} (${preset.width}×${preset.height})`;
-    setTimeout(fitToScreen, 100);
+    container.classList.remove('size-16-9','size-9-16','size-4-3','size-1-1','size-21-9','size-custom');
+    container.style.width=preset.width+'px';
+    container.style.height=preset.height+'px';
+    document.getElementById('deviceInfo').textContent=`已选择: ${preset.name} (${preset.width}×${preset.height})`;
+    setTimeout(fitToScreen,100);
     updatePreview();
   }
 
-  // ========== 缩放功能 ==========
-  const zoomSlider = document.getElementById('zoomSlider');
-  const zoomValue = document.getElementById('zoomValue');
-  const previewWrapper = document.getElementById('previewWrapper');
-  const previewArea = document.getElementById('previewArea');
-
-  function applyZoom(zoom) {
-    currentZoom = Math.max(15, Math.min(200, zoom));
-    zoomSlider.value = currentZoom;
-    zoomValue.textContent = currentZoom + '%';
-    previewWrapper.style.transform = `scale(${currentZoom / 100})`;
-  }
-
-  zoomSlider.addEventListener('input', function() { applyZoom(parseInt(this.value)); });
-  function zoomIn() { applyZoom(currentZoom + 10); }
-  function zoomOut() { applyZoom(currentZoom - 10); }
-
-  function fitToScreen() {
-    const container = document.getElementById('previewContainer');
-    const areaWidth = previewArea.clientWidth - 40;
-    const areaHeight = previewArea.clientHeight - 80;
-    const scaleX = areaWidth / container.offsetWidth;
-    const scaleY = areaHeight / container.offsetHeight;
-    applyZoom(Math.floor(Math.min(scaleX, scaleY, 1) * 100));
-  }
-
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => { if (currentZoom === 100) fitToScreen(); }, 300);
-  });
-
-  previewArea.addEventListener('wheel', function(e) {
-    if (e.ctrlKey || e.metaKey) { e.preventDefault(); applyZoom(currentZoom + (e.deltaY < 0 ? 5 : -5)); }
-  }, { passive: false });
+  // ========== 缩放 ==========
+  const zoomSlider=document.getElementById('zoomSlider'),zoomValue=document.getElementById('zoomValue'),previewWrapper=document.getElementById('previewWrapper'),previewArea=document.getElementById('previewArea');
+  function applyZoom(z){currentZoom=Math.max(15,Math.min(200,z));zoomSlider.value=currentZoom;zoomValue.textContent=currentZoom+'%';previewWrapper.style.transform=`scale(${currentZoom/100})`;}
+  zoomSlider.addEventListener('input',function(){applyZoom(parseInt(this.value));});
+  function zoomIn(){applyZoom(currentZoom+10);}
+  function zoomOut(){applyZoom(currentZoom-10);}
+  function fitToScreen(){const c=document.getElementById('previewContainer');const ax=previewArea.clientWidth-40,ay=previewArea.clientHeight-80;applyZoom(Math.floor(Math.min(ax/c.offsetWidth,ay/c.offsetHeight,1)*100));}
+  let resizeTimeout;window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{if(currentZoom===100)fitToScreen();},300);});
+  previewArea.addEventListener('wheel',function(e){if(e.ctrlKey||e.metaKey){e.preventDefault();applyZoom(currentZoom+(e.deltaY<0?5:-5));}},{passive:false});
 
   // ========== 文件处理 ==========
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve({ dataUrl: reader.result, mimeType: file.type, fileName: file.name, size: file.size });
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function formatFileSize(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-  }
-
-  async function handleFileUpload(inputId, statusId, key) {
-    const input = document.getElementById(inputId);
-    const statusEl = document.getElementById(statusId);
-    input.addEventListener('change', async function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      statusEl.textContent = '⏳ 处理中...';
-      statusEl.className = 'file-status show';
-      try {
-        const data = await fileToBase64(file);
-        fileBase64[key] = data;
-        if (key === 'audio') { audioElement.src = data.dataUrl; audioElement.load(); }
-        if (key === 'bgVideo') { document.getElementById('previewBgVideo').src = data.dataUrl; document.getElementById('previewBgVideo').style.display = 'block'; document.getElementById('previewBgImage').style.display = 'none'; document.getElementById('previewBgFallback').style.display = 'none'; }
-        if (key === 'bgImage') { document.getElementById('previewBgImage').src = data.dataUrl; document.getElementById('previewBgImage').style.display = 'block'; document.getElementById('previewBgVideo').style.display = 'none'; document.getElementById('previewBgFallback').style.display = 'none'; }
-        if (key === 'figureVideo') { document.getElementById('previewFigureVideo').src = data.dataUrl; document.getElementById('previewFigureVideo').style.display = 'block'; document.getElementById('previewFigureImage').style.display = 'none'; }
-        if (key === 'figureImage') { document.getElementById('previewFigureImage').src = data.dataUrl; document.getElementById('previewFigureImage').style.display = 'block'; document.getElementById('previewFigureVideo').style.display = 'none'; }
-        statusEl.textContent = '✅ ' + file.name + ' (' + formatFileSize(file.size) + ')';
-        statusEl.className = 'file-status show'; statusEl.style.color = '#4caf50';
-        updatePreview();
-      } catch (err) { statusEl.textContent = '❌ 失败'; statusEl.className = 'file-status show'; statusEl.style.color = '#f44336'; }
-    });
-  }
-
-  handleFileUpload('bgVideoFile', 'bgVideoFileStatus', 'bgVideo');
-  handleFileUpload('bgImageFile', 'bgImageFileStatus', 'bgImage');
-  handleFileUpload('figureVideoFile', 'figureVideoFileStatus', 'figureVideo');
-  handleFileUpload('figureImageFile', 'figureImageFileStatus', 'figureImage');
-  handleFileUpload('audioFile', 'audioFileStatus', 'audio');
+  function fileToBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve({dataUrl:r.result,mimeType:file.type,fileName:file.name,size:file.size});r.onerror=reject;r.readAsDataURL(file);});}
+  function formatFileSize(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';return (b/1048576).toFixed(1)+' MB';}
+  async function handleFileUpload(iid,sid,key){const inp=document.getElementById(iid),sel=document.getElementById(sid);inp.addEventListener('change',async function(e){const f=e.target.files[0];if(!f)return;sel.textContent='⏳ 处理中...';sel.className='file-status show';try{const d=await fileToBase64(f);fileBase64[key]=d;if(key==='audio'){audioElement.src=d.dataUrl;audioElement.load();}if(key==='bgVideo'){const el=document.getElementById('previewBgVideo');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewBgImage').style.display='none';document.getElementById('previewBgFallback').style.display='none';}if(key==='bgImage'){const el=document.getElementById('previewBgImage');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewBgVideo').style.display='none';document.getElementById('previewBgFallback').style.display='none';}if(key==='figureVideo'){const el=document.getElementById('previewFigureVideo');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewFigureImage').style.display='none';}if(key==='figureImage'){const el=document.getElementById('previewFigureImage');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewFigureVideo').style.display='none';}sel.textContent='✅ '+f.name+' ('+formatFileSize(f.size)+')';sel.className='file-status show';sel.style.color='#4caf50';updatePreview();}catch(err){sel.textContent='❌ 失败';sel.className='file-status show';sel.style.color='#f44336';}});}
+  handleFileUpload('bgVideoFile','bgVideoFileStatus','bgVideo');handleFileUpload('bgImageFile','bgImageFileStatus','bgImage');
+  handleFileUpload('figureVideoFile','figureVideoFileStatus','figureVideo');handleFileUpload('figureImageFile','figureImageFileStatus','figureImage');
+  handleFileUpload('audioFile','audioFileStatus','audio');
 
   // ========== 容器尺寸 ==========
-  document.getElementById('containerSizePresets').addEventListener('click', function(e) {
-    if (!e.target.classList.contains('size-preset')) return;
-    this.querySelectorAll('.size-preset').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    config.containerSize = e.target.dataset.size;
-    document.getElementById('phoneModel').value = '';
-    document.getElementById('padModel').value = '';
-    document.getElementById('monitorModel').value = '';
-    document.getElementById('deviceInfo').textContent = '';
-    currentDeviceType = null;
-    const container = document.getElementById('previewContainer');
-    container.classList.remove('size-16-9', 'size-9-16', 'size-4-3', 'size-1-1', 'size-21-9', 'size-custom');
-    if (config.containerSize === 'custom') {
-      document.getElementById('containerCustomSize').style.display = 'block';
-      container.style.width = config.containerWidth + 'px';
-      container.style.height = config.containerHeight + 'px';
-    } else {
-      document.getElementById('containerCustomSize').style.display = 'none';
-      container.classList.add('size-' + config.containerSize);
-      container.style.width = ''; container.style.height = '';
-    }
-    setTimeout(fitToScreen, 100);
-  });
-
-  document.getElementById('containerWidth').addEventListener('input', function() {
-    config.containerWidth = parseInt(this.value) || 853;
-    if (config.containerSize === 'custom' || currentDeviceType) { document.getElementById('previewContainer').style.width = config.containerWidth + 'px'; setTimeout(fitToScreen, 100); }
-  });
-  document.getElementById('containerHeight').addEventListener('input', function() {
-    config.containerHeight = parseInt(this.value) || 480;
-    if (config.containerSize === 'custom' || currentDeviceType) { document.getElementById('previewContainer').style.height = config.containerHeight + 'px'; setTimeout(fitToScreen, 100); }
-  });
+  document.getElementById('containerSizePresets').addEventListener('click',function(e){if(!e.target.classList.contains('size-preset'))return;this.querySelectorAll('.size-preset').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');config.containerSize=e.target.dataset.size;document.getElementById('phoneModel').value='';document.getElementById('padModel').value='';document.getElementById('monitorModel').value='';document.getElementById('deviceInfo').textContent='';currentDeviceType=null;const c=document.getElementById('previewContainer');c.classList.remove('size-16-9','size-9-16','size-4-3','size-1-1','size-21-9','size-custom');if(config.containerSize==='custom'){document.getElementById('containerCustomSize').style.display='block';c.style.width=config.containerWidth+'px';c.style.height=config.containerHeight+'px';}else{document.getElementById('containerCustomSize').style.display='none';c.classList.add('size-'+config.containerSize);c.style.width='';c.style.height='';}setTimeout(fitToScreen,100);});
+  document.getElementById('containerWidth').addEventListener('input',function(){config.containerWidth=parseInt(this.value)||853;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.width=config.containerWidth+'px';setTimeout(fitToScreen,100);}});
+  document.getElementById('containerHeight').addEventListener('input',function(){config.containerHeight=parseInt(this.value)||480;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.height=config.containerHeight+'px';setTimeout(fitToScreen,100);}});
 
   // ========== 蒙版 ==========
-  document.getElementById('overlayColor').addEventListener('input', function() { config.overlayColor = this.value; document.getElementById('overlayColorText').value = this.value; updateOverlay(); });
-  document.getElementById('overlayColorText').addEventListener('input', function() { config.overlayColor = this.value; document.getElementById('overlayColor').value = this.value; updateOverlay(); });
-  document.getElementById('overlayOpacity').addEventListener('input', function() { config.overlayOpacity = parseInt(this.value); document.getElementById('overlayOpacityValue').textContent = this.value + '%'; updateOverlay(); });
-  function updateOverlay() { const hex = config.overlayColor; document.getElementById('previewOverlay').style.backgroundColor = `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${config.overlayOpacity/100})`; }
+  document.getElementById('overlayColor').addEventListener('input',function(){config.overlayColor=this.value;document.getElementById('overlayColorText').value=this.value;updateOverlay();});
+  document.getElementById('overlayColorText').addEventListener('input',function(){config.overlayColor=this.value;document.getElementById('overlayColor').value=this.value;updateOverlay();});
+  document.getElementById('overlayOpacity').addEventListener('input',function(){config.overlayOpacity=parseInt(this.value);document.getElementById('overlayOpacityValue').textContent=this.value+'%';updateOverlay();});
+  function updateOverlay(){const h=config.overlayColor;document.getElementById('previewOverlay').style.backgroundColor=`rgba(${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)},${config.overlayOpacity/100})`;}
 
   // ========== 文字 ==========
-  document.getElementById('textColor').addEventListener('input', function() { config.textColor = this.value; document.getElementById('textColorText').value = this.value; updateTextStyles(); });
-  document.getElementById('textColorText').addEventListener('input', function() { config.textColor = this.value; document.getElementById('textColor').value = this.value; updateTextStyles(); });
-  document.getElementById('titleFontSize').addEventListener('input', function() { config.titleFontSize = parseInt(this.value); document.getElementById('titleFontSizeValue').textContent = this.value + 'px'; document.getElementById('previewTitle').style.fontSize = this.value + 'px'; });
-  document.getElementById('textFontSize').addEventListener('input', function() { config.textFontSize = parseInt(this.value); document.getElementById('textFontSizeValue').textContent = this.value + 'px'; updateTextStyles(); });
-  function updateTextStyles() {
-    document.getElementById('previewTitle').style.color = config.textColor;
-    document.getElementById('previewSubtitle').style.color = config.textColor;
-    document.getElementById('previewCredits').style.color = config.textColor;
-    document.getElementById('previewSubtitle').style.fontSize = config.textFontSize + 'px';
-    document.getElementById('previewCredits').style.fontSize = config.textFontSize + 'px';
-    document.querySelectorAll('.preview-lyric-line').forEach(el => { el.style.color = config.textColor; el.style.fontSize = config.lyricFontSize + 'px'; });
-  }
+  document.getElementById('textColor').addEventListener('input',function(){config.textColor=this.value;document.getElementById('textColorText').value=this.value;updateTextStyles();});
+  document.getElementById('textColorText').addEventListener('input',function(){config.textColor=this.value;document.getElementById('textColor').value=this.value;updateTextStyles();});
+  document.getElementById('titleFontSize').addEventListener('input',function(){config.titleFontSize=parseInt(this.value);document.getElementById('titleFontSizeValue').textContent=this.value+'px';document.getElementById('previewTitle').style.fontSize=this.value+'px';});
+  document.getElementById('textFontSize').addEventListener('input',function(){config.textFontSize=parseInt(this.value);document.getElementById('textFontSizeValue').textContent=this.value+'px';updateTextStyles();});
+  function updateTextStyles(){document.getElementById('previewTitle').style.color=config.textColor;document.getElementById('previewSubtitle').style.color=config.textColor;document.getElementById('previewCredits').style.color=config.textColor;document.getElementById('previewSubtitle').style.fontSize=config.textFontSize+'px';document.getElementById('previewCredits').style.fontSize=config.textFontSize+'px';document.querySelectorAll('.preview-lyric-line').forEach(el=>{el.style.color=config.textColor;el.style.fontSize=config.lyricFontSize+'px';});}
 
   // ========== 人物尺寸 ==========
-  document.getElementById('figureSizePresets').addEventListener('click', function(e) {
-    if (!e.target.classList.contains('size-preset')) return;
-    this.querySelectorAll('.size-preset').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    config.figureSize = e.target.dataset.figureSize;
-    updateFigureSize();
-  });
-  function updateFigureSize() { const sizes = { small: '80px', medium: '150px', large: '250px' }; document.getElementById('previewFigure').style.maxHeight = sizes[config.figureSize] || '150px'; }
+  document.getElementById('figureSizePresets').addEventListener('click',function(e){if(!e.target.classList.contains('size-preset'))return;this.querySelectorAll('.size-preset').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');config.figureSize=e.target.dataset.figureSize;updateFigureSize();});
+  function updateFigureSize(){const s={small:'80px',medium:'150px',large:'250px'};document.getElementById('previewFigure').style.maxHeight=s[config.figureSize]||'150px';}
 
   // ========== 歌词 ==========
-  document.getElementById('lyricVisibleLines').addEventListener('input', function() { config.lyricVisibleLines = parseInt(this.value); document.getElementById('lyricVisibleLinesValue').textContent = this.value; updateLyricDisplay(); });
-  document.getElementById('lyricFontSize').addEventListener('input', function() { config.lyricFontSize = parseInt(this.value); document.getElementById('lyricFontSizeValue').textContent = this.value + 'px'; document.querySelectorAll('.preview-lyric-line').forEach(el => { el.style.fontSize = this.value + 'px'; }); });
-  function parseLyrics() { const text = document.getElementById('lyricTimestamp').value; const lines = text.split('\n').filter(l => l.trim()); parsedLyrics = []; const regex = /\[(\d+):(\d+)\.(\d+)\](.*)/; lines.forEach(line => { const m = line.match(regex); if (m) { const t = parseInt(m[1])*60 + parseInt(m[2]) + parseInt(m[3])/1000; const txt = m[4].trim(); if (txt) parsedLyrics.push({time:t, text:txt}); } }); }
-  function getVisibleLyrics(ct) { if (!parsedLyrics.length) return {lines:[], activeIndex:-1}; let ai = -1; for (let i=parsedLyrics.length-1; i>=0; i--) { if (ct >= parsedLyrics[i].time) { ai = i; break; } } const half = Math.floor(config.lyricVisibleLines/2); let start = Math.max(0, ai-half); let end = Math.min(parsedLyrics.length, start+config.lyricVisibleLines); if (end-start < config.lyricVisibleLines) start = Math.max(0, end-config.lyricVisibleLines); return {lines: parsedLyrics.slice(start,end).map((l,i)=>({...l, isActive:(start+i)===ai})), activeIndex: ai-start}; }
-  function updateLyricDisplay() { const ct = audioElement.currentTime || 0; const {lines} = getVisibleLyrics(ct); const c = document.getElementById('previewLyrics'); c.innerHTML = ''; lines.forEach(l => { const d = document.createElement('div'); d.className = 'preview-lyric-line' + (l.isActive ? ' active' : ''); d.textContent = l.text; d.style.color = config.textColor; d.style.fontSize = config.lyricFontSize + 'px'; c.appendChild(d); }); }
-  function updateTextContent() { document.getElementById('previewTitle').textContent = document.getElementById('songTitle').value || '歌名'; const sub = document.getElementById('songSubtitle').value; const subEl = document.getElementById('previewSubtitle'); if (sub) { subEl.textContent = sub; subEl.style.display = 'block'; } else { subEl.style.display = 'none'; } const l=document.getElementById('creditsLyrics').value, m=document.getElementById('creditsMusic').value, a=document.getElementById('creditsArtist').value; let c=''; if(l)c+='词：'+l; if(m)c+=(c?'  ':'')+'曲：'+m; if(a)c+=(c?'  ':'')+'唱：'+a; document.getElementById('previewCredits').textContent = c; }
-  function updatePreview() { parseLyrics(); updateOverlay(); updateTextContent(); updateTextStyles(); updateFigureSize(); updateLyricDisplay(); document.getElementById('previewTitle').style.fontSize = config.titleFontSize + 'px'; }
+  document.getElementById('lyricVisibleLines').addEventListener('input',function(){config.lyricVisibleLines=parseInt(this.value);document.getElementById('lyricVisibleLinesValue').textContent=this.value;updateLyricDisplay();});
+  document.getElementById('lyricFontSize').addEventListener('input',function(){config.lyricFontSize=parseInt(this.value);document.getElementById('lyricFontSizeValue').textContent=this.value+'px';document.querySelectorAll('.preview-lyric-line').forEach(el=>{el.style.fontSize=this.value+'px';});});
+  function parseLyrics(){const t=document.getElementById('lyricTimestamp').value;const ls=t.split('\n').filter(l=>l.trim());parsedLyrics=[];const re=/\[(\d+):(\d+)\.(\d+)\](.*)/;ls.forEach(l=>{const m=l.match(re);if(m){const tm=parseInt(m[1])*60+parseInt(m[2])+parseInt(m[3])/1000;const tx=m[4].trim();if(tx)parsedLyrics.push({time:tm,text:tx});}});}
+  function getVisibleLyrics(ct){if(!parsedLyrics.length)return{lines:[],activeIndex:-1};let ai=-1;for(let i=parsedLyrics.length-1;i>=0;i--){if(ct>=parsedLyrics[i].time){ai=i;break;}}const hf=Math.floor(config.lyricVisibleLines/2);let st=Math.max(0,ai-hf);let ed=Math.min(parsedLyrics.length,st+config.lyricVisibleLines);if(ed-st<config.lyricVisibleLines)st=Math.max(0,ed-config.lyricVisibleLines);return{lines:parsedLyrics.slice(st,ed).map((l,i)=>({...l,isActive:(st+i)===ai})),activeIndex:ai-st};}
+  function updateLyricDisplay(){const ct=audioElement.currentTime||0;const{lines}=getVisibleLyrics(ct);const c=document.getElementById('previewLyrics');c.innerHTML='';lines.forEach(l=>{const d=document.createElement('div');d.className='preview-lyric-line'+(l.isActive?' active':'');d.textContent=l.text;d.style.color=config.textColor;d.style.fontSize=config.lyricFontSize+'px';c.appendChild(d);});}
+  function updateTextContent(){document.getElementById('previewTitle').textContent=document.getElementById('songTitle').value||'歌名';const sub=document.getElementById('songSubtitle').value;const se=document.getElementById('previewSubtitle');if(sub){se.textContent=sub;se.style.display='block';}else{se.style.display='none';}const l=document.getElementById('creditsLyrics').value,m=document.getElementById('creditsMusic').value,a=document.getElementById('creditsArtist').value;let cr='';if(l)cr+='词：'+l;if(m)cr+=(cr?'  ':'')+'曲：'+m;if(a)cr+=(cr?'  ':'')+'唱：'+a;document.getElementById('previewCredits').textContent=cr;}
+  function updatePreview(){parseLyrics();updateOverlay();updateTextContent();updateTextStyles();updateFigureSize();updateLyricDisplay();document.getElementById('previewTitle').style.fontSize=config.titleFontSize+'px';}
 
-  // ========== 播放控制 ==========
-  function playPreview() { if (!audioElement.src) { showStatus('error', '❌ 请先上传音频'); return; } audioElement.play().then(() => { isPlaying = true; document.getElementById('previewBgVideo')?.play().catch(()=>{}); document.getElementById('previewFigureVideo')?.play().catch(()=>{}); startTimeUpdate(); }).catch(err => showStatus('error', '❌ '+err.message)); }
-  function pausePreview() { audioElement.pause(); isPlaying = false; document.getElementById('previewBgVideo')?.pause(); document.getElementById('previewFigureVideo')?.pause(); if (animationId) { cancelAnimationFrame(animationId); animationId = null; } }
-  function startTimeUpdate() { function upd() { if (!isPlaying) return; const t = audioElement.currentTime; document.getElementById('currentTime').textContent = formatTime(t); document.getElementById('totalTime').textContent = formatTime(audioElement.duration||0); updateLyricDisplay(); animationId = requestAnimationFrame(upd); } upd(); }
-  function formatTime(s) { if (isNaN(s)) return '00:00'; return String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0'); }
-  audioElement.addEventListener('loadedmetadata', () => { document.getElementById('totalTime').textContent = formatTime(audioElement.duration); });
-  audioElement.addEventListener('ended', pausePreview);
-  document.getElementById('previewLyrics').addEventListener('click', function(e) { const line = e.target.closest('.preview-lyric-line'); if (!line||!parsedLyrics.length) return; const found = parsedLyrics.find(l => l.text === line.textContent); if (found) { audioElement.currentTime = found.time; updateLyricDisplay(); } });
-  document.getElementById('audioUrl').addEventListener('input', function() { if (this.value && !fileBase64.audio) { audioElement.src = this.value; audioElement.load(); } });
+  // ========== 播放 ==========
+  function playPreview(){if(!audioElement.src){showStatus('error','❌ 请先上传音频');return;}audioElement.play().then(()=>{isPlaying=true;document.getElementById('previewBgVideo')?.play().catch(()=>{});document.getElementById('previewFigureVideo')?.play().catch(()=>{});startTimeUpdate();}).catch(err=>showStatus('error','❌ '+err.message));}
+  function pausePreview(){audioElement.pause();isPlaying=false;document.getElementById('previewBgVideo')?.pause();document.getElementById('previewFigureVideo')?.pause();if(animationId){cancelAnimationFrame(animationId);animationId=null;}}
+  function startTimeUpdate(){function upd(){if(!isPlaying)return;const t=audioElement.currentTime;document.getElementById('currentTime').textContent=formatTime(t);document.getElementById('totalTime').textContent=formatTime(audioElement.duration||0);updateLyricDisplay();animationId=requestAnimationFrame(upd);}upd();}
+  function formatTime(s){if(isNaN(s))return'00:00';return String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');}
+  audioElement.addEventListener('loadedmetadata',()=>{document.getElementById('totalTime').textContent=formatTime(audioElement.duration);});
+  audioElement.addEventListener('ended',()=>{isPlaying=false;if(animationId){cancelAnimationFrame(animationId);animationId=null;}});
+  document.getElementById('previewLyrics').addEventListener('click',function(e){const ln=e.target.closest('.preview-lyric-line');if(!ln||!parsedLyrics.length)return;const fd=parsedLyrics.find(l=>l.text===ln.textContent);if(fd){audioElement.currentTime=fd.time;updateLyricDisplay();}});
+  document.getElementById('audioUrl').addEventListener('input',function(){if(this.value&&!fileBase64.audio){audioElement.src=this.value;audioElement.load();}});
 
-  function showStatus(type, msg) { const s = document.getElementById('status'); s.className = 'status '+type; s.textContent = msg; s.style.display = 'block'; setTimeout(()=>s.style.display='none', 3000); }
+  function showStatus(type,msg){const s=document.getElementById('status');s.className='status '+type;s.textContent=msg;s.style.display='block';setTimeout(()=>s.style.display='none',3000);}
 
-  // ========== 恢复默认 ==========
-  function resetForm() {
-    document.getElementById('songTitle').value=defaultValues.songTitle;
-    document.getElementById('songSubtitle').value=defaultValues.songSubtitle;
-    document.getElementById('creditsLyrics').value=defaultValues.creditsLyrics;
-    document.getElementById('creditsMusic').value=defaultValues.creditsMusic;
-    document.getElementById('creditsArtist').value=defaultValues.creditsArtist;
-    document.getElementById('lyricTimestamp').value=defaultValues.lyricTimestamp;
+  // ========== Canvas 录制 ==========
+  async function startRecording() {
+    if (!audioElement.src) {
+      showStatus('error', '❌ 请先上传音频或填写音频链接');
+      return;
+    }
+    if (isRecording) return;
+    
+    const size = getContainerSize();
+    const bw = size.width, bh = size.height;
+    
+    // 限制最大分辨率避免性能问题
+    const maxDim = 1920;
+    let rw = bw, rh = bh;
+    if (bw > maxDim || bh > maxDim) {
+      const scale = Math.min(maxDim / bw, maxDim / bh);
+      rw = Math.floor(bw * scale);
+      rh = Math.floor(bh * scale);
+    }
+    
+    // 创建录制 Canvas
+    recordingCanvas = document.createElement('canvas');
+    recordingCanvas.width = rw;
+    recordingCanvas.height = rh;
+    recordingCtx = recordingCanvas.getContext('2d');
+    
+    // 获取背景视频元素
+    const bgVideo = document.getElementById('previewBgVideo');
+    const bgImage = document.getElementById('previewBgImage');
+    const figureVideo = document.getElementById('previewFigureVideo');
+    const figureImage = document.getElementById('previewFigureImage');
+    
+    // 预加载图片
+    let bgImgElement = null;
+    let fgImgElement = null;
+    
+    if (fileBase64.bgImage && bgImage.style.display !== 'none') {
+      bgImgElement = new Image();
+      bgImgElement.src = fileBase64.bgImage.dataUrl;
+      await new Promise(r => { bgImgElement.onload = r; });
+    }
+    if (fileBase64.figureImage && figureImage.style.display !== 'none') {
+      fgImgElement = new Image();
+      fgImgElement.src = fileBase64.figureImage.dataUrl;
+      await new Promise(r => { fgImgElement.onload = r; });
+    }
+    
+    // 准备录制
+    const stream = recordingCanvas.captureStream(30); // 30fps
+    const audioStream = audioElement.captureStream ? audioElement.captureStream() : null;
+    
+    // 尝试合并音视频轨道
+    let combinedStream;
+    if (audioStream && audioStream.getAudioTracks().length > 0) {
+      const videoTrack = stream.getVideoTracks()[0];
+      const audioTrack = audioStream.getAudioTracks()[0];
+      combinedStream = new MediaStream([videoTrack, audioTrack]);
+    } else {
+      combinedStream = stream;
+    }
+    
+    // 选择支持的编码格式
+    const mimeTypes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+    let selectedMime = '';
+    for (const mt of mimeTypes) {
+      if (MediaRecorder.isTypeSupported(mt)) { selectedMime = mt; break; }
+    }
+    
+    if (!selectedMime) {
+      showStatus('error', '❌ 浏览器不支持视频录制');
+      return;
+    }
+    
+    recordingChunks = [];
+    mediaRecorder = new MediaRecorder(combinedStream, { mimeType: selectedMime, videoBitsPerSecond: 5000000 });
+    
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) recordingChunks.push(e.data);
+    };
+    
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordingChunks, { type: selectedMime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const songTitle = document.getElementById('songTitle').value || '音乐视频';
+      a.download = songTitle + '.webm';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      document.getElementById('recordingModal').style.display = 'none';
+      document.getElementById('downloadBtn').disabled = false;
+      isRecording = false;
+      showStatus('success', `✅ 视频导出成功！(${formatFileSize(blob.size)})`);
+    };
+    
+    // 显示进度弹窗
+    document.getElementById('recordingModal').style.display = 'flex';
+    document.getElementById('downloadBtn').disabled = true;
+    isRecording = true;
+    
+    // 重置音频到开头
+    audioElement.currentTime = 0;
+    if (bgVideo.style.display !== 'none') bgVideo.currentTime = 0;
+    if (figureVideo.style.display !== 'none') figureVideo.currentTime = 0;
+    
+    recordingDuration = audioElement.duration || 60;
+    
+    // 开始录制
+    mediaRecorder.start(100);
+    recordingStartTime = performance.now();
+    
+    // 同步播放
+    await audioElement.play().catch(() => {});
+    if (bgVideo.style.display !== 'none') bgVideo.play().catch(() => {});
+    if (figureVideo.style.display !== 'none') figureVideo.play().catch(() => {});
+    
+    // 开始渲染循环
+    renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
+    
+    // 监听结束
+    const onEnded = () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+      }
+      audioElement.removeEventListener('ended', onEnded);
+    };
+    audioElement.addEventListener('ended', onEnded);
+  }
+  
+  function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh) {
+    if (!isRecording) return;
+    
+    const ctx = recordingCtx;
+    const canvas = recordingCanvas;
+    const ct = audioElement.currentTime;
+    const total = recordingDuration || 1;
+    const progress = Math.min(ct / total * 100, 100);
+    
+    // 更新进度
+    document.getElementById('recordingProgressFill').style.width = progress + '%';
+    document.getElementById('recordingProgressText').textContent = Math.floor(progress) + '%';
+    
+    // 清除画布
+    ctx.clearRect(0, 0, rw, rh);
+    
+    // 1. 绘制背景
+    const bgVideoEl = bgVideo;
+    if (bgVideoEl.style.display !== 'none' && bgVideoEl.readyState >= 2) {
+      ctx.drawImage(bgVideoEl, 0, 0, rw, rh);
+    } else if (bgImgElement) {
+      ctx.drawImage(bgImgElement, 0, 0, rw, rh);
+    } else if (bgImage.style.display !== 'none' && bgImage.complete) {
+      ctx.drawImage(bgImage, 0, 0, rw, rh);
+    } else {
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, rw, rh);
+    }
+    
+    // 2. 蒙版
+    const hex = config.overlayColor;
+    ctx.fillStyle = `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${config.overlayOpacity/100})`;
+    ctx.fillRect(0, 0, rw, rh);
+    
+    // 3. 文字
+    const titleColor = config.textColor;
+    const centerX = rw / 2;
+    let currentY = rh * 0.22; // 起始 Y 位置（偏上）
+    
+    // 歌名
+    ctx.fillStyle = titleColor;
+    ctx.font = `bold ${config.titleFontSize * (rw / getContainerSize().width)}px "PingFang SC","Microsoft YaHei",sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 8;
+    const title = document.getElementById('songTitle').value || '歌名';
+    ctx.fillText(title, centerX, currentY);
+    currentY += config.titleFontSize * (rw / getContainerSize().width) * 1.8;
+    
+    // 副标题
+    const subtitle = document.getElementById('songSubtitle').value;
+    if (subtitle) {
+      ctx.font = `${config.textFontSize * (rw / getContainerSize().width)}px "PingFang SC","Microsoft YaHei",sans-serif`;
+      ctx.shadowBlur = 6;
+      ctx.fillText(subtitle, centerX, currentY);
+      currentY += config.textFontSize * (rw / getContainerSize().width) * 1.8;
+    }
+    
+    // 词曲演
+    const l = document.getElementById('creditsLyrics').value;
+    const m = document.getElementById('creditsMusic').value;
+    const a = document.getElementById('creditsArtist').value;
+    let credits = '';
+    if (l) credits += '词：' + l;
+    if (m) credits += (credits ? '  ' : '') + '曲：' + m;
+    if (a) credits += (credits ? '  ' : '') + '唱：' + a;
+    if (credits) {
+      ctx.globalAlpha = 0.85;
+      ctx.font = `${config.textFontSize * (rw / getContainerSize().width)}px "PingFang SC","Microsoft YaHei",sans-serif`;
+      ctx.shadowBlur = 4;
+      ctx.fillText(credits, centerX, currentY);
+      ctx.globalAlpha = 1;
+      currentY += config.textFontSize * (rw / getContainerSize().width) * 2;
+    }
+    
+    // 4. 人物
+    const figureSizes = { small: rh * 0.12, medium: rh * 0.22, large: rh * 0.35 };
+    const figureMaxH = figureSizes[config.figureSize] || rh * 0.22;
+    const figureVideoEl = figureVideo;
+    const figureImageEl = figureImage;
+    
+    if (figureVideoEl.style.display !== 'none' && figureVideoEl.readyState >= 2) {
+      const fw = figureVideoEl.videoWidth;
+      const fh = figureVideoEl.videoHeight;
+      const scale = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
+      const dw = fw * scale;
+      const dh = fh * scale;
+      ctx.shadowBlur = 20;
+      ctx.drawImage(figureVideoEl, centerX - dw/2, currentY - dh/2, dw, dh);
+      currentY += dh/2 + 10;
+    } else if (fgImgElement) {
+      const fw = fgImgElement.width;
+      const fh = fgImgElement.height;
+      const scale = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
+      const dw = fw * scale;
+      const dh = fh * scale;
+      ctx.shadowBlur = 20;
+      ctx.drawImage(fgImgElement, centerX - dw/2, currentY - dh/2, dw, dh);
+      currentY += dh/2 + 10;
+    } else if (figureImageEl.style.display !== 'none' && figureImageEl.complete) {
+      const fw = figureImageEl.naturalWidth || 100;
+      const fh = figureImageEl.naturalHeight || 100;
+      const scale = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
+      const dw = fw * scale;
+      const dh = fh * scale;
+      ctx.shadowBlur = 20;
+      ctx.drawImage(figureImageEl, centerX - dw/2, currentY - dh/2, dw, dh);
+      currentY += dh/2 + 10;
+    } else {
+      currentY += figureMaxH/2;
+    }
+    
+    ctx.shadowBlur = 0;
+    
+    // 5. 歌词
+    const { lines } = getVisibleLyrics(ct);
+    const lyricFontSize = config.lyricFontSize * (rw / getContainerSize().width);
+    ctx.font = `${lyricFontSize}px "PingFang SC","Microsoft YaHei",sans-serif`;
+    ctx.shadowBlur = 6;
+    
+    const lineHeight = lyricFontSize * 1.8;
+    const totalLyricHeight = lines.length * lineHeight;
+    let lyricStartY = Math.min(currentY + 20, rh - totalLyricHeight - 20);
+    
+    lines.forEach((line) => {
+      if (line.isActive) {
+        ctx.globalAlpha = 1;
+        ctx.font = `bold ${lyricFontSize * 1.08}px "PingFang SC","Microsoft YaHei",sans-serif`;
+      } else {
+        ctx.globalAlpha = 0.5;
+        ctx.font = `${lyricFontSize}px "PingFang SC","Microsoft YaHei",sans-serif`;
+      }
+      ctx.fillText(line.text, centerX, lyricStartY);
+      lyricStartY += lineHeight;
+    });
+    
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+    
+    // 继续渲染
+    recordingAnimationId = requestAnimationFrame(() => {
+      renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
+    });
+  }
+  
+  function cancelRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
+    if (recordingAnimationId) {
+      cancelAnimationFrame(recordingAnimationId);
+      recordingAnimationId = null;
+    }
+    audioElement.pause();
+    document.getElementById('previewBgVideo')?.pause();
+    document.getElementById('previewFigureVideo')?.pause();
+    document.getElementById('recordingModal').style.display = 'none';
+    document.getElementById('downloadBtn').disabled = false;
+    isRecording = false;
+    recordingChunks = [];
+    showStatus('info', '已取消录制');
+  }
+
+  // ========== 重置 ==========
+  function resetForm(){
+    if (isRecording) cancelRecording();
+    document.getElementById('songTitle').value=defaultValues.songTitle;document.getElementById('songSubtitle').value=defaultValues.songSubtitle;
+    document.getElementById('creditsLyrics').value=defaultValues.creditsLyrics;document.getElementById('creditsMusic').value=defaultValues.creditsMusic;
+    document.getElementById('creditsArtist').value=defaultValues.creditsArtist;document.getElementById('lyricTimestamp').value=defaultValues.lyricTimestamp;
     document.getElementById('audioUrl').value='';
     document.getElementById('overlayColor').value='#000000';document.getElementById('overlayColorText').value='#000000';
     document.getElementById('overlayOpacity').value=50;document.getElementById('overlayOpacityValue').textContent='50%';
@@ -1076,65 +823,17 @@
     config.containerSize='16-9';document.getElementById('containerCustomSize').style.display='none';
     document.getElementById('phoneModel').value='';document.getElementById('padModel').value='';document.getElementById('monitorModel').value='';
     document.getElementById('deviceInfo').textContent='';currentDeviceType=null;
-    const container=document.getElementById('previewContainer');
-    container.classList.remove('size-9-16','size-4-3','size-1-1','size-21-9','size-custom');
-    container.classList.add('size-16-9');container.style.width='';container.style.height='';
+    const c=document.getElementById('previewContainer');c.classList.remove('size-9-16','size-4-3','size-1-1','size-21-9','size-custom');c.classList.add('size-16-9');c.style.width='';c.style.height='';
     document.querySelectorAll('#figureSizePresets .size-preset').forEach(b=>b.classList.remove('active'));
-    document.querySelector('#figureSizePresets .size-preset[data-figure-size="medium"]').classList.add('active');
-    config.figureSize='medium';
+    document.querySelector('#figureSizePresets .size-preset[data-figure-size="medium"]').classList.add('active');config.figureSize='medium';
     Object.keys(fileBase64).forEach(k=>fileBase64[k]=null);
-    document.querySelectorAll('input[type="file"]').forEach(i=>i.value='');
-    document.querySelectorAll('.file-status').forEach(el=>{el.className='file-status';el.textContent='';});
-    document.getElementById('previewBgVideo').style.display='none';
-    document.getElementById('previewBgImage').style.display='none';
-    document.getElementById('previewBgFallback').style.display='block';
-    document.getElementById('previewFigureVideo').style.display='none';
-    document.getElementById('previewFigureImage').style.display='none';
-    audioElement.src='';pausePreview();
-    document.getElementById('currentTime').textContent='00:00';
-    document.getElementById('totalTime').textContent='00:00';
-    updatePreview();setTimeout(fitToScreen,100);
-    showStatus('success','✅ 已恢复默认值');
+    document.querySelectorAll('input[type="file"]').forEach(i=>i.value='');document.querySelectorAll('.file-status').forEach(el=>{el.className='file-status';el.textContent='';});
+    document.getElementById('previewBgVideo').style.display='none';document.getElementById('previewBgImage').style.display='none';
+    document.getElementById('previewBgFallback').style.display='block';document.getElementById('previewFigureVideo').style.display='none';
+    document.getElementById('previewFigureImage').style.display='none';audioElement.src='';pausePreview();
+    document.getElementById('currentTime').textContent='00:00';document.getElementById('totalTime').textContent='00:00';
+    updatePreview();setTimeout(fitToScreen,100);showStatus('success','✅ 已恢复默认值');
   }
-
-  // ========== 下载 ==========
-  function downloadPage() {
-    updatePreview();
-    const cfg={
-      title:document.getElementById('songTitle').value||'音乐视频',
-      subtitle:document.getElementById('songSubtitle').value,
-      creditsLyrics:document.getElementById('creditsLyrics').value,
-      creditsMusic:document.getElementById('creditsMusic').value,
-      creditsArtist:document.getElementById('creditsArtist').value,
-      lyricText:document.getElementById('lyricTimestamp').value,
-      audioUrl:document.getElementById('audioUrl').value,
-      containerWidth:document.getElementById('previewContainer').style.width||(config.containerSize==='custom'?config.containerWidth+'px':''),
-      containerHeight:document.getElementById('previewContainer').style.height||(config.containerSize==='custom'?config.containerHeight+'px':''),
-      containerClass:document.getElementById('previewContainer').className.replace('preview-container','').trim(),
-      overlayColor:config.overlayColor,overlayOpacity:config.overlayOpacity,
-      textColor:config.textColor,titleFontSize:config.titleFontSize,textFontSize:config.textFontSize,
-      figureSize:config.figureSize,lyricVisibleLines:config.lyricVisibleLines,lyricFontSize:config.lyricFontSize,
-      fileBase64:{...fileBase64}
-    };
-    const figureSizes={small:'80px',medium:'150px',large:'250px'};
-    const figureMaxH=figureSizes[cfg.figureSize]||'150px';
-    let bgHTML='<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:#1a1a2e;z-index:1;"></div>';
-    if(cfg.fileBase64.bgVideo)bgHTML=`<video class="bg-media" src="${cfg.fileBase64.bgVideo.dataUrl}" autoplay muted loop playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;"></video>`;
-    else if(cfg.fileBase64.bgImage)bgHTML=`<img class="bg-media" src="${cfg.fileBase64.bgImage.dataUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;">`;
-    let figureHTML='';
-    if(cfg.fileBase64.figureVideo)figureHTML=`<video src="${cfg.fileBase64.figureVideo.dataUrl}" autoplay muted loop playsinline style="max-width:100%;max-height:${figureMaxH};object-fit:contain;filter:drop-shadow(0 0 20px rgba(0,0,0,0.4));"></video>`;
-    else if(cfg.fileBase64.figureImage)figureHTML=`<img src="${cfg.fileBase64.figureImage.dataUrl}" style="max-width:100%;max-height:${figureMaxH};object-fit:contain;filter:drop-shadow(0 0 20px rgba(0,0,0,0.4));">`;
-    const r=parseInt(cfg.overlayColor.slice(1,3),16),g=parseInt(cfg.overlayColor.slice(3,5),16),b=parseInt(cfg.overlayColor.slice(5,7),16),a=cfg.overlayOpacity/100;
-    let audioSrc=cfg.fileBase64.audio?cfg.fileBase64.audio.dataUrl:cfg.audioUrl;
-    const html=`<!DOCTYPE html>\n<html lang="zh-CN">\n<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${escapeHTML(cfg.title)}</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\nbody{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}\n.mv-container{position:relative;overflow:hidden;${cfg.containerWidth?'width:'+cfg.containerWidth+';':''}${cfg.containerHeight?'height:'+cfg.containerHeight+';':''}}\n${!cfg.containerWidth?'.mv-container.size-16-9{width:853px;height:480px}.mv-container.size-9-16{width:270px;height:480px}.mv-container.size-4-3{width:640px;height:480px}.mv-container.size-1-1{width:480px;height:480px}.mv-container.size-21-9{width:1120px;height:480px}@media(max-width:900px){.mv-container.size-16-9,.mv-container.size-21-9{width:100%;height:auto;aspect-ratio:16/9}.mv-container.size-9-16{width:auto;height:100%;aspect-ratio:9/16}.mv-container.size-4-3{width:100%;height:auto;aspect-ratio:4/3}.mv-container.size-1-1{width:80%;height:auto;aspect-ratio:1/1}}':''}\n.mv-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(${r},${g},${b},${a});z-index:2}\n.mv-content{position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:${cfg.textColor}}\n.mv-title{font-size:${cfg.titleFontSize}px;font-weight:bold;text-align:center;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}\n.mv-subtitle{font-size:${cfg.textFontSize}px;text-align:center;letter-spacing:1px;text-shadow:0 1px 6px rgba(0,0,0,0.5);margin-top:6px;${!cfg.subtitle?'display:none':''}}\n.mv-credits{font-size:${cfg.textFontSize}px;text-align:center;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.5);margin-top:8px;opacity:0.85}\n.mv-figure{margin:10px 0;display:flex;align-items:center;justify-content:center;max-height:${figureMaxH}}\n.mv-lyrics{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:8px;max-height:40%;overflow:hidden}\n.mv-lyric-line{font-size:${cfg.lyricFontSize}px;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,0.6);opacity:0.5;white-space:nowrap;letter-spacing:1px;transition:all 0.3s}\n.mv-lyric-line.active{opacity:1;transform:scale(1.08)}\n</style>\n</head>\n<body>\n<div class="mv-container ${cfg.containerClass}">${bgHTML}<div class="mv-overlay"></div><div class="mv-content"><div class="mv-title">${escapeHTML(cfg.title)}</div><div class="mv-subtitle">${escapeHTML(cfg.subtitle||'')}</div><div class="mv-credits">${[cfg.creditsLyrics?'词：'+cfg.creditsLyrics:'',cfg.creditsMusic?'曲：'+cfg.creditsMusic:'',cfg.creditsArtist?'唱：'+cfg.creditsArtist:''].filter(Boolean).join('  ')}</div><div class="mv-figure">${figureHTML}</div><div class="mv-lyrics" id="mvLyrics"></div></div></div>\n${audioSrc?`<audio id="mvAudio" src="${escapeHTML(audioSrc)}" style="display:none;"></audio>`:''}\n<script>\n(function(){\nvar lyrics=[];\nvar t=${JSON.stringify(cfg.lyricText)};\nt.split('\\n').filter(function(l){return l.trim()}).forEach(function(l){var m=l.match(/\\[(\\d+):(\\d+)\\.(\\d+)\\](.*)/);if(m){var time=parseInt(m[1])*60+parseInt(m[2])+parseInt(m[3])/1000;if(m[4].trim())lyrics.push({time:time,text:m[4].trim()})}});\nvar vl=${cfg.lyricVisibleLines},audio=document.getElementById('mvAudio');\nfunction getVis(ct){var ai=-1;for(var i=lyrics.length-1;i>=0;i--){if(ct>=lyrics[i].time){ai=i;break}}var half=Math.floor(vl/2),start=Math.max(0,ai-half),end=Math.min(lyrics.length,start+vl);if(end-start<vl)start=Math.max(0,end-vl);return{lines:lyrics.slice(start,end),ai:ai-start}}\nfunction upd(){if(!audio)return;var ct=audio.currentTime,r=getVis(ct),c=document.getElementById('mvLyrics');c.innerHTML='';r.lines.forEach(function(l,i){var d=document.createElement('div');d.className='mv-lyric-line'+(i===r.ai?' active':'');d.textContent=l.text;d.addEventListener('click',function(){if(audio){audio.currentTime=l.time;upd()}});c.appendChild(d)})}\nif(audio){audio.addEventListener('timeupdate',upd);audio.addEventListener('play',function(){document.querySelector('.bg-media')?.play();document.querySelector('.mv-figure video')?.play()});audio.addEventListener('pause',function(){document.querySelector('.bg-media')?.pause();document.querySelector('.mv-figure video')?.pause()});upd()}\ndocument.addEventListener('click',function(){if(audio&&audio.paused)audio.play().catch(function(){})},{once:true});\n})();\n<\/script>\n</body>\n</html>`;
-    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-    const url=URL.createObjectURL(blob);
-    const dl=document.createElement('a');dl.href=url;dl.download=(document.getElementById('songTitle').value||'音乐视频')+'.html';
-    document.body.appendChild(dl);dl.click();document.body.removeChild(dl);URL.revokeObjectURL(url);
-    showStatus('success','✅ 下载成功');
-  }
-
-  function escapeHTML(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
 
   // ========== 初始化 ==========
   window.addEventListener('load',()=>{updatePreview();setTimeout(fitToScreen,200);});
