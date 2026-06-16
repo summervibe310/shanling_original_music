@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>歌词解读页面生成器</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      background: #f5f0f0;
+      color: #2c2c2c;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* 左侧控制面板 */
+    .control-panel {
+      width: 420px;
+      background: #fff;
+      padding: 24px;
+      border-right: 1px solid #e8d8d8;
+      overflow-y: auto;
+      max-height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .control-panel h2 {
+      font-size: 20px;
+      margin-bottom: 24px;
+      color: #d14b4b;
+      border-left: 4px solid #d14b4b;
+      padding-left: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #4a3a3a;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e0d0d0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fdfafa;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #d14b4b;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    .file-input-wrapper input[type="file"]::file-selector-button {
+      background: #fdf0f0;
+      border: 1px solid #d14b4b;
+      color: #d14b4b;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .file-input-wrapper input[type="file"]::file-selector-button:hover {
+      background: #d14b4b;
+      color: #fff;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    /* 视频尺寸预设 */
+    .preset-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .preset-btn {
+      padding: 6px 12px;
+      border: 1px solid #e0d0d0;
+      background: #fff;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #666;
+    }
+
+    .preset-btn:hover {
+      background: #fdf0f0;
+      border-color: #d14b4b;
+      color: #d14b4b;
+    }
+
+    .preset-btn.active {
+      background: #d14b4b;
+      color: #fff;
+      border-color: #d14b4b;
+    }
+
+    /* 视频预览卡片 */
+    .video-preview-card {
+      background: #fdfafa;
+      border: 1px solid #e8d8d8;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .video-preview-card h4 {
+      font-size: 14px;
+      color: #4a3a3a;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dimension-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dimension-inputs input {
+      width: 80px;
+      text-align: center;
+    }
+
+    .dimension-inputs span {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .unit-select {
+      width: 70px !important;
+    }
+
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .toggle-switch input[type="checkbox"] {
+      width: 40px;
+      height: 22px;
+      appearance: none;
+      background: #e0d0d0;
+      border-radius: 11px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch input[type="checkbox"]:checked {
+      background: #d14b4b;
+    }
+
+    .toggle-switch input[type="checkbox"]::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch input[type="checkbox"]:checked::before {
+      transform: translateX(18px);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.25s;
+      letter-spacing: 1px;
+    }
+
+    .btn-preview {
+      background: #fdf0f0;
+      color: #d14b4b;
+      border: 1px solid #d14b4b;
+    }
+
+    .btn-preview:hover {
+      background: #d14b4b;
+      color: #fff;
+    }
+
+    .btn-download {
+      background: #d14b4b;
+      color: #fff;
+    }
+
+    .btn-download:hover {
+      background: #b33a3a;
+    }
+
+    .btn-reset {
+      background: #f5f5f5;
+      color: #666;
+      border: 1px solid #ddd;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .btn-reset:hover {
+      background: #eee;
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .status.success {
+      display: block;
+      background: #f0fff0;
+      color: #2d8a2d;
+      border: 1px solid #c8e6c8;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff0f0;
+      color: #d14b4b;
+      border: 1px solid #f0c0c0;
+    }
+
+    /* 右侧预览区 */
+    .preview-area {
+      flex: 1;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .preview-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fafafa;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+      }
+      .control-panel {
+        width: 100%;
+        max-height: none;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid #e8d8d8;
+      }
+      .form-row {
+        flex-direction: column;
+      }
+      .preview-area {
+        min-height: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- 控制面板 -->
+  <div class="control-panel">
+    <h2>🎵 歌词解读页面生成器</h2>
+
+    <!-- ========== 基础信息 ========== -->
+    <div class="form-group">
+      <label>📝 歌曲标题</label>
+      <input type="text" id="songTitle" placeholder="例如：活该我盛开" value="活该我盛开">
+    </div>
+
+    <div class="form-group">
+      <label>📝 副标题/描述</label>
+      <input type="text" id="songSubtitle" placeholder="例如：一首关于破碎、重塑与自我加冕的女性叙事诗" value="一首关于破碎、重塑与自我加冕的女性叙事诗">
+    </div>
+
+    <div class="form-group">
+      <label>🎵 音频文件 (MP3)</label>
+      <div class="file-input-wrapper">
+        <input type="file" id="audioFile" accept="audio/mpeg,audio/mp3">
+      </div>
+      <div class="hint">上传歌曲音频文件</div>
+    </div>
+
+    <div class="form-group">
+      <label>🎵 音频外链URL (可选)</label>
+      <input type="text" id="audioUrl" placeholder="https://example.com/song.mp3">
+    </div>
+
+    <!-- ========== 背景视频设置 ========== -->
+    <div class="video-preview-card">
+      <h4>🎬 背景视频设置</h4>
+      
+      <div class="form-group">
+        <label>上传背景视频 (MP4)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="bgVideoFile" accept="video/mp4">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>视频尺寸</label>
+        <div class="preset-buttons" id="bgVideoPresets">
+          <button class="preset-btn active" data-preset="fullscreen">全屏覆盖</button>
+          <button class="preset-btn" data-preset="16-9">16:9</button>
+          <button class="preset-btn" data-preset="4-3">4:3</button>
+          <button class="preset-btn" data-preset="1-1">1:1</button>
+          <button class="preset-btn" data-preset="9-16">9:16</button>
+          <button class="preset-btn" data-preset="custom">自定义</button>
+        </div>
+      </div>
+
+      <div id="bgVideoCustom" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>宽度</label>
+            <div class="dimension-inputs">
+              <input type="number" id="bgVideoWidth" placeholder="1920" min="1">
+              <select class="unit-select" id="bgVideoWidthUnit">
+                <option value="px">px</option>
+                <option value="%">%</option>
+                <option value="vw">vw</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>高度</label>
+            <div class="dimension-inputs">
+              <input type="number" id="bgVideoHeight" placeholder="1080" min="1">
+              <select class="unit-select" id="bgVideoHeightUnit">
+                <option value="px">px</option>
+                <option value="%">%</option>
+                <option value="vh">vh</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="hint">自定义尺寸，支持 px / % / vw / vh</div>
+      </div>
+
+      <div class="form-group">
+        <label>透明度</label>
+        <input type="range" id="bgVideoOpacity" min="5" max="100" value="15" style="width:100%;">
+        <div class="hint">当前透明度: <span id="bgVideoOpacityValue">15%</span></div>
+      </div>
+
+      <div class="toggle-switch">
+        <input type="checkbox" id="bgVideoCover" checked>
+        <label for="bgVideoCover">object-fit: cover (裁剪填充)</label>
+      </div>
+    </div>
+
+    <!-- ========== 背景图片设置 ========== -->
+    <div class="video-preview-card">
+      <h4>🖼️ 背景图片设置 (移动端回退)</h4>
+      
+      <div class="form-group">
+        <label>上传背景图片</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="bgImageFile" accept="image/*">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>透明度</label>
+        <input type="range" id="bgImageOpacity" min="5" max="100" value="15" style="width:100%;">
+        <div class="hint">当前透明度: <span id="bgImageOpacityValue">15%</span></div>
+      </div>
+    </div>
+
+    <!-- ========== 装饰视频设置 ========== -->
+    <div class="video-preview-card">
+      <h4>🏴‍☠️ 装饰视频/图片设置 (桌面端右下角)</h4>
+      
+      <div class="form-group">
+        <label>上传装饰视频 (WebM/MP4)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="decorVideoFile" accept="video/webm,video/mp4">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>上传装饰图片 (移动端回退)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="decorImageFile" accept="image/*">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>装饰视频尺寸</label>
+        <div class="preset-buttons" id="decorVideoPresets">
+          <button class="preset-btn active" data-preset="auto">自动高度</button>
+          <button class="preset-btn" data-preset="small">小 (30vh)</button>
+          <button class="preset-btn" data-preset="medium">中 (60vh)</button>
+          <button class="preset-btn" data-preset="large">大 (80vh)</button>
+          <button class="preset-btn" data-preset="custom">自定义</button>
+        </div>
+      </div>
+
+      <div id="decorVideoCustom" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>宽度</label>
+            <div class="dimension-inputs">
+              <input type="number" id="decorVideoWidth" placeholder="auto">
+              <select class="unit-select" id="decorVideoWidthUnit">
+                <option value="px">px</option>
+                <option value="%">%</option>
+                <option value="vw">vw</option>
+                <option value="auto">auto</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>高度</label>
+            <div class="dimension-inputs">
+              <input type="number" id="decorVideoHeight" placeholder="60" min="1" value="60">
+              <select class="unit-select" id="decorVideoHeightUnit">
+                <option value="vh" selected>vh</option>
+                <option value="px">px</option>
+                <option value="%">%</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>透明度</label>
+        <input type="range" id="decorVideoOpacity" min="10" max="100" value="90" style="width:100%;">
+        <div class="hint">当前透明度: <span id="decorVideoOpacityValue">90%</span></div>
+      </div>
+    </div>
+
+    <!-- ========== 歌词内容 ========== -->
+    <div class="form-group">
+      <label>📝 带时间戳的歌词 (格式: [分:秒.毫秒]歌词)</label>
+      <textarea id="lyricTimestamp" placeholder="[00:18.99]空心人 站进人海&#10;[00:23.34]只剩九十斤的反骨 还在&#10;...">[00:18.99]空心人 站进人海
+[00:23.34]只剩九十斤的反骨 还在
+[00:26.88]废墟里 排队等一个赦免
+[00:30.72]等月光失约 才学会
+[00:35.52]做自己的女娲 重塑这人间
+[00:44.13]眼泪是大的海
+[00:47.13]那就溺死 我的从前
+[00:52.74]活该我盛开
+[00:55.44]活该我 哭着哭着就笑出来
+[00:61.35]活该我盛开
+[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>📝 歌词解读内容 (HTML格式)</label>
+      <textarea id="lyricContent" placeholder="支持HTML标签..."><h2>第一乐章：废墟中的觉醒</h2>
+<p class="lyric-line" data-time="18.99">空心人 站进人海</p>
+<p>"空心人"开篇即定调——被掏空、失去内核的存在状态。</p></textarea>
+    </div>
+
+    <!-- ========== 其他 ========== -->
+    <div class="form-group">
+      <label>🔗 歌曲外链 (可选)</label>
+      <input type="text" id="songLink" placeholder="https://music.163.com/..." value="https://163cn.tv/8OWPUVm">
+    </div>
+
+    <div class="form-group">
+      <label>✍️ 署名</label>
+      <input type="text" id="signature" placeholder="例如：山岭在逃 · 词曲创作" value="山岭在逃 · 词曲创作">
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-preview" onclick="generatePreview()">👁️ 预览</button>
+      <button class="btn btn-download" onclick="downloadPage()">⬇️ 下载</button>
+    </div>
+    <button class="btn btn-reset" onclick="resetForm()">🔄 重置表单</button>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <!-- 预览区 -->
+  <div class="preview-area">
+    <iframe id="previewFrame" class="preview-frame"></iframe>
+  </div>
+</div>
+
+<script>
+  // 存储上传的文件 URL
+  const fileUrls = {
+    audio: null,
+    bgVideo: null,
+    bgImage: null,
+    decorVideo: null,
+    decorImage: null
+  };
+
+  // ========== 视频尺寸预设逻辑 ==========
+  
+  // 背景视频预设
+  const bgVideoConfig = {
+    preset: 'fullscreen',
+    customWidth: '',
+    customWidthUnit: 'px',
+    customHeight: '',
+    customHeightUnit: 'px',
+    opacity: 15,
+    objectFit: 'cover'
+  };
+
+  document.getElementById('bgVideoPresets').addEventListener('click', function(e) {
+    if (e.target.classList.contains('preset-btn')) {
+      // 更新 active 状态
+      this.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      bgVideoConfig.preset = e.target.dataset.preset;
+      document.getElementById('bgVideoCustom').style.display = 
+        bgVideoConfig.preset === 'custom' ? 'block' : 'none';
+    }
+  });
+
+  // 背景视频透明度
+  document.getElementById('bgVideoOpacity').addEventListener('input', function() {
+    bgVideoConfig.opacity = parseInt(this.value);
+    document.getElementById('bgVideoOpacityValue').textContent = this.value + '%';
+  });
+
+  // 背景视频 object-fit
+  document.getElementById('bgVideoCover').addEventListener('change', function() {
+    bgVideoConfig.objectFit = this.checked ? 'cover' : 'contain';
+  });
+
+  // 背景视频自定义尺寸
+  document.getElementById('bgVideoWidth').addEventListener('input', function() {
+    bgVideoConfig.customWidth = this.value;
+  });
+  document.getElementById('bgVideoWidthUnit').addEventListener('change', function() {
+    bgVideoConfig.customWidthUnit = this.value;
+  });
+  document.getElementById('bgVideoHeight').addEventListener('input', function() {
+    bgVideoConfig.customHeight = this.value;
+  });
+  document.getElementById('bgVideoHeightUnit').addEventListener('change', function() {
+    bgVideoConfig.customHeightUnit = this.value;
+  });
+
+  // 背景图片透明度
+  const bgImageConfig = { opacity: 15 };
+  document.getElementById('bgImageOpacity').addEventListener('input', function() {
+    bgImageConfig.opacity = parseInt(this.value);
+    document.getElementById('bgImageOpacityValue').textContent = this.value + '%';
+  });
+
+  // 装饰视频预设
+  const decorVideoConfig = {
+    preset: 'auto',
+    customWidth: '',
+    customWidthUnit: 'auto',
+    customHeight: '60',
+    customHeightUnit: 'vh',
+    opacity: 90
+  };
+
+  document.getElementById('decorVideoPresets').addEventListener('click', function(e) {
+    if (e.target.classList.contains('preset-btn')) {
+      this.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      decorVideoConfig.preset = e.target.dataset.preset;
+      document.getElementById('decorVideoCustom').style.display = 
+        decorVideoConfig.preset === 'custom' ? 'block' : 'none';
+    }
+  });
+
+  // 装饰视频透明度
+  document.getElementById('decorVideoOpacity').addEventListener('input', function() {
+    decorVideoConfig.opacity = parseInt(this.value);
+    document.getElementById('decorVideoOpacityValue').textContent = this.value + '%';
+  });
+
+  // 装饰视频自定义尺寸
+  document.getElementById('decorVideoWidth').addEventListener('input', function() {
+    decorVideoConfig.customWidth = this.value;
+  });
+  document.getElementById('decorVideoWidthUnit').addEventListener('change', function() {
+    decorVideoConfig.customWidthUnit = this.value;
+  });
+  document.getElementById('decorVideoHeight').addEventListener('input', function() {
+    decorVideoConfig.customHeight = this.value;
+  });
+  document.getElementById('decorVideoHeightUnit').addEventListener('change', function() {
+    decorVideoConfig.customHeightUnit = this.value;
+  });
+
+  // ========== 文件上传监听 ==========
+  ['audioFile', 'bgVideoFile', 'bgImageFile', 'decorVideoFile', 'decorImageFile'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const key = id.replace('File', '');
+        if (fileUrls[key]) URL.revokeObjectURL(fileUrls[key]);
+        
+        fileUrls[key] = URL.createObjectURL(file);
+        showStatus('success', `✅ ${file.name} 已就绪`);
+      });
+    }
+  });
+
+  // ========== 获取当前所有配置 ==========
+  function getAllConfig() {
+    return {
+      title: document.getElementById('songTitle').value || '未命名歌曲',
+      subtitle: document.getElementById('songSubtitle').value || '',
+      audioSrc: fileUrls.audio || document.getElementById('audioUrl').value,
+      bgVideoSrc: fileUrls.bgVideo,
+      bgImageSrc: fileUrls.bgImage,
+      decorVideoSrc: fileUrls.decorVideo,
+      decorImageSrc: fileUrls.decorImage,
+      lyrics: parseTimestampLyrics(document.getElementById('lyricTimestamp').value),
+      lyricContent: document.getElementById('lyricContent').value,
+      songLink: document.getElementById('songLink').value,
+      signature: document.getElementById('signature').value,
+      // 视频配置
+      bgVideo: { ...bgVideoConfig },
+      bgImage: { ...bgImageConfig },
+      decorVideo: { ...decorVideoConfig }
+    };
+  }
+
+  // ========== 生成预览 ==========
+  function generatePreview() {
+    const config = getAllConfig();
+    const fullHTML = generateFullHTML(config);
+    
+    const iframe = document.getElementById('previewFrame');
+    const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
+    iframe.src = URL.createObjectURL(blob);
+    
+    showStatus('success', '✅ 预览已生成');
+  }
+
+  // ========== 下载页面 ==========
+  function downloadPage() {
+    const config = getAllConfig();
+    const fullHTML = generateFullHTML(config);
+    
+    const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${config.title}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showStatus('success', '✅ 下载成功！用浏览器打开即可查看');
+  }
+
+  // ========== 解析时间戳歌词 ==========
+  function parseTimestampLyrics(text) {
+    const lines = text.split('\n').filter(line => line.trim());
+    const parsed = [];
+    const regex = /\[(\d+):(\d+)\.(\d+)\](.*)/;
+    
+    lines.forEach(line => {
+      const match = line.match(regex);
+      if (match) {
+        const minutes = parseInt(match[1]);
+        const seconds = parseInt(match[2]);
+        const ms = parseInt(match[3]);
+        const time = minutes * 60 + seconds + ms / 1000;
+        const text = match[4].trim();
+        if (text) {
+          parsed.push({ time, text });
+        }
+      }
+    });
+    
+    return parsed;
+  }
+
+  // ========== 计算视频 CSS ==========
+  function getVideoCSS(config, type) {
+    if (type === 'bg') {
+      const { preset, customWidth, customWidthUnit, customHeight, customHeightUnit, opacity, objectFit } = config;
+      let widthCSS = '100%';
+      let heightCSS = '100%';
+      
+      switch (preset) {
+        case 'fullscreen':
+          widthCSS = '100%';
+          heightCSS = '100%';
+          break;
+        case '16-9':
+          widthCSS = '100%';
+          heightCSS = 'auto';
+          break;
+        case '4-3':
+          widthCSS = '100%';
+          heightCSS = 'auto';
+          break;
+        case '1-1':
+          widthCSS = '80%';
+          heightCSS = '80%';
+          break;
+        case '9-16':
+          widthCSS = 'auto';
+          heightCSS = '100%';
+          break;
+        case 'custom':
+          widthCSS = customWidth ? `${customWidth}${customWidthUnit}` : '100%';
+          heightCSS = customHeight ? `${customHeight}${customHeightUnit}` : '100%';
+          break;
+      }
+      
+      return {
+        width: widthCSS,
+        height: heightCSS,
+        opacity: opacity / 100,
+        objectFit: objectFit
+      };
+    }
+    
+    if (type === 'decor') {
+      const { preset, customWidth, customWidthUnit, customHeight, customHeightUnit, opacity } = config;
+      let widthCSS = 'auto';
+      let heightCSS = '60vh';
+      
+      switch (preset) {
+        case 'auto':
+          widthCSS = 'auto';
+          heightCSS = '60vh';
+          break;
+        case 'small':
+          widthCSS = 'auto';
+          heightCSS = '30vh';
+          break;
+        case 'medium':
+          widthCSS = 'auto';
+          heightCSS = '60vh';
+          break;
+        case 'large':
+          widthCSS = 'auto';
+          heightCSS = '80vh';
+          break;
+        case 'custom':
+          widthCSS = customWidth ? `${customWidth}${customWidthUnit}` : 'auto';
+          heightCSS = customHeight ? `${customHeight}${customHeightUnit}` : '60vh';
+          break;
+      }
+      
+      return {
+        width: widthCSS,
+        height: heightCSS,
+        opacity: opacity / 100
+      };
+    }
+    
+    return {};
+  }
+
+  // ========== 生成完整 HTML ==========
+  function generateFullHTML(config) {
+    const {
+      title, subtitle, audioSrc, bgVideoSrc, bgImageSrc,
+      decorVideoSrc, decorImageSrc, lyrics, lyricContent,
+      songLink, signature, bgVideo, bgImage, decorVideo
+    } = config;
+
+    const bgCSS = getVideoCSS(bgVideo, 'bg');
+    const decorCSS = getVideoCSS(decorVideo, 'decor');
+    
+    const lyricPanelHTML = generateLyricPanelHTML(lyrics);
+    const mobileLyricHTML = generateMobileLyricHTML(lyrics);
+    
+    // 背景视频 HTML（带尺寸参数）
+    const bgVideoHTML = bgVideoSrc 
+      ? `<video class="bg-video" autoplay muted loop playsinline preload="auto"
+           style="width:${bgCSS.width}; height:${bgCSS.height}; object-fit:${bgCSS.objectFit}; opacity:${bgCSS.opacity};">
+           <source src="${escapeHTML(bgVideoSrc)}" type="video/mp4">
+         </video>` 
+      : '';
+    
+    // 背景图片 HTML
+    const bgImageHTML = bgImageSrc
+      ? `<img src="${escapeHTML(bgImageSrc)}" id="mobileBg" 
+           style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:${bgImage.opacity / 100};">`
+      : '';
+    
+    // 桌面端装饰视频
+    const decorVideoHTML = decorVideoSrc
+      ? `<video class="pirate-desktop" autoplay muted loop playsinline preload="none"
+           style="width:${decorCSS.width}; height:${decorCSS.height}; opacity:${decorCSS.opacity}; right:60px; bottom:10vh; position:fixed; z-index:998; pointer-events:none;">
+           <source src="${escapeHTML(decorVideoSrc)}" type="${decorVideoSrc.endsWith('.webm') ? 'video/webm' : 'video/mp4'}">
+         </video>`
+      : '';
+    
+    // 移动端装饰
+    const decorMobileHTML = (decorImageSrc || decorVideoSrc)
+      ? `<div id="mobilePirate" style="display:none; justify-content:center; margin-top:32px; height:400px;">
+           <img src="${escapeHTML(decorImageSrc || '')}" 
+                style="height:100%; max-width:85%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
+         </div>`
+      : '';
+
+    const audioHTML = audioSrc
+      ? `<div id="player-container">
+           <blockquote class="song-link">
+             🎵 收听完整歌曲<br>
+             <audio id="song" controls>
+               <source src="${escapeHTML(audioSrc)}" type="audio/mpeg">
+             </audio>
+             ${songLink ? `<p style="margin-top:8px; font-size:14px;">🔗 <a href="${escapeHTML(songLink)}" target="_blank">在网易云音乐打开</a></p>` : ''}
+           </blockquote>
+         </div>`
+      : '';
+
+    return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>${escapeHTML(title)} · 歌词解读</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      color: #2c2c2c;
+      line-height: 1.85;
+      background-color: #fafafa;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      text-align: center;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+    h2 {
+      font-size: 20px;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      border-left: 4px solid #d14b4b;
+      padding-left: 12px;
+      color: #1a1a1a;
+    }
+    p { margin: 12px 0; }
+    blockquote {
+      margin: 20px 0;
+      padding: 16px 20px;
+      font-style: italic;
+      color: #4a3a3a;
+      background: #f9f6f6;
+      border-radius: 0 8px 8px 0;
+      border-left: 3px solid #c97a7a;
+    }
+    hr {
+      margin: 32px 0;
+      border: none;
+      border-top: 1px solid #d9c8c8;
+    }
+    strong { color: #1a1a1a; }
+    .signature {
+      margin-top: 24px;
+      text-align: right;
+      font-weight: bold;
+      color: #3a2020;
+    }
+    
+    .lyric-line {
+      margin: 6px 0;
+      padding: 8px 16px;
+      border-left: 3px solid #d14b4b;
+      font-weight: bold;
+      color: #3a2020;
+      background: #fdf5f5;
+      border-radius: 0 6px 6px 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .lyric-line.active-lyric {
+      color: #d14b4b;
+      background: #fdf0f0;
+      border-left-color: #b33a3a;
+    }
+    
+    .song-link {
+      margin: 20px 0;
+      padding: 16px 20px;
+      background: #f5f0f0;
+      border-left: 3px solid #c97a7a;
+      border-radius: 6px;
+    }
+    .song-link a {
+      color: #d14b4b;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    audio { width: 100%; margin-top: 12px; border-radius: 8px; }
+    
+    #sticky-audio-container {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
+      padding: 8px 24px; background: transparent; display: none;
+    }
+    #sticky-audio-container.active { display: block; }
+    #sticky-audio-container audio { width: 100%; max-width: 720px; margin: 0 auto; display: block; }
+    
+    .lyric-panel {
+      position: fixed;
+      left: 60px;
+      top: 10vh;
+      height: 80vh;
+      width: 300px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(18px);
+      border-radius: 18px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(200,150,150,0.2);
+    }
+    .lyric-panel-header {
+      padding: 16px 20px 8px;
+      font-size: 12px;
+      color: #b35f5f;
+      letter-spacing: 2px;
+      text-align: center;
+      border-bottom: 1px solid #f0e0e0;
+      cursor: grab;
+      user-select: none;
+      font-weight: 500;
+    }
+    .lyric-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 12px;
+      scroll-behavior: smooth;
+    }
+    .lyric-scroll::-webkit-scrollbar { width: 4px; }
+    .lyric-scroll::-webkit-scrollbar-thumb { background: #e0d0d0; border-radius: 4px; }
+    .lyric-panel .line {
+      font-size: 14px;
+      line-height: 2.2;
+      color: #999;
+      padding: 4px 12px;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lyric-panel .line:hover { color: #c44; background: #fdf2f2; }
+    .lyric-panel .line.active-lyric {
+      color: #d14b4b;
+      font-weight: bold;
+      background: #fef0f0;
+      font-size: 15px;
+    }
+    
+    .bg-video {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+    
+    @media (max-width: 768px) {
+      .bg-video { display: none; }
+      .lyric-panel { display: none; }
+      .pirate-desktop { display: none; }
+      body { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+${bgVideoHTML}
+${bgImageHTML}
+${decorVideoHTML}
+
+<div class="lyric-panel" id="lyricPanel">
+  <div class="lyric-panel-header" id="lyricPanelHeader">🎧 实时歌词 · 可拖拽</div>
+  <div class="lyric-scroll" id="lyricScroll">
+    ${lyricPanelHTML}
+  </div>
+</div>
+
+<h1>${escapeHTML(title)}<br>歌词解读</h1>
+<p style="text-align:center; color:#5a4a4a;">—— ${escapeHTML(subtitle)}</p>
+
+${audioHTML}
+
+<div id="sticky-audio-container"></div>
+
+<div id="mobileLyricsTop" style="display:none; background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); border-radius:14px; padding:14px 10px; margin-bottom:24px; max-height:200px; overflow-y:auto; box-shadow:0 4px 16px rgba(0,0,0,0.05); border:1px solid rgba(200,150,150,0.15); scroll-behavior:smooth;">
+  <div style="text-align:center;margin-bottom:6px;font-size:10px;color:#c97a7a;letter-spacing:1px;">🎧 实时歌词</div>
+  ${mobileLyricHTML}
+</div>
+
+<p style="font-style: italic; color: #777; margin-top: 24px;">以下解读聚焦于歌词文本自身的意象、结构与精神内核。</p>
+<hr>
+
+${lyricContent}
+
+<hr>
+<p style="text-align: center; font-size: 18px; margin-top: 32px;">一份从灵魂深处出发，关于盛开、自由与自我领航的文本。</p>
+<p class="signature">—— ${escapeHTML(signature)}</p>
+${songLink ? `<p style="text-align: center; margin-top: 32px; color: #c97a7a; font-size: 14px;">
+  <a href="${escapeHTML(songLink)}" target="_blank" style="color: #c97a7a; text-decoration: none;">🎧 收听完整歌曲</a>
+</p>` : ''}
+
+${decorMobileHTML}
+
+<script>
+  (function() {
+    var audio = document.getElementById('song');
+    if (!audio) return;
+    
+    var lyricScroll = document.getElementById('lyricScroll');
+    var mobileLyricsTop = document.getElementById('mobileLyricsTop');
+    var mobileBg = document.getElementById('mobileBg');
+    var mobilePirate = document.getElementById('mobilePirate');
+    var panelLines = document.querySelectorAll('#lyricScroll .line[data-time]');
+    var bodyLines = document.querySelectorAll('.lyric-line[data-time]');
+    var mobileLines = document.querySelectorAll('#mobileLyricsTop .line[data-time]');
+    var currentPanelLyric = null;
+    var currentBodyLyric = null;
+    var currentMobileLyric = null;
+
+    function initMobile() {
+      if (window.innerWidth <= 768) {
+        if (mobileLyricsTop) mobileLyricsTop.style.display = 'block';
+        if (mobileBg) mobileBg.style.display = 'block';
+        if (mobilePirate) mobilePirate.style.display = 'flex';
+      }
+    }
+    initMobile();
+    window.addEventListener('resize', initMobile);
+
+    var stickyContainer = document.getElementById('sticky-audio-container');
+    var isSticky = false;
+    var placeholder = null;
+
+    function handleScroll() {
+      if (!audio) return;
+      var audioRect = audio.getBoundingClientRect();
+      if (audioRect.bottom <= 0 && !isSticky) {
+        isSticky = true;
+        placeholder = document.createElement('div');
+        placeholder.style.height = audio.offsetHeight + 'px';
+        audio.parentNode.insertBefore(placeholder, audio);
+        stickyContainer.appendChild(audio);
+        stickyContainer.classList.add('active');
+      } else if (isSticky && placeholder) {
+        var placeholderRect = placeholder.getBoundingClientRect();
+        if (placeholderRect.top >= 0) {
+          isSticky = false;
+          placeholder.parentNode.insertBefore(audio, placeholder);
+          placeholder.parentNode.removeChild(placeholder);
+          placeholder = null;
+          stickyContainer.classList.remove('active');
+        }
+      }
+    }
+    window.addEventListener('scroll', handleScroll);
+
+    function addClickListeners(lines) {
+      lines.forEach(function(line) {
+        line.addEventListener('click', function() {
+          var time = parseFloat(this.getAttribute('data-time'));
+          if (!isNaN(time) && audio) {
+            audio.currentTime = time;
+            audio.play().catch(function(){});
+          }
+        });
+      });
+    }
+    addClickListeners(panelLines);
+    addClickListeners(bodyLines);
+    addClickListeners(mobileLines);
+
+    audio.addEventListener('timeupdate', function() {
+      var t = audio.currentTime;
+      
+      // 更新正文歌词高亮
+      var activeBody = null;
+      for (var i = bodyLines.length - 1; i >= 0; i--) {
+        if (t >= parseFloat(bodyLines[i].getAttribute('data-time'))) {
+          activeBody = bodyLines[i];
+          break;
+        }
+      }
+      if (activeBody && activeBody !== currentBodyLyric) {
+        if (currentBodyLyric) currentBodyLyric.classList.remove('active-lyric');
+        activeBody.classList.add('active-lyric');
+        currentBodyLyric = activeBody;
+      }
+
+      // 更新面板歌词高亮
+      var activePanel = null;
+      for (var j = panelLines.length - 1; j >= 0; j--) {
+        if (t >= parseFloat(panelLines[j].getAttribute('data-time'))) {
+          activePanel = panelLines[j];
+          break;
+        }
+      }
+      if (activePanel && activePanel !== currentPanelLyric) {
+        if (currentPanelLyric) currentPanelLyric.classList.remove('active-lyric');
+        activePanel.classList.add('active-lyric');
+        currentPanelLyric = activePanel;
+        if (lyricScroll && activePanel) {
+          var lineTop = activePanel.offsetTop;
+          var containerHeight = lyricScroll.clientHeight;
+          var lineHeight = activePanel.offsetHeight;
+          lyricScroll.scrollTo({ top: lineTop - containerHeight / 2 + lineHeight / 2, behavior: 'smooth' });
+        }
+      }
+
+      // 更新移动端歌词高亮
+      var activeMobile = null;
+      for (var k = mobileLines.length - 1; k >= 0; k--) {
+        if (t >= parseFloat(mobileLines[k].getAttribute('data-time'))) {
+          activeMobile = mobileLines[k];
+          break;
+        }
+      }
+      if (activeMobile && activeMobile !== currentMobileLyric) {
+        if (currentMobileLyric) {
+          currentMobileLyric.style.color = '#999';
+          currentMobileLyric.style.fontWeight = 'normal';
+          currentMobileLyric.style.background = 'transparent';
+        }
+        activeMobile.style.color = '#d14b4b';
+        activeMobile.style.fontWeight = 'bold';
+        activeMobile.style.background = '#fef0f0';
+        currentMobileLyric = activeMobile;
+        if (mobileLyricsTop && activeMobile) {
+          var mTop = activeMobile.offsetTop;
+          var mH = mobileLyricsTop.clientHeight;
+          var mLH = activeMobile.offsetHeight;
+          mobileLyricsTop.scrollTo({ top: mTop - mH / 2 + mLH / 2, behavior: 'smooth' });
+        }
+      }
+    });
+
+    // 歌词面板拖拽
+    var lyricPanel = document.getElementById('lyricPanel');
+    var lyricPanelHeader = document.getElementById('lyricPanelHeader');
+    if (lyricPanel && lyricPanelHeader) {
+      var isDragging = false, startX, startY, initialLeft, initialTop;
+      lyricPanelHeader.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = lyricPanel.offsetLeft;
+        initialTop = lyricPanel.offsetTop;
+        function onMove(e) {
+          if (!isDragging) return;
+          var nl = initialLeft + (e.clientX - startX);
+          var nt = initialTop + (e.clientY - startY);
+          nl = Math.max(0, Math.min(nl, window.innerWidth - lyricPanel.offsetWidth));
+          nt = Math.max(0, Math.min(nt, window.innerHeight - lyricPanel.offsetHeight));
+          lyricPanel.style.left = nl + 'px';
+          lyricPanel.style.top = nt + 'px';
+        }
+        function onUp() {
+          isDragging = false;
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        e.preventDefault();
+      });
+    }
+  })();
+</script>
+</body>
+</html>`;
+  }
+
+  // ========== 生成歌词面板 HTML ==========
+  function generateLyricPanelHTML(lyrics) {
+    if (!lyrics.length) return '<div class="line">暂无歌词</div>';
+    return lyrics.map(l => 
+      `<div class="line" data-time="${l.time}">${escapeHTML(l.text)}</div>`
+    ).join('\n');
+  }
+
+  // ========== 生成移动端歌词 HTML ==========
+  function generateMobileLyricHTML(lyrics) {
+    if (!lyrics.length) return '';
+    return lyrics.map(l =>
+      `<div class="line" data-time="${l.time}" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(l.text)}</div>`
+    ).join('\n');
+  }
+
+  // ========== 状态提示 ==========
+  function showStatus(type, message) {
+    const status = document.getElementById('status');
+    status.className = 'status ' + type;
+    status.textContent = message;
+    status.style.display = 'block';
+    setTimeout(() => { status.style.display = 'none'; }, 3000);
+  }
+
+  // ========== 重置表单 ==========
+  function resetForm() {
+    Object.values(fileUrls).forEach(url => {
+      if (url) URL.revokeObjectURL(url);
+    });
+    Object.keys(fileUrls).forEach(k => fileUrls[k] = null);
+    
+    document.querySelectorAll('input[type="file"]').forEach(input => input.value = '');
+    
+    document.getElementById('songTitle').value = '活该我盛开';
+    document.getElementById('songSubtitle').value = '一首关于破碎、重塑与自我加冕的女性叙事诗';
+    document.getElementById('audioUrl').value = '';
+    document.getElementById('songLink').value = 'https://163cn.tv/8OWPUVm';
+    document.getElementById('signature').value = '山岭在逃 · 词曲创作';
+    
+    // 重置视频预设
+    document.querySelectorAll('#bgVideoPresets .preset-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('#bgVideoPresets .preset-btn[data-preset="fullscreen"]').classList.add('active');
+    bgVideoConfig.preset = 'fullscreen';
+    bgVideoConfig.opacity = 15;
+    bgVideoConfig.objectFit = 'cover';
+    document.getElementById('bgVideoOpacity').value = 15;
+    document.getElementById('bgVideoOpacityValue').textContent = '15%';
+    document.getElementById('bgVideoCover').checked = true;
+    document.getElementById('bgVideoCustom').style.display = 'none';
+    
+    document.querySelectorAll('#decorVideoPresets .preset-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('#decorVideoPresets .preset-btn[data-preset="auto"]').classList.add('active');
+    decorVideoConfig.preset = 'auto';
+    decorVideoConfig.opacity = 90;
+    document.getElementById('decorVideoOpacity').value = 90;
+    document.getElementById('decorVideoOpacityValue').textContent = '90%';
+    document.getElementById('decorVideoCustom').style.display = 'none';
+    
+    document.getElementById('previewFrame').src = 'about:blank';
+    
+    showStatus('success', '✅ 已重置');
+  }
+
+  // ========== HTML 转义 ==========
+  function escapeHTML(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // ========== 初始化 ==========
+  window.addEventListener('load', () => {
+    generatePreview();
+  });
+</script>
+</body>
+</html>
