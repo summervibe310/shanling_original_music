@@ -3,118 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>歌词解读页面生成器</title>
+  <title>音乐视频生成器</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
       font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-      background: #f5f0f0;
-      color: #2c2c2c;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      overflow: hidden;
+      height: 100vh;
     }
 
     .app-container {
       display: flex;
-      min-height: 100vh;
+      height: 100vh;
     }
 
+    /* ========== 左侧控制面板 ========== */
     .control-panel {
-      width: 420px;
-      background: #fff;
-      padding: 24px;
-      border-right: 1px solid #e8d8d8;
+      width: 380px;
+      min-width: 380px;
+      background: #222;
+      padding: 20px;
       overflow-y: auto;
-      max-height: 100vh;
-      position: sticky;
-      top: 0;
+      height: 100vh;
+      border-right: 1px solid #333;
     }
 
     .control-panel h2 {
-      font-size: 20px;
-      margin-bottom: 24px;
-      color: #d14b4b;
-      border-left: 4px solid #d14b4b;
-      padding-left: 12px;
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #e8734a;
+      border-left: 3px solid #e8734a;
+      padding-left: 10px;
+      letter-spacing: 1px;
+    }
+
+    .section {
+      background: #2a2a2a;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section h3 {
+      font-size: 13px;
+      color: #ccc;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
 
     .form-group label {
       display: block;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 6px;
-      color: #4a3a3a;
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 4px;
       letter-spacing: 0.5px;
     }
 
     .form-group input[type="text"],
+    .form-group input[type="number"],
     .form-group textarea,
     .form-group select {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #e0d0d0;
-      border-radius: 8px;
+      padding: 8px 10px;
+      border: 1px solid #444;
+      border-radius: 6px;
       font-size: 13px;
       font-family: inherit;
-      background: #fdfafa;
+      background: #1a1a1a;
+      color: #e0e0e0;
       transition: border-color 0.2s;
     }
 
-    .form-group input[type="text"]:focus,
+    .form-group input:focus,
     .form-group textarea:focus,
     .form-group select:focus {
       outline: none;
-      border-color: #d14b4b;
+      border-color: #e8734a;
     }
 
     .form-group textarea {
-      min-height: 100px;
+      min-height: 80px;
       resize: vertical;
     }
 
     .form-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
     }
 
     .form-row .form-group {
       flex: 1;
     }
 
-    .file-input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
     .file-input-wrapper input[type="file"] {
-      flex: 1;
-      font-size: 12px;
+      width: 100%;
+      font-size: 11px;
+      color: #999;
     }
 
     .file-input-wrapper input[type="file"]::file-selector-button {
-      background: #fdf0f0;
-      border: 1px solid #d14b4b;
-      color: #d14b4b;
-      padding: 8px 16px;
-      border-radius: 6px;
+      background: #333;
+      border: 1px solid #555;
+      color: #ddd;
+      padding: 6px 12px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 12px;
-      transition: all 0.2s;
+      font-size: 11px;
+      margin-right: 8px;
     }
 
     .file-input-wrapper input[type="file"]::file-selector-button:hover {
-      background: #d14b4b;
+      background: #e8734a;
+      border-color: #e8734a;
       color: #fff;
     }
 
     .file-status {
-      font-size: 12px;
-      color: #2d8a2d;
+      font-size: 11px;
+      color: #4caf50;
       margin-top: 4px;
       display: none;
     }
@@ -124,441 +138,452 @@
     }
 
     .hint {
-      font-size: 11px;
-      color: #999;
-      margin-top: 4px;
-    }
-
-    .preset-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .preset-btn {
-      padding: 6px 12px;
-      border: 1px solid #e0d0d0;
-      background: #fff;
-      border-radius: 6px;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.2s;
+      font-size: 10px;
       color: #666;
+      margin-top: 3px;
     }
 
-    .preset-btn:hover {
-      background: #fdf0f0;
-      border-color: #d14b4b;
-      color: #d14b4b;
-    }
-
-    .preset-btn.active {
-      background: #d14b4b;
-      color: #fff;
-      border-color: #d14b4b;
-    }
-
-    .video-preview-card {
-      background: #fdfafa;
-      border: 1px solid #e8d8d8;
-      border-radius: 10px;
-      padding: 16px;
-      margin-top: 12px;
-    }
-
-    .video-preview-card h4 {
-      font-size: 14px;
-      color: #4a3a3a;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .dimension-inputs {
+    .color-picker-row {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .dimension-inputs input {
-      width: 80px;
-      text-align: center;
-    }
-
-    .dimension-inputs span {
-      color: #999;
-      font-size: 13px;
-    }
-
-    .unit-select {
-      width: 70px !important;
-    }
-
-    .toggle-switch {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .toggle-switch input[type="checkbox"] {
-      width: 40px;
-      height: 22px;
-      appearance: none;
-      background: #e0d0d0;
-      border-radius: 11px;
-      position: relative;
+    .color-picker-row input[type="color"] {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #444;
+      border-radius: 4px;
       cursor: pointer;
-      transition: background 0.3s;
+      background: transparent;
+      padding: 2px;
     }
 
-    .toggle-switch input[type="checkbox"]:checked {
-      background: #d14b4b;
+    .size-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
     }
 
-    .toggle-switch input[type="checkbox"]::before {
-      content: '';
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #fff;
-      top: 2px;
-      left: 2px;
-      transition: transform 0.3s;
+    .size-preset {
+      padding: 4px 10px;
+      border: 1px solid #444;
+      background: #1a1a1a;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      color: #999;
+      transition: all 0.2s;
     }
 
-    .toggle-switch input[type="checkbox"]:checked::before {
-      transform: translateX(18px);
+    .size-preset:hover {
+      border-color: #e8734a;
+      color: #e8734a;
+    }
+
+    .size-preset.active {
+      background: #e8734a;
+      color: #fff;
+      border-color: #e8734a;
     }
 
     .btn-group {
       display: flex;
-      gap: 12px;
-      margin-top: 32px;
+      gap: 10px;
+      margin-top: 20px;
     }
 
     .btn {
       flex: 1;
-      padding: 12px 20px;
+      padding: 10px 16px;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.25s;
+      transition: all 0.2s;
       letter-spacing: 1px;
     }
 
     .btn-preview {
-      background: #fdf0f0;
-      color: #d14b4b;
-      border: 1px solid #d14b4b;
+      background: #333;
+      color: #e8734a;
+      border: 1px solid #e8734a;
     }
 
     .btn-preview:hover {
-      background: #d14b4b;
+      background: #e8734a;
+      color: #fff;
+    }
+
+    .btn-play {
+      background: #4caf50;
+      color: #fff;
+    }
+
+    .btn-play:hover {
+      background: #45a049;
+    }
+
+    .btn-pause {
+      background: #ff9800;
+      color: #fff;
+    }
+
+    .btn-pause:hover {
+      background: #f08900;
+    }
+
+    .btn-reset {
+      background: #333;
+      color: #999;
+      border: 1px solid #555;
+    }
+
+    .btn-reset:hover {
+      background: #444;
       color: #fff;
     }
 
     .btn-download {
-      background: #d14b4b;
+      background: #e8734a;
       color: #fff;
+      width: 100%;
+      margin-top: 8px;
     }
 
     .btn-download:hover {
-      background: #b33a3a;
-    }
-
-    .btn-reset {
-      background: #f5f5f5;
-      color: #666;
-      border: 1px solid #ddd;
-      margin-top: 12px;
-      width: 100%;
-    }
-
-    .btn-reset:hover {
-      background: #eee;
+      background: #d1653d;
     }
 
     .status {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 12px;
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 11px;
       text-align: center;
       display: none;
     }
 
     .status.success {
       display: block;
-      background: #f0fff0;
-      color: #2d8a2d;
-      border: 1px solid #c8e6c8;
+      background: #1a3a1a;
+      color: #4caf50;
+      border: 1px solid #2d5a2d;
     }
 
     .status.error {
       display: block;
-      background: #fff0f0;
-      color: #d14b4b;
-      border: 1px solid #f0c0c0;
+      background: #3a1a1a;
+      color: #f44336;
+      border: 1px solid #5a2d2d;
     }
 
     .status.info {
       display: block;
-      background: #fffef0;
-      color: #8a7d2d;
-      border: 1px solid #e8e0c0;
+      background: #1a2a3a;
+      color: #64b5f6;
+      border: 1px solid #2d405a;
     }
 
+    /* ========== 右侧预览区 ========== */
     .preview-area {
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
       position: relative;
-      min-height: 100vh;
-    }
-
-    .preview-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #fafafa;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: #f0e0e0;
-      border-radius: 2px;
-      margin-top: 12px;
       overflow: hidden;
-      display: none;
     }
 
-    .progress-bar.show {
-      display: block;
+    .preview-container {
+      position: relative;
+      overflow: hidden;
+      background: #111;
     }
 
-    .progress-bar-fill {
+    /* 容器尺寸预设 */
+    .preview-container.size-16-9 { width: 853px; height: 480px; }
+    .preview-container.size-9-16 { width: 270px; height: 480px; }
+    .preview-container.size-4-3 { width: 640px; height: 480px; }
+    .preview-container.size-1-1 { width: 480px; height: 480px; }
+    .preview-container.size-21-9 { width: 1120px; height: 480px; }
+    .preview-container.size-custom { }
+
+    .preview-bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
       height: 100%;
-      background: #d14b4b;
-      border-radius: 2px;
-      width: 0%;
-      transition: width 0.3s;
+      object-fit: cover;
+      z-index: 1;
     }
 
-    @media (max-width: 768px) {
+    .preview-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .preview-content {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      pointer-events: none;
+    }
+
+    .preview-title {
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .preview-subtitle {
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+      margin-top: 6px;
+    }
+
+    .preview-credits {
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      margin-top: 8px;
+      opacity: 0.85;
+    }
+
+    .preview-figure {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-figure video,
+    .preview-figure img {
+      object-fit: contain;
+      filter: drop-shadow(0 0 20px rgba(0,0,0,0.4));
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .preview-lyrics {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      max-height: 40%;
+      overflow: hidden;
+    }
+
+    .preview-lyric-line {
+      text-align: center;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      transition: all 0.3s ease;
+      opacity: 0.5;
+      white-space: nowrap;
+      letter-spacing: 1px;
+    }
+
+    .preview-lyric-line.active {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    /* 响应式 */
+    @media (max-width: 900px) {
       .app-container {
         flex-direction: column;
       }
       .control-panel {
         width: 100%;
-        max-height: none;
-        position: static;
+        min-width: auto;
+        height: auto;
+        max-height: 40vh;
         border-right: none;
-        border-bottom: 1px solid #e8d8d8;
-      }
-      .form-row {
-        flex-direction: column;
+        border-bottom: 1px solid #333;
       }
       .preview-area {
-        min-height: 600px;
+        flex: 1;
+        min-height: 300px;
       }
+      .preview-container.size-16-9 { width: 100%; height: auto; aspect-ratio: 16/9; }
+      .preview-container.size-9-16 { width: auto; height: 100%; aspect-ratio: 9/16; }
+      .preview-container.size-4-3 { width: 100%; height: auto; aspect-ratio: 4/3; }
+      .preview-container.size-1-1 { width: 80%; height: auto; aspect-ratio: 1/1; }
+      .preview-container.size-21-9 { width: 100%; height: auto; aspect-ratio: 21/9; }
     }
   </style>
 </head>
 <body>
 
 <div class="app-container">
+  <!-- 左侧控制面板 -->
   <div class="control-panel">
-    <h2>🎵 歌词解读页面生成器</h2>
+    <h2>🎬 音乐视频生成器</h2>
 
-    <!-- 基础信息 -->
-    <div class="form-group">
-      <label>📝 歌曲标题</label>
-      <input type="text" id="songTitle" placeholder="例如：活该我盛开" value="活该我盛开">
+    <!-- 播放控制 -->
+    <div class="section">
+      <h3>▶ 播放控制</h3>
+      <div class="btn-group">
+        <button class="btn btn-play" onclick="playPreview()">▶ 播放</button>
+        <button class="btn btn-pause" onclick="pausePreview()">⏸ 暂停</button>
+        <button class="btn btn-preview" onclick="updatePreview()">🔄 刷新预览</button>
+      </div>
+      <div class="hint" style="text-align:center;margin-top:8px;">
+        当前时间: <span id="currentTime">00:00</span> / <span id="totalTime">00:00</span>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>📝 副标题/描述</label>
-      <input type="text" id="songSubtitle" placeholder="例如：一首关于破碎、重塑与自我加冕的女性叙事诗" value="一首关于破碎、重塑与自我加冕的女性叙事诗">
-    </div>
-
-    <!-- 音频来源 -->
-    <div class="video-preview-card" style="border-left: 3px solid #d14b4b;">
-      <h4>🎵 音频来源（二选一，优先使用本地上传）</h4>
-      
-      <div class="form-group">
-        <label>📁 本地上传音频（MP3 / WAV）</label>
-        <div class="file-input-wrapper">
-          <input type="file" id="audioFile" accept="audio/mpeg,audio/mp3,audio/wav,audio/wave,audio/x-wav,audio/*">
+    <!-- 容器尺寸 -->
+    <div class="section">
+      <h3>📐 视频容器尺寸</h3>
+      <div class="size-presets" id="containerSizePresets">
+        <button class="size-preset active" data-size="16-9">16:9 横屏</button>
+        <button class="size-preset" data-size="9-16">9:16 竖屏</button>
+        <button class="size-preset" data-size="4-3">4:3</button>
+        <button class="size-preset" data-size="1-1">1:1 方形</button>
+        <button class="size-preset" data-size="21-9">21:9 宽屏</button>
+        <button class="size-preset" data-size="custom">自定义</button>
+      </div>
+      <div id="containerCustomSize" style="display:none; margin-top:8px;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>宽度 (px)</label>
+            <input type="number" id="containerWidth" value="853" min="200" max="1920">
+          </div>
+          <div class="form-group">
+            <label>高度 (px)</label>
+            <input type="number" id="containerHeight" value="480" min="200" max="1920">
+          </div>
         </div>
-        <div class="file-status" id="audioFileStatus"></div>
-        <div class="hint">上传后自动转 Base64 嵌入 HTML，无需外链，完全独立可用</div>
-      </div>
-
-      <div class="form-group">
-        <label>🔗 或填写音频外链 URL（备选）</label>
-        <input type="text" id="audioUrl" placeholder="https://example.com/song.mp3" value="">
-        <div class="hint">如果同时上传了本地文件，优先使用本地文件</div>
       </div>
     </div>
 
-    <!-- 背景视频设置 -->
-    <div class="video-preview-card">
-      <h4>🎬 背景视频设置（可选）</h4>
-      
+    <!-- 背景媒体 -->
+    <div class="section">
+      <h3>🖼️ 背景视频/图片</h3>
       <div class="form-group">
-        <label>📁 本地上传背景视频（MP4）</label>
+        <label>上传背景视频 (MP4)</label>
         <div class="file-input-wrapper">
           <input type="file" id="bgVideoFile" accept="video/mp4">
         </div>
         <div class="file-status" id="bgVideoFileStatus"></div>
-        <div class="hint">自动转 Base64 嵌入（⚠️ 视频较大会增加 HTML 体积）</div>
       </div>
-
       <div class="form-group">
-        <label>视频尺寸</label>
-        <div class="preset-buttons" id="bgVideoPresets">
-          <button class="preset-btn active" data-preset="fullscreen">全屏覆盖</button>
-          <button class="preset-btn" data-preset="16-9">16:9</button>
-          <button class="preset-btn" data-preset="4-3">4:3</button>
-          <button class="preset-btn" data-preset="1-1">1:1</button>
-          <button class="preset-btn" data-preset="9-16">9:16</button>
-          <button class="preset-btn" data-preset="custom">自定义</button>
-        </div>
-      </div>
-
-      <div id="bgVideoCustom" style="display:none;">
-        <div class="form-row">
-          <div class="form-group">
-            <label>宽度</label>
-            <div class="dimension-inputs">
-              <input type="number" id="bgVideoWidth" placeholder="1920" min="1" value="">
-              <select class="unit-select" id="bgVideoWidthUnit">
-                <option value="px">px</option>
-                <option value="%">%</option>
-                <option value="vw">vw</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>高度</label>
-            <div class="dimension-inputs">
-              <input type="number" id="bgVideoHeight" placeholder="1080" min="1" value="">
-              <select class="unit-select" id="bgVideoHeightUnit">
-                <option value="px">px</option>
-                <option value="%">%</option>
-                <option value="vh">vh</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>透明度</label>
-        <input type="range" id="bgVideoOpacity" min="5" max="100" value="15" style="width:100%;">
-        <div class="hint">当前透明度: <span id="bgVideoOpacityValue">15%</span></div>
-      </div>
-
-      <div class="toggle-switch">
-        <input type="checkbox" id="bgVideoCover" checked>
-        <label for="bgVideoCover">object-fit: cover（裁剪填充）</label>
-      </div>
-    </div>
-
-    <!-- 背景图片设置 -->
-    <div class="video-preview-card">
-      <h4>🖼️ 背景图片设置（移动端回退，可选）</h4>
-      
-      <div class="form-group">
-        <label>📁 本地上传背景图片</label>
+        <label>上传背景图片</label>
         <div class="file-input-wrapper">
           <input type="file" id="bgImageFile" accept="image/*">
         </div>
         <div class="file-status" id="bgImageFileStatus"></div>
       </div>
+    </div>
 
+    <!-- 蒙版设置 -->
+    <div class="section">
+      <h3>🎨 蒙版设置</h3>
       <div class="form-group">
-        <label>透明度</label>
-        <input type="range" id="bgImageOpacity" min="5" max="100" value="15" style="width:100%;">
-        <div class="hint">当前透明度: <span id="bgImageOpacityValue">15%</span></div>
+        <label>蒙版颜色</label>
+        <div class="color-picker-row">
+          <input type="color" id="overlayColor" value="#000000">
+          <input type="text" id="overlayColorText" value="#000000" style="flex:1;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>蒙版透明度: <span id="overlayOpacityValue">50%</span></label>
+        <input type="range" id="overlayOpacity" min="0" max="100" value="50" style="width:100%;">
       </div>
     </div>
 
-    <!-- 装饰视频设置 -->
-    <div class="video-preview-card">
-      <h4>🏴‍☠️ 装饰视频/图片设置（桌面端右下角，可选）</h4>
-      
+    <!-- 文字信息 -->
+    <div class="section">
+      <h3>📝 文字信息</h3>
       <div class="form-group">
-        <label>📁 本地上传装饰视频（WebM / MP4）</label>
-        <div class="file-input-wrapper">
-          <input type="file" id="decorVideoFile" accept="video/webm,video/mp4">
-        </div>
-        <div class="file-status" id="decorVideoFileStatus"></div>
+        <label>歌名</label>
+        <input type="text" id="songTitle" value="活该我盛开" placeholder="歌名">
       </div>
-
       <div class="form-group">
-        <label>📁 本地上传装饰图片（移动端回退）</label>
-        <div class="file-input-wrapper">
-          <input type="file" id="decorImageFile" accept="image/*">
-        </div>
-        <div class="file-status" id="decorImageFileStatus"></div>
+        <label>副标题</label>
+        <input type="text" id="songSubtitle" value="" placeholder="可选副标题">
       </div>
-
-      <div class="form-group">
-        <label>装饰视频尺寸</label>
-        <div class="preset-buttons" id="decorVideoPresets">
-          <button class="preset-btn active" data-preset="auto">自动高度</button>
-          <button class="preset-btn" data-preset="small">小（30vh）</button>
-          <button class="preset-btn" data-preset="medium">中（60vh）</button>
-          <button class="preset-btn" data-preset="large">大（80vh）</button>
-          <button class="preset-btn" data-preset="custom">自定义</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>词</label>
+          <input type="text" id="creditsLyrics" value="山岭在逃" placeholder="作词">
+        </div>
+        <div class="form-group">
+          <label>曲</label>
+          <input type="text" id="creditsMusic" value="山岭在逃" placeholder="作曲">
+        </div>
+        <div class="form-group">
+          <label>演</label>
+          <input type="text" id="creditsArtist" value="" placeholder="演唱（可选）">
         </div>
       </div>
-
-      <div id="decorVideoCustom" style="display:none;">
-        <div class="form-row">
-          <div class="form-group">
-            <label>宽度</label>
-            <div class="dimension-inputs">
-              <input type="number" id="decorVideoWidth" placeholder="auto" value="">
-              <select class="unit-select" id="decorVideoWidthUnit">
-                <option value="px">px</option>
-                <option value="%">%</option>
-                <option value="vw">vw</option>
-                <option value="auto">auto</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>高度</label>
-            <div class="dimension-inputs">
-              <input type="number" id="decorVideoHeight" placeholder="60" min="1" value="60">
-              <select class="unit-select" id="decorVideoHeightUnit">
-                <option value="vh" selected>vh</option>
-                <option value="px">px</option>
-                <option value="%">%</option>
-              </select>
-            </div>
-          </div>
+      <div class="form-group">
+        <label>文字颜色</label>
+        <div class="color-picker-row">
+          <input type="color" id="textColor" value="#ffffff">
+          <input type="text" id="textColorText" value="#ffffff" style="flex:1;">
         </div>
       </div>
-
       <div class="form-group">
-        <label>透明度</label>
-        <input type="range" id="decorVideoOpacity" min="10" max="100" value="90" style="width:100%;">
-        <div class="hint">当前透明度: <span id="decorVideoOpacityValue">90%</span></div>
+        <label>歌名字号: <span id="titleFontSizeValue">28px</span></label>
+        <input type="range" id="titleFontSize" min="16" max="72" value="28" style="width:100%;">
+      </div>
+      <div class="form-group">
+        <label>其他文字字号: <span id="textFontSizeValue">14px</span></label>
+        <input type="range" id="textFontSize" min="10" max="36" value="14" style="width:100%;">
       </div>
     </div>
 
-    <!-- 歌词内容 -->
-    <div class="form-group">
-      <label>📝 带时间戳的歌词（格式：[分:秒.毫秒]歌词）</label>
-      <textarea id="lyricTimestamp" placeholder="[00:18.99]空心人 站进人海">[00:18.99]空心人 站进人海
+    <!-- 人物媒体 -->
+    <div class="section">
+      <h3>👤 人物视频/图片</h3>
+      <div class="form-group">
+        <label>上传人物视频 (WebM/MP4)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="figureVideoFile" accept="video/webm,video/mp4">
+        </div>
+        <div class="file-status" id="figureVideoFileStatus"></div>
+      </div>
+      <div class="form-group">
+        <label>上传人物图片</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="figureImageFile" accept="image/*">
+        </div>
+        <div class="file-status" id="figureImageFileStatus"></div>
+      </div>
+      <div class="form-group">
+        <label>人物尺寸</label>
+        <div class="size-presets" id="figureSizePresets">
+          <button class="size-preset active" data-figure-size="medium">中</button>
+          <button class="size-preset" data-figure-size="small">小</button>
+          <button class="size-preset" data-figure-size="large">大</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 歌词 -->
+    <div class="section">
+      <h3>🎤 歌词 (带时间戳)</h3>
+      <div class="form-group">
+        <label>格式: [分:秒.毫秒]歌词</label>
+        <textarea id="lyricTimestamp" placeholder="[00:18.99]空心人 站进人海">[00:18.99]空心人 站进人海
 [00:23.34]只剩九十斤的反骨 还在
 [00:26.88]废墟里 排队等一个赦免
 [00:30.72]等月光失约 才学会
@@ -568,160 +593,71 @@
 [00:52.74]活该我盛开
 [00:55.44]活该我 哭着哭着就笑出来
 [00:61.35]活该我盛开
-[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖
-[00:71.64]不死鸟 决定叛逃
-[00:74.82]一万场落日 收集羽毛
-[00:78.60]葡萄要静候 等待是生长
-[00:82.56]春雷不是号角 是我终于
-[00:85.32]被自己 听见的心跳
-[00:88.95]反正短暂
-[00:93.06]反正 要燃烧
-[00:95.76]活该我盛开
-[00:98.40]活该我 坏到最后又亮起来
-[01:04.28]活该我盛开
-[01:06.98]活该我 赤着脚 踏过荒芜 踏成我自己的 节拍
-[01:13.37]驶向 不被命名的航线
-[01:15.38]不必上岸
-[01:16.40]我偏爱 颠倒的罗盘
-[01:18.32]做海盗 掠夺快乐 升起红粉骷髅旗
-[01:22.28]你看 我这艘写满补丁的船
-[01:26.24]正劫持 整片黑暗
-[01:31.91]嘿 看着吧
-[01:33.74]这是我 千千万万遍
-[01:36.89]救我于水火之后 撰写的答案
-[01:40.64]我是自己的靠山
-[01:42.80]我是自己的太阳
-[01:44.90]我是自己的月亮
-[01:46.58]我是 我唯一的 标签 与规范
-[01:50.75]活该我 如此灿烂
-[01:53.99]活该我 又争又抢 又不慌不忙
-[02:00.41]活该我 终于长成 一株
-[02:03.02]迎着烈日 拔节作响的
-[02:05.48]——野生的光
-[03:39.41]Oh captain my captain
-[03:44.81]Oh captain my captain
-[03:51.23]Oh captain my captain
-[03:52.61]不等谁 送花来
-[03:55.94]这朵玫瑰 我自己摘
-[04:01.46]活该 我
-[04:03.32]盛
-[04:03.71]开</textarea>
+[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖</textarea>
+      </div>
+      <div class="form-group">
+        <label>歌词可见行数: <span id="lyricVisibleLinesValue">5</span></label>
+        <input type="range" id="lyricVisibleLines" min="3" max="11" value="5" step="2" style="width:100%;">
+      </div>
+      <div class="form-group">
+        <label>歌词字号: <span id="lyricFontSizeValue">16px</span></label>
+        <input type="range" id="lyricFontSize" min="10" max="32" value="16" style="width:100%;">
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>📝 歌词解读内容（HTML格式）</label>
-      <textarea id="lyricContent" placeholder="支持HTML标签..."><h2>第一乐章：废墟中的觉醒</h2>
-<p class="lyric-line" data-time="18.99">空心人 站进人海</p>
-<p>"空心人"开篇即定调——被掏空、失去内核的存在状态。"站进人海"是讽刺，即便置身人群也如空壳。</p>
-
-<p class="lyric-line" data-time="23.34">只剩九十斤的反骨 还在</p>
-<p>"九十斤"将抽象的"反骨"具象化为一个瘦弱却具体的重量，它是构成生命全部内核的、最后的倔强。</p>
-
-<p class="lyric-line" data-time="26.88">废墟里 排队等一个赦免</p>
-<p>描绘出绝望的仪式感。"废墟"是内心世界崩塌后的景象，"排队"意味着被动、从众。</p>
-
-<p class="lyric-line" data-time="30.72">等月光失约 才学会</p>
-<p class="lyric-line" data-time="35.52">做自己的女娲 重塑这人间</p>
-<p>全篇第一个重大转折。"月光"是高洁但虚幻的外部寄托，它的"失约"是信仰的崩塌。"做自己的女娲"是一次神性的觉醒——我不再等待救世主，我就是自己的创世神。</p>
-
-<h2>第二乐章：告别与宣战</h2>
-<p class="lyric-line" data-time="44.13">眼泪是大的海</p>
-<p class="lyric-line" data-time="47.13">那就溺死 我的从前</p>
-<p>不否认痛苦的体量，但态度极其决绝。用暴力美学的动作"溺死"，与过去做一次性、彻底的切割。</p>
-
-<p class="lyric-line" data-time="52.74">活该我盛开</p>
-<p class="lyric-line" data-time="55.44">活该我 哭着哭着就笑出来</p>
-<p class="lyric-line" data-time="61.35">活该我盛开</p>
-<p class="lyric-line" data-time="64.05">活该我 偏偏要 嫁给自由 嫁给我的 不够乖</p>
-<p>副歌是战斗檄文。"活该"是最高级的反讽，将外界的贬低内化为自豪的勋章。"嫁给自由"和"嫁给不够乖"，宣告身心只属于自己。</p>
-
-<h2>第三乐章：在静默中积蓄</h2>
-<p class="lyric-line" data-time="71.64">不死鸟 决定叛逃</p>
-<p class="lyric-line" data-time="74.82">一万场落日 收集羽毛</p>
-<p>"叛逃"不是逃跑，是主动脱离。"一万场落日"代表无数次失败和考验，主角不怨天尤人，俯身收集自己散落的"羽毛"。</p>
-
-<p class="lyric-line" data-time="78.60">葡萄要静候 等待是生长</p>
-<p class="lyric-line" data-time="82.56">春雷不是号角 是我终于</p>
-<p class="lyric-line" data-time="85.32">被自己 听见的心跳</p>
-<p>将等待重新定义为积极的生长过程。那一声"春雷"不是上天的指令，而是自己重新变得强壮、清晰的心跳声。</p>
-
-<h2>第四乐章：燃烧与节拍</h2>
-<p class="lyric-line" data-time="88.95">反正短暂</p>
-<p class="lyric-line" data-time="93.06">反正 要燃烧</p>
-<p>第二次预副歌，比第一次更短、更急、更有力。"短暂"不是遗憾，是燃料。</p>
-
-<p class="lyric-line" data-time="95.76">活该我盛开</p>
-<p class="lyric-line" data-time="98.40">活该我 坏到最后又亮起来</p>
-<p>"坏到最后又亮起来"——"亮"是不死鸟燃烧之后发出的光，是灰烬里重新长出的光明。</p>
-
-<h2>第五乐章：海盗的自由宣言</h2>
-<p class="lyric-line" data-time="113.37">驶向 不被命名的航线</p>
-<p class="lyric-line" data-time="115.38">不必上岸</p>
-<p>拒绝一切既定道路，并且拒绝世俗意义上的归宿和终点。</p>
-
-<p class="lyric-line" data-time="118.32">做海盗 掠夺快乐 升起红粉骷髅旗</p>
-<p class="lyric-line" data-time="122.28">你看 我这艘写满补丁的船</p>
-<p class="lyric-line" data-time="126.24">正劫持 整片黑暗</p>
-<p>全词的华彩乐章。"红粉骷髅旗"是独一无二的自我标识。"写满补丁的船"承认了所有的创伤，但正是这些伤疤组成的船，反过来"劫持"了曾经吞噬自己的黑暗。</p>
-
-<h2>第六乐章：自我加冕的仪式</h2>
-<p class="lyric-line" data-time="131.91">嘿 看着吧</p>
-<p class="lyric-line" data-time="133.74">这是我 千千万万遍</p>
-<p class="lyric-line" data-time="136.89">救我于水火之后 撰写的答案</p>
-<p>打破第四堵墙，直接向世界宣告。"千千万万遍"呼应西西弗斯式的重复自救。</p>
-
-<p class="lyric-line" data-time="140.64">我是自己的靠山</p>
-<p class="lyric-line" data-time="142.80">我是自己的太阳</p>
-<p class="lyric-line" data-time="144.90">我是自己的月亮</p>
-<p class="lyric-line" data-time="146.58">我是 我唯一的 标签 与规范</p>
-<p>我即宇宙，我即法则。对一切外界定义、贴标签、设规范行为的彻底否决。</p>
-
-<h2>终章：加冕与回声</h2>
-<p class="lyric-line" data-time="199.41">Oh captain my captain</p>
-<p class="lyric-line" data-time="204.81">Oh captain my captain</p>
-<p class="lyric-line" data-time="211.23">Oh captain my captain</p>
-<p>三声递进，是同一个生命在不同时间依次为自己加冕。</p>
-
-<p class="lyric-line" data-time="212.61">不等谁 送花来</p>
-<p class="lyric-line" data-time="215.94">这朵玫瑰 我自己摘</p>
-<p class="lyric-line" data-time="221.46">活该 我</p>
-<p class="lyric-line" data-time="223.32">盛</p>
-<p class="lyric-line" data-time="223.71">开</p>
-<p>结尾从宣言回归到一个安静而具体的动作。最后的"开"字，如涟漪般扩散，像一个永不结束的仪式。</p></textarea>
+    <!-- 音频 -->
+    <div class="section">
+      <h3>🎵 音频</h3>
+      <div class="form-group">
+        <label>上传音频 (MP3/WAV)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="audioFile" accept="audio/mpeg,audio/mp3,audio/wav,audio/wave,audio/x-wav,audio/*">
+        </div>
+        <div class="file-status" id="audioFileStatus"></div>
+      </div>
+      <div class="form-group">
+        <label>或音频外链 URL</label>
+        <input type="text" id="audioUrl" placeholder="https://example.com/song.mp3">
+      </div>
     </div>
 
-    <!-- 其他 -->
-    <div class="form-group">
-      <label>🔗 歌曲外链（可选）</label>
-      <input type="text" id="songLink" placeholder="https://music.163.com/..." value="https://163cn.tv/8OWPUVm">
-    </div>
-
-    <div class="form-group">
-      <label>✍️ 署名</label>
-      <input type="text" id="signature" placeholder="例如：山岭在逃 · 词曲创作" value="山岭在逃 · 词曲创作">
-    </div>
-
-    <!-- 进度条 -->
-    <div class="progress-bar" id="progressBar">
-      <div class="progress-bar-fill" id="progressBarFill"></div>
-    </div>
-
-    <div class="btn-group">
-      <button class="btn btn-preview" onclick="generatePreview()">👁️ 预览</button>
-      <button class="btn btn-download" onclick="downloadPage()">⬇️ 下载</button>
-    </div>
-    <button class="btn btn-reset" onclick="resetForm()">🔄 恢复默认值</button>
+    <!-- 操作按钮 -->
+    <button class="btn btn-download" onclick="downloadPage()">⬇ 下载生成页面</button>
+    <button class="btn btn-reset" onclick="resetForm()" style="width:100%; margin-top:6px;">🔄 恢复默认值</button>
 
     <div class="status" id="status"></div>
-    <div class="hint" style="text-align:center; margin-top:12px;">
-      💡 上传的本地文件会转为 Base64 嵌入下载的 HTML<br>
-      关闭页面后所有缓存自动清除，不占用你的存储空间
-    </div>
+
+    <audio id="audioPlayer" style="display:none;"></audio>
   </div>
 
-  <!-- 预览区 -->
-  <div class="preview-area">
-    <iframe id="previewFrame" class="preview-frame"></iframe>
+  <!-- 右侧预览区 -->
+  <div class="preview-area" id="previewArea">
+    <div class="preview-container size-16-9" id="previewContainer">
+      <!-- 背景 -->
+      <video class="preview-bg" id="previewBgVideo" style="display:none;" muted loop playsinline></video>
+      <img class="preview-bg" id="previewBgImage" style="display:none;">
+      <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:#1a1a2e;z-index:1;" id="previewBgFallback"></div>
+
+      <!-- 蒙版 -->
+      <div class="preview-overlay" id="previewOverlay"></div>
+
+      <!-- 内容层 -->
+      <div class="preview-content" id="previewContent">
+        <!-- 歌名 -->
+        <div class="preview-title" id="previewTitle">活该我盛开</div>
+        <!-- 副标题 -->
+        <div class="preview-subtitle" id="previewSubtitle" style="display:none;"></div>
+        <!-- 创作者 -->
+        <div class="preview-credits" id="previewCredits"></div>
+        <!-- 人物 -->
+        <div class="preview-figure" id="previewFigure">
+          <video id="previewFigureVideo" style="display:none;" muted loop playsinline></video>
+          <img id="previewFigureImage" style="display:none;">
+        </div>
+        <!-- 歌词 -->
+        <div class="preview-lyrics" id="previewLyrics"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -729,58 +665,50 @@
   // ========== 全局状态 ==========
   
   const fileBase64 = {
-    audio: null,
     bgVideo: null,
     bgImage: null,
-    decorVideo: null,
-    decorImage: null
+    figureVideo: null,
+    figureImage: null,
+    audio: null
   };
 
-  const bgVideoConfig = {
-    preset: 'fullscreen',
-    customWidth: '',
-    customWidthUnit: 'px',
-    customHeight: '',
-    customHeightUnit: 'px',
-    opacity: 15,
-    objectFit: 'cover'
+  let audioElement = document.getElementById('audioPlayer');
+  let parsedLyrics = [];
+  let currentLyricIndex = -1;
+  let isPlaying = false;
+  let animationId = null;
+
+  // 配置
+  const config = {
+    containerSize: '16-9',
+    containerWidth: 853,
+    containerHeight: 480,
+    overlayColor: '#000000',
+    overlayOpacity: 50,
+    textColor: '#ffffff',
+    titleFontSize: 28,
+    textFontSize: 14,
+    figureSize: 'medium',
+    lyricVisibleLines: 5,
+    lyricFontSize: 16
   };
 
-  const bgImageConfig = { opacity: 15 };
-
-  const decorVideoConfig = {
-    preset: 'auto',
-    customWidth: '',
-    customWidthUnit: 'auto',
-    customHeight: '60',
-    customHeightUnit: 'vh',
-    opacity: 90
-  };
-
-  // 默认值存储（用于重置）
+  // 默认值
   const defaultValues = {
     songTitle: '活该我盛开',
-    songSubtitle: '一首关于破碎、重塑与自我加冕的女性叙事诗',
-    audioUrl: '',
-    songLink: 'https://163cn.tv/8OWPUVm',
-    signature: '山岭在逃 · 词曲创作',
-    lyricTimestamp: document.getElementById('lyricTimestamp').value,
-    lyricContent: document.getElementById('lyricContent').value
+    songSubtitle: '',
+    creditsLyrics: '山岭在逃',
+    creditsMusic: '山岭在逃',
+    creditsArtist: '',
+    lyricTimestamp: document.getElementById('lyricTimestamp').value
   };
 
-  // ========== 文件转 Base64 ==========
+  // ========== 文件处理 ==========
   
   function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => {
-        resolve({
-          dataUrl: reader.result,
-          mimeType: file.type,
-          fileName: file.name,
-          size: file.size
-        });
-      };
+      reader.onload = () => resolve({ dataUrl: reader.result, mimeType: file.type, fileName: file.name, size: file.size });
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
@@ -792,8 +720,6 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
-  // ========== 文件上传处理 ==========
-  
   async function handleFileUpload(inputId, statusId, key) {
     const input = document.getElementById(inputId);
     const statusEl = document.getElementById(statusId);
@@ -802,739 +728,406 @@
       const file = e.target.files[0];
       if (!file) return;
       
-      statusEl.textContent = '⏳ 正在处理 ' + file.name + '...';
+      statusEl.textContent = '⏳ 处理中...';
       statusEl.className = 'file-status show';
       
       try {
-        const base64Data = await fileToBase64(file);
-        fileBase64[key] = base64Data;
+        const data = await fileToBase64(file);
+        fileBase64[key] = data;
         
-        statusEl.textContent = '✅ ' + file.name + '（' + formatFileSize(file.size) + '）已就绪';
-        statusEl.className = 'file-status show';
-        statusEl.style.color = '#2d8a2d';
-        
-        if (file.size > 10 * 1024 * 1024) {
-          showStatus('info', '⚠️ 文件较大（' + formatFileSize(file.size) + '），生成的 HTML 体积也会较大');
+        // 如果是音频，加载到播放器
+        if (key === 'audio') {
+          audioElement.src = data.dataUrl;
+          audioElement.load();
         }
-      } catch (err) {
-        statusEl.textContent = '❌ 处理失败：' + err.message;
+        
+        // 如果是背景视频，设置到预览
+        if (key === 'bgVideo') {
+          const el = document.getElementById('previewBgVideo');
+          el.src = data.dataUrl;
+          el.style.display = 'block';
+          document.getElementById('previewBgImage').style.display = 'none';
+          document.getElementById('previewBgFallback').style.display = 'none';
+        }
+        
+        // 如果是背景图片
+        if (key === 'bgImage') {
+          const el = document.getElementById('previewBgImage');
+          el.src = data.dataUrl;
+          el.style.display = 'block';
+          document.getElementById('previewBgVideo').style.display = 'none';
+          document.getElementById('previewBgFallback').style.display = 'none';
+        }
+        
+        // 如果是人物视频
+        if (key === 'figureVideo') {
+          const el = document.getElementById('previewFigureVideo');
+          el.src = data.dataUrl;
+          el.style.display = 'block';
+          document.getElementById('previewFigureImage').style.display = 'none';
+        }
+        
+        // 如果是人物图片
+        if (key === 'figureImage') {
+          const el = document.getElementById('previewFigureImage');
+          el.src = data.dataUrl;
+          el.style.display = 'block';
+          document.getElementById('previewFigureVideo').style.display = 'none';
+        }
+        
+        statusEl.textContent = '✅ ' + file.name + ' (' + formatFileSize(file.size) + ')';
         statusEl.className = 'file-status show';
-        statusEl.style.color = '#d14b4b';
+        statusEl.style.color = '#4caf50';
+        
+        updatePreview();
+      } catch (err) {
+        statusEl.textContent = '❌ 失败';
+        statusEl.className = 'file-status show';
+        statusEl.style.color = '#f44336';
       }
     });
   }
 
-  handleFileUpload('audioFile', 'audioFileStatus', 'audio');
   handleFileUpload('bgVideoFile', 'bgVideoFileStatus', 'bgVideo');
   handleFileUpload('bgImageFile', 'bgImageFileStatus', 'bgImage');
-  handleFileUpload('decorVideoFile', 'decorVideoFileStatus', 'decorVideo');
-  handleFileUpload('decorImageFile', 'decorImageFileStatus', 'decorImage');
+  handleFileUpload('figureVideoFile', 'figureVideoFileStatus', 'figureVideo');
+  handleFileUpload('figureImageFile', 'figureImageFileStatus', 'figureImage');
+  handleFileUpload('audioFile', 'audioFileStatus', 'audio');
 
-  // ========== 视频尺寸预设 ==========
+  // ========== 容器尺寸 ==========
   
-  document.getElementById('bgVideoPresets').addEventListener('click', function(e) {
-    if (e.target.classList.contains('preset-btn')) {
-      this.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      bgVideoConfig.preset = e.target.dataset.preset;
-      document.getElementById('bgVideoCustom').style.display = 
-        bgVideoConfig.preset === 'custom' ? 'block' : 'none';
+  document.getElementById('containerSizePresets').addEventListener('click', function(e) {
+    if (!e.target.classList.contains('size-preset')) return;
+    this.querySelectorAll('.size-preset').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    
+    config.containerSize = e.target.dataset.size;
+    const container = document.getElementById('previewContainer');
+    
+    // 移除所有尺寸类
+    container.classList.remove('size-16-9', 'size-9-16', 'size-4-3', 'size-1-1', 'size-21-9', 'size-custom');
+    
+    if (config.containerSize === 'custom') {
+      document.getElementById('containerCustomSize').style.display = 'block';
+      container.style.width = config.containerWidth + 'px';
+      container.style.height = config.containerHeight + 'px';
+    } else {
+      document.getElementById('containerCustomSize').style.display = 'none';
+      container.classList.add('size-' + config.containerSize);
+      container.style.width = '';
+      container.style.height = '';
     }
   });
 
-  document.getElementById('bgVideoOpacity').addEventListener('input', function() {
-    bgVideoConfig.opacity = parseInt(this.value);
-    document.getElementById('bgVideoOpacityValue').textContent = this.value + '%';
+  document.getElementById('containerWidth').addEventListener('input', function() {
+    config.containerWidth = parseInt(this.value) || 853;
+    if (config.containerSize === 'custom') {
+      document.getElementById('previewContainer').style.width = config.containerWidth + 'px';
+    }
   });
 
-  document.getElementById('bgVideoCover').addEventListener('change', function() {
-    bgVideoConfig.objectFit = this.checked ? 'cover' : 'contain';
+  document.getElementById('containerHeight').addEventListener('input', function() {
+    config.containerHeight = parseInt(this.value) || 480;
+    if (config.containerSize === 'custom') {
+      document.getElementById('previewContainer').style.height = config.containerHeight + 'px';
+    }
   });
 
-  ['bgVideoWidth', 'bgVideoWidthUnit', 'bgVideoHeight', 'bgVideoHeightUnit'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener('input', function() {
-      bgVideoConfig[id.startsWith('bgVideoWidth') ? (id.includes('Unit') ? 'customWidthUnit' : 'customWidth') : (id.includes('Unit') ? 'customHeightUnit' : 'customHeight')] = this.value;
+  // ========== 蒙版设置 ==========
+  
+  document.getElementById('overlayColor').addEventListener('input', function() {
+    config.overlayColor = this.value;
+    document.getElementById('overlayColorText').value = this.value;
+    updateOverlay();
+  });
+
+  document.getElementById('overlayColorText').addEventListener('input', function() {
+    config.overlayColor = this.value;
+    document.getElementById('overlayColor').value = this.value;
+    updateOverlay();
+  });
+
+  document.getElementById('overlayOpacity').addEventListener('input', function() {
+    config.overlayOpacity = parseInt(this.value);
+    document.getElementById('overlayOpacityValue').textContent = this.value + '%';
+    updateOverlay();
+  });
+
+  function updateOverlay() {
+    const hex = config.overlayColor;
+    const r = parseInt(hex.slice(1,3), 16);
+    const g = parseInt(hex.slice(3,5), 16);
+    const b = parseInt(hex.slice(5,7), 16);
+    const a = config.overlayOpacity / 100;
+    document.getElementById('previewOverlay').style.backgroundColor = `rgba(${r},${g},${b},${a})`;
+  }
+
+  // ========== 文字设置 ==========
+  
+  document.getElementById('textColor').addEventListener('input', function() {
+    config.textColor = this.value;
+    document.getElementById('textColorText').value = this.value;
+    updateTextStyles();
+  });
+
+  document.getElementById('textColorText').addEventListener('input', function() {
+    config.textColor = this.value;
+    document.getElementById('textColor').value = this.value;
+    updateTextStyles();
+  });
+
+  document.getElementById('titleFontSize').addEventListener('input', function() {
+    config.titleFontSize = parseInt(this.value);
+    document.getElementById('titleFontSizeValue').textContent = this.value + 'px';
+    document.getElementById('previewTitle').style.fontSize = this.value + 'px';
+  });
+
+  document.getElementById('textFontSize').addEventListener('input', function() {
+    config.textFontSize = parseInt(this.value);
+    document.getElementById('textFontSizeValue').textContent = this.value + 'px';
+    updateTextStyles();
+  });
+
+  function updateTextStyles() {
+    document.getElementById('previewTitle').style.color = config.textColor;
+    document.getElementById('previewSubtitle').style.color = config.textColor;
+    document.getElementById('previewCredits').style.color = config.textColor;
+    
+    document.getElementById('previewSubtitle').style.fontSize = config.textFontSize + 'px';
+    document.getElementById('previewCredits').style.fontSize = config.textFontSize + 'px';
+    
+    document.querySelectorAll('.preview-lyric-line').forEach(el => {
+      el.style.color = config.textColor;
+      el.style.fontSize = config.lyricFontSize + 'px';
     });
-    if (el.tagName === 'SELECT') {
-      el.addEventListener('change', function() {
-        bgVideoConfig[id.startsWith('bgVideoWidth') ? (id.includes('Unit') ? 'customWidthUnit' : 'customWidth') : (id.includes('Unit') ? 'customHeightUnit' : 'customHeight')] = this.value;
-      });
-    }
+  }
+
+  // ========== 人物尺寸 ==========
+  
+  document.getElementById('figureSizePresets').addEventListener('click', function(e) {
+    if (!e.target.classList.contains('size-preset')) return;
+    this.querySelectorAll('.size-preset').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    config.figureSize = e.target.dataset.figureSize;
+    updateFigureSize();
   });
 
-  document.getElementById('bgImageOpacity').addEventListener('input', function() {
-    bgImageConfig.opacity = parseInt(this.value);
-    document.getElementById('bgImageOpacityValue').textContent = this.value + '%';
+  function updateFigureSize() {
+    const figure = document.getElementById('previewFigure');
+    const sizes = { small: '80px', medium: '150px', large: '250px' };
+    figure.style.maxHeight = sizes[config.figureSize] || '150px';
+  }
+
+  // ========== 歌词设置 ==========
+  
+  document.getElementById('lyricVisibleLines').addEventListener('input', function() {
+    config.lyricVisibleLines = parseInt(this.value);
+    document.getElementById('lyricVisibleLinesValue').textContent = this.value;
+    updateLyricDisplay();
   });
 
-  document.getElementById('decorVideoPresets').addEventListener('click', function(e) {
-    if (e.target.classList.contains('preset-btn')) {
-      this.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      decorVideoConfig.preset = e.target.dataset.preset;
-      document.getElementById('decorVideoCustom').style.display = 
-        decorVideoConfig.preset === 'custom' ? 'block' : 'none';
-    }
-  });
-
-  document.getElementById('decorVideoOpacity').addEventListener('input', function() {
-    decorVideoConfig.opacity = parseInt(this.value);
-    document.getElementById('decorVideoOpacityValue').textContent = this.value + '%';
-  });
-
-  ['decorVideoWidth', 'decorVideoWidthUnit', 'decorVideoHeight', 'decorVideoHeightUnit'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener('input', function() {
-      const key = id.startsWith('decorVideoWidth') ? (id.includes('Unit') ? 'customWidthUnit' : 'customWidth') : (id.includes('Unit') ? 'customHeightUnit' : 'customHeight');
-      decorVideoConfig[key] = this.value;
+  document.getElementById('lyricFontSize').addEventListener('input', function() {
+    config.lyricFontSize = parseInt(this.value);
+    document.getElementById('lyricFontSizeValue').textContent = this.value + 'px';
+    document.querySelectorAll('.preview-lyric-line').forEach(el => {
+      el.style.fontSize = this.value + 'px';
     });
-    if (el.tagName === 'SELECT') {
-      el.addEventListener('change', function() {
-        const key = id.startsWith('decorVideoWidth') ? (id.includes('Unit') ? 'customWidthUnit' : 'customWidth') : (id.includes('Unit') ? 'customHeightUnit' : 'customHeight');
-        decorVideoConfig[key] = this.value;
-      });
-    }
   });
 
-  // ========== 获取音频源 ==========
+  // ========== 解析歌词 ==========
   
-  function getAudioSource() {
-    if (fileBase64.audio) {
-      return { type: 'base64', dataUrl: fileBase64.audio.dataUrl, mimeType: fileBase64.audio.mimeType };
-    }
-    const url = document.getElementById('audioUrl').value.trim();
-    if (url) {
-      return { type: 'url', url: url };
-    }
-    return null;
-  }
-
-  function getMediaSource(key) {
-    if (fileBase64[key]) {
-      return { type: 'base64', dataUrl: fileBase64[key].dataUrl, mimeType: fileBase64[key].mimeType };
-    }
-    return null;
-  }
-
-  // ========== 获取所有配置 ==========
-  
-  function getAllConfig() {
-    return {
-      title: document.getElementById('songTitle').value || '未命名歌曲',
-      subtitle: document.getElementById('songSubtitle').value || '',
-      audioSource: getAudioSource(),
-      bgVideoSource: getMediaSource('bgVideo'),
-      bgImageSource: getMediaSource('bgImage'),
-      decorVideoSource: getMediaSource('decorVideo'),
-      decorImageSource: getMediaSource('decorImage'),
-      lyrics: parseTimestampLyrics(document.getElementById('lyricTimestamp').value),
-      lyricContent: document.getElementById('lyricContent').value,
-      songLink: document.getElementById('songLink').value,
-      signature: document.getElementById('signature').value,
-      bgVideo: { ...bgVideoConfig },
-      bgImage: { ...bgImageConfig },
-      decorVideo: { ...decorVideoConfig }
-    };
-  }
-
-  // ========== 生成预览（使用 Blob URL，同一会话有效） ==========
-  
-  function generatePreview() {
-    const config = getAllConfig();
-    const fullHTML = generateFullHTML(config, false);
-    
-    const iframe = document.getElementById('previewFrame');
-    const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
-    iframe.src = URL.createObjectURL(blob);
-    
-    showStatus('success', '✅ 预览已生成');
-  }
-
-  // ========== 下载页面（内嵌 Base64） ==========
-  
-  async function downloadPage() {
-    const config = getAllConfig();
-    
-    if (!config.audioSource) {
-      showStatus('error', '❌ 请先上传音频文件或填写音频外链 URL');
-      return;
-    }
-    
-    showStatus('info', '⏳ 正在生成 HTML（内嵌媒体文件）...');
-    
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressBarFill');
-    progressBar.classList.add('show');
-    progressFill.style.width = '30%';
-    
-    await new Promise(r => setTimeout(r, 100));
-    
-    const fullHTML = generateFullHTML(config, true);
-    
-    progressFill.style.width = '80%';
-    await new Promise(r => setTimeout(r, 100));
-    
-    const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${config.title}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    progressFill.style.width = '100%';
-    await new Promise(r => setTimeout(r, 300));
-    progressBar.classList.remove('show');
-    progressFill.style.width = '0%';
-    
-    const sizeMB = (blob.size / (1024 * 1024)).toFixed(1);
-    showStatus('success', `✅ 下载成功！文件大小约 ${sizeMB} MB，用浏览器打开即可查看`);
-  }
-
-  // ========== 解析时间戳歌词 ==========
-  
-  function parseTimestampLyrics(text) {
+  function parseLyrics() {
+    const text = document.getElementById('lyricTimestamp').value;
     const lines = text.split('\n').filter(line => line.trim());
-    const parsed = [];
+    parsedLyrics = [];
     const regex = /\[(\d+):(\d+)\.(\d+)\](.*)/;
     
     lines.forEach(line => {
       const match = line.match(regex);
       if (match) {
-        const minutes = parseInt(match[1]);
-        const seconds = parseInt(match[2]);
+        const min = parseInt(match[1]);
+        const sec = parseInt(match[2]);
         const ms = parseInt(match[3]);
-        const time = minutes * 60 + seconds + ms / 1000;
-        const text = match[4].trim();
-        if (text) {
-          parsed.push({ time, text });
-        }
+        const time = min * 60 + sec + ms / 1000;
+        const txt = match[4].trim();
+        if (txt) parsedLyrics.push({ time, text: txt });
       }
     });
-    
-    return parsed;
   }
 
-  // ========== 计算视频 CSS ==========
-  
-  function getVideoCSS(config, type) {
-    if (type === 'bg') {
-      const { preset, customWidth, customWidthUnit, customHeight, customHeightUnit, opacity, objectFit } = config;
-      let widthCSS = '100%';
-      let heightCSS = '100%';
-      
-      switch (preset) {
-        case 'fullscreen': widthCSS = '100%'; heightCSS = '100%'; break;
-        case '16-9': widthCSS = '100%'; heightCSS = 'auto'; break;
-        case '4-3': widthCSS = '100%'; heightCSS = 'auto'; break;
-        case '1-1': widthCSS = '80%'; heightCSS = '80%'; break;
-        case '9-16': widthCSS = 'auto'; heightCSS = '100%'; break;
-        case 'custom':
-          widthCSS = customWidth ? `${customWidth}${customWidthUnit}` : '100%';
-          heightCSS = customHeight ? `${customHeight}${customHeightUnit}` : '100%';
-          break;
+  function getVisibleLyrics(currentTime) {
+    if (!parsedLyrics.length) return { lines: [], activeIndex: -1 };
+    
+    let activeIndex = -1;
+    for (let i = parsedLyrics.length - 1; i >= 0; i--) {
+      if (currentTime >= parsedLyrics[i].time) {
+        activeIndex = i;
+        break;
       }
-      
-      return { width: widthCSS, height: heightCSS, opacity: opacity / 100, objectFit };
     }
     
-    if (type === 'decor') {
-      const { preset, customWidth, customWidthUnit, customHeight, customHeightUnit, opacity } = config;
-      let widthCSS = 'auto';
-      let heightCSS = '60vh';
-      
-      switch (preset) {
-        case 'auto': widthCSS = 'auto'; heightCSS = '60vh'; break;
-        case 'small': widthCSS = 'auto'; heightCSS = '30vh'; break;
-        case 'medium': widthCSS = 'auto'; heightCSS = '60vh'; break;
-        case 'large': widthCSS = 'auto'; heightCSS = '80vh'; break;
-        case 'custom':
-          widthCSS = customWidth ? `${customWidth}${customWidthUnit}` : 'auto';
-          heightCSS = customHeight ? `${customHeight}${customHeightUnit}` : '60vh';
-          break;
-      }
-      
-      return { width: widthCSS, height: heightCSS, opacity: opacity / 100 };
+    const half = Math.floor(config.lyricVisibleLines / 2);
+    let start = Math.max(0, activeIndex - half);
+    let end = Math.min(parsedLyrics.length, start + config.lyricVisibleLines);
+    
+    if (end - start < config.lyricVisibleLines) {
+      start = Math.max(0, end - config.lyricVisibleLines);
     }
     
-    return {};
+    const lines = parsedLyrics.slice(start, end).map((l, i) => ({
+      ...l,
+      isActive: (start + i) === activeIndex
+    }));
+    
+    return { lines, activeIndex: activeIndex - start };
   }
 
-  // ========== 生成完整 HTML ==========
-  
-  function generateFullHTML(config, embedBase64) {
-    const {
-      title, subtitle, audioSource, bgVideoSource, bgImageSource,
-      decorVideoSource, decorImageSource, lyrics, lyricContent,
-      songLink, signature, bgVideo, bgImage, decorVideo
-    } = config;
-
-    const bgCSS = getVideoCSS(bgVideo, 'bg');
-    const decorCSS = getVideoCSS(decorVideo, 'decor');
+  function updateLyricDisplay() {
+    const currentTime = audioElement.currentTime || 0;
+    const { lines } = getVisibleLyrics(currentTime);
     
-    const lyricPanelHTML = generateLyricPanelHTML(lyrics);
-    const mobileLyricHTML = generateMobileLyricHTML(lyrics);
+    const container = document.getElementById('previewLyrics');
+    container.innerHTML = '';
     
-    // 音频 HTML
-    let audioSrc;
-    if (audioSource) {
-      if (audioSource.type === 'base64') {
-        audioSrc = embedBase64 ? audioSource.dataUrl : audioSource.dataUrl;
-      } else {
-        audioSrc = audioSource.url;
-      }
-    }
-    
-    // 背景视频 HTML
-    let bgVideoSrc = null;
-    if (bgVideoSource) {
-      bgVideoSrc = embedBase64 ? bgVideoSource.dataUrl : bgVideoSource.dataUrl;
-    }
-    
-    const bgVideoHTML = bgVideoSrc
-      ? `<video class="bg-video" autoplay muted loop playsinline preload="auto"
-           style="width:${bgCSS.width}; height:${bgCSS.height}; object-fit:${bgCSS.objectFit}; opacity:${bgCSS.opacity};">
-           <source src="${escapeHTML(bgVideoSrc)}" type="${bgVideoSource ? bgVideoSource.mimeType : 'video/mp4'}">
-         </video>`
-      : '';
-    
-    // 背景图片 HTML
-    let bgImgSrc = null;
-    if (bgImageSource) {
-      bgImgSrc = embedBase64 ? bgImageSource.dataUrl : bgImageSource.dataUrl;
-    }
-    
-    const bgImageHTML = bgImgSrc
-      ? `<img src="${escapeHTML(bgImgSrc)}" id="mobileBg" 
-           style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:${bgImage.opacity / 100};">`
-      : '';
-    
-    // 桌面端装饰视频
-    let decorVidSrc = null;
-    if (decorVideoSource) {
-      decorVidSrc = embedBase64 ? decorVideoSource.dataUrl : decorVideoSource.dataUrl;
-    }
-    
-    const decorVideoHTML = decorVidSrc
-      ? `<video class="pirate-desktop" autoplay muted loop playsinline preload="none"
-           style="width:${decorCSS.width}; height:${decorCSS.height}; opacity:${decorCSS.opacity}; right:60px; bottom:10vh; position:fixed; z-index:998; pointer-events:none;">
-           <source src="${escapeHTML(decorVidSrc)}" type="${decorVideoSource ? decorVideoSource.mimeType : 'video/webm'}">
-         </video>`
-      : '';
-    
-    // 移动端装饰
-    let decorImgSrc = null;
-    if (decorImageSource) {
-      decorImgSrc = embedBase64 ? decorImageSource.dataUrl : decorImageSource.dataUrl;
-    }
-    
-    const decorMobileHTML = decorImgSrc
-      ? `<div id="mobilePirate" style="display:none; justify-content:center; margin-top:32px; height:400px;">
-           <img src="${escapeHTML(decorImgSrc)}" 
-                style="height:100%; max-width:85%; object-fit:contain; filter:drop-shadow(0 0 20px rgba(200,150,150,0.4));">
-         </div>`
-      : '';
-
-    const audioHTML = audioSrc
-      ? `<div id="player-container">
-           <blockquote class="song-link">
-             🎵 收听完整歌曲<br>
-             <audio id="song" controls>
-               <source src="${escapeHTML(audioSrc)}" type="${audioSource ? audioSource.mimeType || 'audio/mpeg' : 'audio/mpeg'}">
-             </audio>
-             ${songLink ? `<p style="margin-top:8px; font-size:14px;">🔗 <a href="${escapeHTML(songLink)}" target="_blank">在网易云音乐打开</a></p>` : ''}
-           </blockquote>
-         </div>`
-      : '';
-
-    return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>${escapeHTML(title)} · 歌词解读</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 40px 24px;
-      color: #2c2c2c;
-      line-height: 1.85;
-      background-color: #fafafa;
-    }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 24px;
-      text-align: center;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
-    h2 {
-      font-size: 20px;
-      margin-top: 40px;
-      margin-bottom: 16px;
-      border-left: 4px solid #d14b4b;
-      padding-left: 12px;
-      color: #1a1a1a;
-    }
-    p { margin: 12px 0; }
-    blockquote {
-      margin: 20px 0;
-      padding: 16px 20px;
-      font-style: italic;
-      color: #4a3a3a;
-      background: #f9f6f6;
-      border-radius: 0 8px 8px 0;
-      border-left: 3px solid #c97a7a;
-    }
-    hr {
-      margin: 32px 0;
-      border: none;
-      border-top: 1px solid #d9c8c8;
-    }
-    strong { color: #1a1a1a; }
-    .signature {
-      margin-top: 24px;
-      text-align: right;
-      font-weight: bold;
-      color: #3a2020;
-    }
-    
-    .lyric-line {
-      margin: 6px 0;
-      padding: 8px 16px;
-      border-left: 3px solid #d14b4b;
-      font-weight: bold;
-      color: #3a2020;
-      background: #fdf5f5;
-      border-radius: 0 6px 6px 0;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .lyric-line.active-lyric {
-      color: #d14b4b;
-      background: #fdf0f0;
-      border-left-color: #b33a3a;
-    }
-    
-    .song-link {
-      margin: 20px 0;
-      padding: 16px 20px;
-      background: #f5f0f0;
-      border-left: 3px solid #c97a7a;
-      border-radius: 6px;
-    }
-    .song-link a {
-      color: #d14b4b;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    
-    audio { width: 100%; margin-top: 12px; border-radius: 8px; }
-    
-    #sticky-audio-container {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
-      padding: 8px 24px; background: transparent; display: none;
-    }
-    #sticky-audio-container.active { display: block; }
-    #sticky-audio-container audio { width: 100%; max-width: 720px; margin: 0 auto; display: block; }
-    
-    .lyric-panel {
-      position: fixed;
-      left: 60px;
-      top: 10vh;
-      height: 80vh;
-      width: 300px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(18px);
-      border-radius: 18px;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.08);
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border: 1px solid rgba(200,150,150,0.2);
-    }
-    .lyric-panel-header {
-      padding: 16px 20px 8px;
-      font-size: 12px;
-      color: #b35f5f;
-      letter-spacing: 2px;
-      text-align: center;
-      border-bottom: 1px solid #f0e0e0;
-      cursor: grab;
-      user-select: none;
-      font-weight: 500;
-    }
-    .lyric-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 18px 12px;
-      scroll-behavior: smooth;
-    }
-    .lyric-scroll::-webkit-scrollbar { width: 4px; }
-    .lyric-scroll::-webkit-scrollbar-thumb { background: #e0d0d0; border-radius: 4px; }
-    .lyric-panel .line {
-      font-size: 14px;
-      line-height: 2.2;
-      color: #999;
-      padding: 4px 12px;
-      border-radius: 8px;
-      transition: all 0.25s ease;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .lyric-panel .line:hover { color: #c44; background: #fdf2f2; }
-    .lyric-panel .line.active-lyric {
-      color: #d14b4b;
-      font-weight: bold;
-      background: #fef0f0;
-      font-size: 15px;
-    }
-    
-    .bg-video {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-    }
-    
-    @media (max-width: 768px) {
-      .bg-video { display: none; }
-      .lyric-panel { display: none; }
-      .pirate-desktop { display: none; }
-      body { padding: 20px 16px; }
-    }
-  </style>
-</head>
-<body>
-
-${bgVideoHTML}
-${bgImageHTML}
-${decorVideoHTML}
-
-<div class="lyric-panel" id="lyricPanel">
-  <div class="lyric-panel-header" id="lyricPanelHeader">🎧 实时歌词 · 可拖拽</div>
-  <div class="lyric-scroll" id="lyricScroll">
-    ${lyricPanelHTML}
-  </div>
-</div>
-
-<h1>${escapeHTML(title)}<br>歌词解读</h1>
-<p style="text-align:center; color:#5a4a4a;">—— ${escapeHTML(subtitle)}</p>
-
-${audioHTML}
-
-<div id="sticky-audio-container"></div>
-
-<div id="mobileLyricsTop" style="display:none; background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); border-radius:14px; padding:14px 10px; margin-bottom:24px; max-height:200px; overflow-y:auto; box-shadow:0 4px 16px rgba(0,0,0,0.05); border:1px solid rgba(200,150,150,0.15); scroll-behavior:smooth;">
-  <div style="text-align:center;margin-bottom:6px;font-size:10px;color:#c97a7a;letter-spacing:1px;">🎧 实时歌词</div>
-  ${mobileLyricHTML}
-</div>
-
-<p style="font-style: italic; color: #777; margin-top: 24px;">以下解读聚焦于歌词文本自身的意象、结构与精神内核。</p>
-<hr>
-
-${lyricContent}
-
-<hr>
-<p style="text-align: center; font-size: 18px; margin-top: 32px;">一份从灵魂深处出发，关于盛开、自由与自我领航的文本。</p>
-<p class="signature">—— ${escapeHTML(signature)}</p>
-${songLink ? `<p style="text-align: center; margin-top: 32px; color: #c97a7a; font-size: 14px;">
-  <a href="${escapeHTML(songLink)}" target="_blank" style="color: #c97a7a; text-decoration: none;">🎧 收听完整歌曲</a>
-</p>` : ''}
-
-${decorMobileHTML}
-
-<script>
-  (function() {
-    var audio = document.getElementById('song');
-    if (!audio) return;
-    
-    var lyricScroll = document.getElementById('lyricScroll');
-    var mobileLyricsTop = document.getElementById('mobileLyricsTop');
-    var mobileBg = document.getElementById('mobileBg');
-    var mobilePirate = document.getElementById('mobilePirate');
-    var panelLines = document.querySelectorAll('#lyricScroll .line[data-time]');
-    var bodyLines = document.querySelectorAll('.lyric-line[data-time]');
-    var mobileLines = document.querySelectorAll('#mobileLyricsTop .line[data-time]');
-    var currentPanelLyric = null;
-    var currentBodyLyric = null;
-    var currentMobileLyric = null;
-
-    function initMobile() {
-      if (window.innerWidth <= 768) {
-        if (mobileLyricsTop) mobileLyricsTop.style.display = 'block';
-        if (mobileBg) mobileBg.style.display = 'block';
-        if (mobilePirate) mobilePirate.style.display = 'flex';
-      }
-    }
-    initMobile();
-    window.addEventListener('resize', initMobile);
-
-    var stickyContainer = document.getElementById('sticky-audio-container');
-    var isSticky = false;
-    var placeholder = null;
-
-    function handleScroll() {
-      if (!audio) return;
-      var audioRect = audio.getBoundingClientRect();
-      if (audioRect.bottom <= 0 && !isSticky) {
-        isSticky = true;
-        placeholder = document.createElement('div');
-        placeholder.style.height = audio.offsetHeight + 'px';
-        audio.parentNode.insertBefore(placeholder, audio);
-        stickyContainer.appendChild(audio);
-        stickyContainer.classList.add('active');
-      } else if (isSticky && placeholder) {
-        var placeholderRect = placeholder.getBoundingClientRect();
-        if (placeholderRect.top >= 0) {
-          isSticky = false;
-          placeholder.parentNode.insertBefore(audio, placeholder);
-          placeholder.parentNode.removeChild(placeholder);
-          placeholder = null;
-          stickyContainer.classList.remove('active');
-        }
-      }
-    }
-    window.addEventListener('scroll', handleScroll);
-
-    function addClickListeners(lines) {
-      lines.forEach(function(line) {
-        line.addEventListener('click', function() {
-          var time = parseFloat(this.getAttribute('data-time'));
-          if (!isNaN(time) && audio) {
-            audio.currentTime = time;
-            audio.play().catch(function(){});
-          }
-        });
-      });
-    }
-    addClickListeners(panelLines);
-    addClickListeners(bodyLines);
-    addClickListeners(mobileLines);
-
-    audio.addEventListener('timeupdate', function() {
-      var t = audio.currentTime;
-      
-      var activeBody = null;
-      for (var i = bodyLines.length - 1; i >= 0; i--) {
-        if (t >= parseFloat(bodyLines[i].getAttribute('data-time'))) {
-          activeBody = bodyLines[i];
-          break;
-        }
-      }
-      if (activeBody && activeBody !== currentBodyLyric) {
-        if (currentBodyLyric) currentBodyLyric.classList.remove('active-lyric');
-        activeBody.classList.add('active-lyric');
-        currentBodyLyric = activeBody;
-      }
-
-      var activePanel = null;
-      for (var j = panelLines.length - 1; j >= 0; j--) {
-        if (t >= parseFloat(panelLines[j].getAttribute('data-time'))) {
-          activePanel = panelLines[j];
-          break;
-        }
-      }
-      if (activePanel && activePanel !== currentPanelLyric) {
-        if (currentPanelLyric) currentPanelLyric.classList.remove('active-lyric');
-        activePanel.classList.add('active-lyric');
-        currentPanelLyric = activePanel;
-        if (lyricScroll && activePanel) {
-          var lineTop = activePanel.offsetTop;
-          var containerHeight = lyricScroll.clientHeight;
-          var lineHeight = activePanel.offsetHeight;
-          lyricScroll.scrollTo({ top: lineTop - containerHeight / 2 + lineHeight / 2, behavior: 'smooth' });
-        }
-      }
-
-      var activeMobile = null;
-      for (var k = mobileLines.length - 1; k >= 0; k--) {
-        if (t >= parseFloat(mobileLines[k].getAttribute('data-time'))) {
-          activeMobile = mobileLines[k];
-          break;
-        }
-      }
-      if (activeMobile && activeMobile !== currentMobileLyric) {
-        if (currentMobileLyric) {
-          currentMobileLyric.style.color = '#999';
-          currentMobileLyric.style.fontWeight = 'normal';
-          currentMobileLyric.style.background = 'transparent';
-        }
-        activeMobile.style.color = '#d14b4b';
-        activeMobile.style.fontWeight = 'bold';
-        activeMobile.style.background = '#fef0f0';
-        currentMobileLyric = activeMobile;
-        if (mobileLyricsTop && activeMobile) {
-          var mTop = activeMobile.offsetTop;
-          var mH = mobileLyricsTop.clientHeight;
-          var mLH = activeMobile.offsetHeight;
-          mobileLyricsTop.scrollTo({ top: mTop - mH / 2 + mLH / 2, behavior: 'smooth' });
-        }
-      }
+    lines.forEach((line, i) => {
+      const div = document.createElement('div');
+      div.className = 'preview-lyric-line' + (line.isActive ? ' active' : '');
+      div.textContent = line.text;
+      div.style.color = config.textColor;
+      div.style.fontSize = config.lyricFontSize + 'px';
+      container.appendChild(div);
     });
-
-    var lyricPanel = document.getElementById('lyricPanel');
-    var lyricPanelHeader = document.getElementById('lyricPanelHeader');
-    if (lyricPanel && lyricPanelHeader) {
-      var isDragging = false, startX, startY, initialLeft, initialTop;
-      lyricPanelHeader.addEventListener('mousedown', function(e) {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        initialLeft = lyricPanel.offsetLeft;
-        initialTop = lyricPanel.offsetTop;
-        function onMove(e) {
-          if (!isDragging) return;
-          var nl = initialLeft + (e.clientX - startX);
-          var nt = initialTop + (e.clientY - startY);
-          nl = Math.max(0, Math.min(nl, window.innerWidth - lyricPanel.offsetWidth));
-          nt = Math.max(0, Math.min(nt, window.innerHeight - lyricPanel.offsetHeight));
-          lyricPanel.style.left = nl + 'px';
-          lyricPanel.style.top = nt + 'px';
-        }
-        function onUp() {
-          isDragging = false;
-          document.removeEventListener('mousemove', onMove);
-          document.removeEventListener('mouseup', onUp);
-        }
-        document.addEventListener('mousemove', onMove);
-        document.addEventListener('mouseup', onUp);
-        e.preventDefault();
-      });
-    }
-  })();
-<\/script>
-</body>
-</html>`;
   }
 
-  // ========== 生成歌词面板 HTML ==========
+  // ========== 更新文字内容 ==========
   
-  function generateLyricPanelHTML(lyrics) {
-    if (!lyrics.length) return '<div class="line">暂无歌词</div>';
-    return lyrics.map(l => 
-      `<div class="line" data-time="${l.time}">${escapeHTML(l.text)}</div>`
-    ).join('\n');
+  function updateTextContent() {
+    const title = document.getElementById('songTitle').value || '歌名';
+    const subtitle = document.getElementById('songSubtitle').value;
+    const lyrics = document.getElementById('creditsLyrics').value;
+    const music = document.getElementById('creditsMusic').value;
+    const artist = document.getElementById('creditsArtist').value;
+    
+    document.getElementById('previewTitle').textContent = title;
+    
+    const subtitleEl = document.getElementById('previewSubtitle');
+    if (subtitle) {
+      subtitleEl.textContent = subtitle;
+      subtitleEl.style.display = 'block';
+    } else {
+      subtitleEl.style.display = 'none';
+    }
+    
+    let creditsText = '';
+    if (lyrics) creditsText += '词：' + lyrics;
+    if (music) creditsText += (creditsText ? '  ' : '') + '曲：' + music;
+    if (artist) creditsText += (creditsText ? '  ' : '') + '唱：' + artist;
+    document.getElementById('previewCredits').textContent = creditsText;
   }
 
-  function generateMobileLyricHTML(lyrics) {
-    if (!lyrics.length) return '';
-    return lyrics.map(l =>
-      `<div class="line" data-time="${l.time}" style="font-size:13px;line-height:2;color:#999;padding:3px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(l.text)}</div>`
-    ).join('\n');
+  // ========== 全部更新 ==========
+  
+  function updatePreview() {
+    parseLyrics();
+    updateOverlay();
+    updateTextContent();
+    updateTextStyles();
+    updateFigureSize();
+    updateLyricDisplay();
+    document.getElementById('previewTitle').style.fontSize = config.titleFontSize + 'px';
   }
+
+  // ========== 播放控制 ==========
+  
+  function playPreview() {
+    if (!audioElement.src) {
+      showStatus('error', '❌ 请先上传音频文件或填写音频链接');
+      return;
+    }
+    
+    audioElement.play().then(() => {
+      isPlaying = true;
+      document.getElementById('previewBgVideo')?.play().catch(() => {});
+      document.getElementById('previewFigureVideo')?.play().catch(() => {});
+      startTimeUpdate();
+      showStatus('success', '▶ 正在播放');
+    }).catch(err => {
+      showStatus('error', '❌ 播放失败: ' + err.message);
+    });
+  }
+
+  function pausePreview() {
+    audioElement.pause();
+    isPlaying = false;
+    document.getElementById('previewBgVideo')?.pause();
+    document.getElementById('previewFigureVideo')?.pause();
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    showStatus('info', '⏸ 已暂停');
+  }
+
+  function startTimeUpdate() {
+    function update() {
+      if (!isPlaying) return;
+      
+      const t = audioElement.currentTime;
+      const total = audioElement.duration || 0;
+      
+      document.getElementById('currentTime').textContent = formatTime(t);
+      document.getElementById('totalTime').textContent = formatTime(total);
+      
+      updateLyricDisplay();
+      
+      animationId = requestAnimationFrame(update);
+    }
+    
+    update();
+  }
+
+  function formatTime(seconds) {
+    if (isNaN(seconds)) return '00:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  audioElement.addEventListener('loadedmetadata', function() {
+    document.getElementById('totalTime').textContent = formatTime(audioElement.duration);
+  });
+
+  audioElement.addEventListener('ended', function() {
+    isPlaying = false;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    document.getElementById('previewBgVideo')?.pause();
+    document.getElementById('previewFigureVideo')?.pause();
+  });
+
+  // 点击歌词行跳转
+  document.getElementById('previewLyrics').addEventListener('click', function(e) {
+    const line = e.target.closest('.preview-lyric-line');
+    if (!line || !parsedLyrics.length) return;
+    
+    const text = line.textContent;
+    const found = parsedLyrics.find(l => l.text === text);
+    if (found) {
+      audioElement.currentTime = found.time;
+      updateLyricDisplay();
+    }
+  });
+
+  // ========== 音频 URL ==========
+  
+  document.getElementById('audioUrl').addEventListener('input', function() {
+    if (this.value && !fileBase64.audio) {
+      audioElement.src = this.value;
+      audioElement.load();
+    }
+  });
 
   // ========== 状态提示 ==========
   
@@ -1543,7 +1136,7 @@ ${decorMobileHTML}
     status.className = 'status ' + type;
     status.textContent = message;
     status.style.display = 'block';
-    setTimeout(() => { status.style.display = 'none'; }, 4000);
+    setTimeout(() => { status.style.display = 'none'; }, 3000);
   }
 
   // ========== 恢复默认值 ==========
@@ -1551,67 +1144,313 @@ ${decorMobileHTML}
   function resetForm() {
     document.getElementById('songTitle').value = defaultValues.songTitle;
     document.getElementById('songSubtitle').value = defaultValues.songSubtitle;
-    document.getElementById('audioUrl').value = defaultValues.audioUrl;
-    document.getElementById('songLink').value = defaultValues.songLink;
-    document.getElementById('signature').value = defaultValues.signature;
+    document.getElementById('creditsLyrics').value = defaultValues.creditsLyrics;
+    document.getElementById('creditsMusic').value = defaultValues.creditsMusic;
+    document.getElementById('creditsArtist').value = defaultValues.creditsArtist;
     document.getElementById('lyricTimestamp').value = defaultValues.lyricTimestamp;
-    document.getElementById('lyricContent').value = defaultValues.lyricContent;
+    document.getElementById('audioUrl').value = '';
     
-    // 恢复视频预设
-    document.querySelectorAll('#bgVideoPresets .preset-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('#bgVideoPresets .preset-btn[data-preset="fullscreen"]').classList.add('active');
-    bgVideoConfig.preset = 'fullscreen';
-    bgVideoConfig.opacity = 15;
-    bgVideoConfig.objectFit = 'cover';
-    document.getElementById('bgVideoOpacity').value = 15;
-    document.getElementById('bgVideoOpacityValue').textContent = '15%';
-    document.getElementById('bgVideoCover').checked = true;
-    document.getElementById('bgVideoCustom').style.display = 'none';
+    document.getElementById('overlayColor').value = '#000000';
+    document.getElementById('overlayColorText').value = '#000000';
+    document.getElementById('overlayOpacity').value = 50;
+    document.getElementById('overlayOpacityValue').textContent = '50%';
+    config.overlayColor = '#000000';
+    config.overlayOpacity = 50;
     
-    document.querySelectorAll('#decorVideoPresets .preset-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('#decorVideoPresets .preset-btn[data-preset="auto"]').classList.add('active');
-    decorVideoConfig.preset = 'auto';
-    decorVideoConfig.opacity = 90;
-    document.getElementById('decorVideoOpacity').value = 90;
-    document.getElementById('decorVideoOpacityValue').textContent = '90%';
-    document.getElementById('decorVideoCustom').style.display = 'none';
+    document.getElementById('textColor').value = '#ffffff';
+    document.getElementById('textColorText').value = '#ffffff';
+    config.textColor = '#ffffff';
     
-    document.getElementById('bgImageOpacity').value = 15;
-    document.getElementById('bgImageOpacityValue').textContent = '15%';
+    document.getElementById('titleFontSize').value = 28;
+    document.getElementById('titleFontSizeValue').textContent = '28px';
+    config.titleFontSize = 28;
     
-    // 清除文件上传状态
+    document.getElementById('textFontSize').value = 14;
+    document.getElementById('textFontSizeValue').textContent = '14px';
+    config.textFontSize = 14;
+    
+    document.getElementById('lyricFontSize').value = 16;
+    document.getElementById('lyricFontSizeValue').textContent = '16px';
+    config.lyricFontSize = 16;
+    
+    document.getElementById('lyricVisibleLines').value = 5;
+    document.getElementById('lyricVisibleLinesValue').textContent = '5';
+    config.lyricVisibleLines = 5;
+    
+    // 恢复容器尺寸
+    document.querySelectorAll('#containerSizePresets .size-preset').forEach(b => b.classList.remove('active'));
+    document.querySelector('#containerSizePresets .size-preset[data-size="16-9"]').classList.add('active');
+    config.containerSize = '16-9';
+    document.getElementById('containerCustomSize').style.display = 'none';
+    const container = document.getElementById('previewContainer');
+    container.classList.remove('size-9-16', 'size-4-3', 'size-1-1', 'size-21-9', 'size-custom');
+    container.classList.add('size-16-9');
+    container.style.width = '';
+    container.style.height = '';
+    
+    // 恢复人物尺寸
+    document.querySelectorAll('#figureSizePresets .size-preset').forEach(b => b.classList.remove('active'));
+    document.querySelector('#figureSizePresets .size-preset[data-figure-size="medium"]').classList.add('active');
+    config.figureSize = 'medium';
+    
+    // 清除文件
     Object.keys(fileBase64).forEach(k => fileBase64[k] = null);
     document.querySelectorAll('input[type="file"]').forEach(input => input.value = '');
-    document.querySelectorAll('.file-status').forEach(el => {
-      el.className = 'file-status';
-      el.textContent = '';
-    });
+    document.querySelectorAll('.file-status').forEach(el => { el.className = 'file-status'; el.textContent = ''; });
     
-    document.getElementById('previewFrame').src = 'about:blank';
+    document.getElementById('previewBgVideo').style.display = 'none';
+    document.getElementById('previewBgImage').style.display = 'none';
+    document.getElementById('previewBgFallback').style.display = 'block';
+    document.getElementById('previewFigureVideo').style.display = 'none';
+    document.getElementById('previewFigureImage').style.display = 'none';
     
-    showStatus('success', '✅ 已恢复默认值（文件缓存已清除）');
+    audioElement.src = '';
+    pausePreview();
+    document.getElementById('currentTime').textContent = '00:00';
+    document.getElementById('totalTime').textContent = '00:00';
+    
+    updatePreview();
+    showStatus('success', '✅ 已恢复默认值');
   }
 
-  // ========== HTML 转义 ==========
+  // ========== 下载 ==========
   
+  function downloadPage() {
+    updatePreview();
+    
+    const config = {
+      title: document.getElementById('songTitle').value || '音乐视频',
+      subtitle: document.getElementById('songSubtitle').value,
+      creditsLyrics: document.getElementById('creditsLyrics').value,
+      creditsMusic: document.getElementById('creditsMusic').value,
+      creditsArtist: document.getElementById('creditsArtist').value,
+      lyricText: document.getElementById('lyricTimestamp').value,
+      audioUrl: document.getElementById('audioUrl').value,
+      containerSize: document.getElementById('previewContainer').className.replace('preview-container', '').trim() || 'size-16-9',
+      containerWidth: document.getElementById('previewContainer').style.width,
+      containerHeight: document.getElementById('previewContainer').style.height,
+      overlayColor: config.overlayColor,
+      overlayOpacity: config.overlayOpacity,
+      textColor: config.textColor,
+      titleFontSize: config.titleFontSize,
+      textFontSize: config.textFontSize,
+      figureSize: config.figureSize,
+      lyricVisibleLines: config.lyricVisibleLines,
+      lyricFontSize: config.lyricFontSize,
+      fileBase64: { ...fileBase64 }
+    };
+    
+    const html = generateDownloadHTML(config);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (document.getElementById('songTitle').value || '音乐视频') + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showStatus('success', '✅ 下载成功');
+  }
+
+  function generateDownloadHTML(cfg) {
+    const figureSizes = { small: '80px', medium: '150px', large: '250px' };
+    const figureMaxH = figureSizes[cfg.figureSize] || '150px';
+    
+    let bgStyle = 'background:#1a1a2e;';
+    let bgHTML = '<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:#1a1a2e;z-index:1;"></div>';
+    
+    if (cfg.fileBase64.bgVideo) {
+      bgHTML = `<video class="bg-media" src="${cfg.fileBase64.bgVideo.dataUrl}" autoplay muted loop playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;"></video>`;
+    } else if (cfg.fileBase64.bgImage) {
+      bgHTML = `<img class="bg-media" src="${cfg.fileBase64.bgImage.dataUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;">`;
+    }
+    
+    let figureHTML = '';
+    if (cfg.fileBase64.figureVideo) {
+      figureHTML = `<video src="${cfg.fileBase64.figureVideo.dataUrl}" autoplay muted loop playsinline style="max-width:100%;max-height:${figureMaxH};object-fit:contain;filter:drop-shadow(0 0 20px rgba(0,0,0,0.4));"></video>`;
+    } else if (cfg.fileBase64.figureImage) {
+      figureHTML = `<img src="${cfg.fileBase64.figureImage.dataUrl}" style="max-width:100%;max-height:${figureMaxH};object-fit:contain;filter:drop-shadow(0 0 20px rgba(0,0,0,0.4));">`;
+    }
+    
+    const r = parseInt(cfg.overlayColor.slice(1,3), 16);
+    const g = parseInt(cfg.overlayColor.slice(3,5), 16);
+    const b = parseInt(cfg.overlayColor.slice(5,7), 16);
+    const a = cfg.overlayOpacity / 100;
+    
+    let audioSrc = '';
+    if (cfg.fileBase64.audio) {
+      audioSrc = cfg.fileBase64.audio.dataUrl;
+    } else if (cfg.audioUrl) {
+      audioSrc = cfg.audioUrl;
+    }
+    
+    return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHTML(cfg.title)}</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      display:flex; align-items:center; justify-content:center;
+      min-height:100vh; background:#000;
+      font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    }
+    .mv-container {
+      position:relative; overflow:hidden;
+      ${cfg.containerWidth ? `width:${cfg.containerWidth};` : ''}
+      ${cfg.containerHeight ? `height:${cfg.containerHeight};` : ''}
+    }
+    ${!cfg.containerWidth ? `
+    .mv-container.size-16-9 { width:853px; height:480px; }
+    .mv-container.size-9-16 { width:270px; height:480px; }
+    .mv-container.size-4-3 { width:640px; height:480px; }
+    .mv-container.size-1-1 { width:480px; height:480px; }
+    .mv-container.size-21-9 { width:1120px; height:480px; }
+    @media (max-width:900px) {
+      .mv-container.size-16-9,.mv-container.size-21-9 { width:100%; height:auto; aspect-ratio:16/9; }
+      .mv-container.size-9-16 { width:auto; height:100%; aspect-ratio:9/16; }
+      .mv-container.size-4-3 { width:100%; height:auto; aspect-ratio:4/3; }
+      .mv-container.size-1-1 { width:80%; height:auto; aspect-ratio:1/1; }
+    }
+    ` : ''}
+    .mv-overlay {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      background:rgba(${r},${g},${b},${a}); z-index:2;
+    }
+    .mv-content {
+      position:absolute; top:0; left:0; width:100%; height:100%; z-index:3;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:20px; color:${cfg.textColor};
+    }
+    .mv-title {
+      font-size:${cfg.titleFontSize}px; font-weight:bold; text-align:center;
+      letter-spacing:2px; text-shadow:0 2px 8px rgba(0,0,0,0.5);
+    }
+    .mv-subtitle {
+      font-size:${cfg.textFontSize}px; text-align:center; letter-spacing:1px;
+      text-shadow:0 1px 6px rgba(0,0,0,0.5); margin-top:6px;
+      ${!cfg.subtitle ? 'display:none;' : ''}
+    }
+    .mv-credits {
+      font-size:${cfg.textFontSize}px; text-align:center; letter-spacing:1px;
+      text-shadow:0 1px 4px rgba(0,0,0,0.5); margin-top:8px; opacity:0.85;
+    }
+    .mv-figure {
+      margin:10px 0; display:flex; align-items:center; justify-content:center;
+      max-height:${figureMaxH};
+    }
+    .mv-lyrics {
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      margin-top:8px; max-height:40%; overflow:hidden;
+    }
+    .mv-lyric-line {
+      font-size:${cfg.lyricFontSize}px; text-align:center;
+      text-shadow:0 1px 4px rgba(0,0,0,0.6); opacity:0.5;
+      white-space:nowrap; letter-spacing:1px; transition:all 0.3s;
+    }
+    .mv-lyric-line.active { opacity:1; transform:scale(1.08); }
+  </style>
+</head>
+<body>
+<div class="mv-container ${cfg.containerSize}">
+  ${bgHTML}
+  <div class="mv-overlay"></div>
+  <div class="mv-content">
+    <div class="mv-title">${escapeHTML(cfg.title)}</div>
+    <div class="mv-subtitle">${escapeHTML(cfg.subtitle || '')}</div>
+    <div class="mv-credits">${[
+      cfg.creditsLyrics ? '词：' + cfg.creditsLyrics : '',
+      cfg.creditsMusic ? '曲：' + cfg.creditsMusic : '',
+      cfg.creditsArtist ? '唱：' + cfg.creditsArtist : ''
+    ].filter(Boolean).join('  ')}</div>
+    <div class="mv-figure">${figureHTML}</div>
+    <div class="mv-lyrics" id="mvLyrics"></div>
+  </div>
+</div>
+${audioSrc ? `<audio id="mvAudio" src="${escapeHTML(audioSrc)}" style="display:none;"></audio>` : ''}
+<script>
+  (function() {
+    var lyrics = [];
+    var lyricText = ${JSON.stringify(cfg.lyricText)};
+    var lines = lyricText.split('\\n').filter(function(l) { return l.trim(); });
+    var regex = /\\[(\\d+):(\\d+)\\.(\\d+)\\](.*)/;
+    lines.forEach(function(line) {
+      var m = line.match(regex);
+      if (m) {
+        var time = parseInt(m[1])*60 + parseInt(m[2]) + parseInt(m[3])/1000;
+        if (m[4].trim()) lyrics.push({ time:time, text:m[4].trim() });
+      }
+    });
+    
+    var visibleLines = ${cfg.lyricVisibleLines};
+    var audio = document.getElementById('mvAudio');
+    
+    function getVisibleLyrics(ct) {
+      var active = -1;
+      for (var i=lyrics.length-1; i>=0; i--) {
+        if (ct >= lyrics[i].time) { active = i; break; }
+      }
+      var half = Math.floor(visibleLines/2);
+      var start = Math.max(0, active - half);
+      var end = Math.min(lyrics.length, start + visibleLines);
+      if (end-start < visibleLines) start = Math.max(0, end - visibleLines);
+      return { lines: lyrics.slice(start,end), activeIdx: active - start };
+    }
+    
+    function updateLyrics() {
+      if (!audio) return;
+      var ct = audio.currentTime;
+      var result = getVisibleLyrics(ct);
+      var container = document.getElementById('mvLyrics');
+      container.innerHTML = '';
+      result.lines.forEach(function(l, i) {
+        var d = document.createElement('div');
+        d.className = 'mv-lyric-line' + (i===result.activeIdx ? ' active' : '');
+        d.textContent = l.text;
+        d.addEventListener('click', function() {
+          if (audio) { audio.currentTime = l.time; updateLyrics(); }
+        });
+        container.appendChild(d);
+      });
+    }
+    
+    if (audio) {
+      audio.addEventListener('timeupdate', updateLyrics);
+      audio.addEventListener('play', function() {
+        document.querySelector('.bg-media')?.play();
+        document.querySelector('.mv-figure video')?.play();
+      });
+      audio.addEventListener('pause', function() {
+        document.querySelector('.bg-media')?.pause();
+        document.querySelector('.mv-figure video')?.pause();
+      });
+      updateLyrics();
+    }
+    
+    document.addEventListener('click', function() {
+      if (audio && audio.paused) {
+        audio.play().catch(function(){});
+      }
+    }, { once: true });
+  })();
+<\/script>
+</body>
+</html>`;
+  }
+
   function escapeHTML(str) {
     if (!str) return '';
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
   }
 
   // ========== 初始化 ==========
   
   window.addEventListener('load', () => {
-    // 保存初始默认值
-    defaultValues.lyricTimestamp = document.getElementById('lyricTimestamp').value;
-    defaultValues.lyricContent = document.getElementById('lyricContent').value;
-    
-    generatePreview();
+    updatePreview();
   });
 </script>
 </body>
