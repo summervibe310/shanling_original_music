@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Canvas + AudioContext录制</title>
+
+<style>
+body{
+    font-family:Arial;
+    padding:20px;
+}
+
+canvas{
+    border:1px solid #ccc;
+}
+
+button{
+    padding:10px 20px;
+    margin-right:10px;
+}
+</style>
+</head>
+<body>
+
+<h2>Canvas录制测试</h2>
+
+<canvas id="canvas"
+        width="1280"
+        height="720">
+</canvas>
+
+<br><br>
+
+<button id="startBtn">
+开始录制
+</button>
+
+<button id="stopBtn">
+停止录制
+</button>
+
+<audio
+    id="audio"
+    src="music.mp3"
+    controls>
+</audio>
+
+<script>
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+const audioElement=
+    document.getElementById("audio");
+
+let recorder;
+let chunks=[];
+
+let animationId;
+
+let x=0;
+
+function render(){
+
+    ctx.fillStyle="black";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle="red";
+
+    ctx.fillRect(
+        x,
+        300,
+        100,
+        100
+    );
+
+    ctx.fillStyle="white";
+
+    ctx.font="60px Arial";
+
+    ctx.fillText(
+        new Date().toLocaleTimeString(),
+        50,
+        100
+    );
+
+    x+=5;
+
+    if(x>canvas.width){
+        x=-100;
+    }
+
+    animationId=
+        requestAnimationFrame(render);
+}
+
+render();
+
+document
+.getElementById("startBtn")
+.onclick=async()=>{
+
+    chunks=[];
+
+    const videoStream=
+        canvas.captureStream(30);
+
+    const audioContext=
+        new AudioContext();
+
+    await audioContext.resume();
+
+    const source=
+        audioContext
+        .createMediaElementSource(
+            audioElement
+        );
+
+    const destination=
+        audioContext
+        .createMediaStreamDestination();
+
+    source.connect(destination);
+
+    source.connect(
+        audioContext.destination
+    );
+
+    const combinedStream=
+        new MediaStream([
+            ...videoStream.getVideoTracks(),
+            ...destination
+                .stream
+                .getAudioTracks()
+        ]);
+
+    recorder=
+        new MediaRecorder(
+            combinedStream,
+            {
+                mimeType:
+                "video/webm;codecs=vp9,opus"
+            }
+        );
+
+    recorder.ondataavailable=(e)=>{
+
+        if(e.data.size>0){
+
+            chunks.push(e.data);
+
+        }
+    };
+
+    recorder.onstop=()=>{
+
+        const blob=
+            new Blob(
+                chunks,
+                {
+                    type:"video/webm"
+                }
+            );
+
+        console.log(
+            "文件大小(MB):",
+            (
+                blob.size/
+                1024/
+                1024
+            ).toFixed(2)
+        );
+
+        const url=
+            URL.createObjectURL(blob);
+
+        const a=
+            document.createElement("a");
+
+        a.href=url;
+
+        a.download=
+            "record.webm";
+
+        a.click();
+
+        URL.revokeObjectURL(url);
+    };
+
+    recorder.start(1000);
+
+    audioElement.currentTime=0;
+
+    audioElement.play();
+
+    console.log(
+        "开始录制"
+    );
+};
+
+document
+.getElementById("stopBtn")
+.onclick=()=>{
+
+    recorder.stop();
+
+    audioElement.pause();
+
+    console.log(
+        "停止录制"
+    );
+};
+
+</script>
+
+</body>
+</html>
