@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>音乐视频生成器</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
-  
-  <!-- FFmpeg WebAssembly -->
   <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.min.js"></script>
-  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; background: #1a1a1a; color: #e0e0e0; overflow: hidden; height: 100vh; }
@@ -110,8 +107,8 @@
     .preview-credits { text-align: center; letter-spacing: 1px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); margin-top: 8px; opacity: 0.85; }
     .preview-figure { margin: 10px 0; display: flex; align-items: center; justify-content: center; }
     .preview-figure video, .preview-figure img { object-fit: contain; filter: drop-shadow(0 0 20px rgba(0,0,0,0.4)); max-width: 100%; max-height: 100%; }
-    .preview-lyrics { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 8px; max-height: 40%; overflow: hidden; }
-    .preview-lyric-line { text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.6); transition: all 0.3s ease; opacity: 0.5; white-space: nowrap; letter-spacing: 1px; cursor: pointer; pointer-events: auto; }
+    .preview-lyrics { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 8px; max-height: 50%; overflow-y: auto; overflow-x: visible; padding: 0 20px; width: 90%; }
+    .preview-lyric-line { text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.6); transition: all 0.3s ease; opacity: 0.5; white-space: normal; word-break: break-word; letter-spacing: 1px; cursor: pointer; pointer-events: auto; line-height: 1.6; padding: 2px 0; max-width: 100%; }
     .preview-lyric-line.active { opacity: 1; transform: scale(1.08); }
     
     .zoom-control { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 20px; z-index: 100; backdrop-filter: blur(8px); }
@@ -126,7 +123,7 @@
   </style>
 </head>
 <body>
-
+<!-- Star 弹窗 -->
 <div class="star-modal-overlay" id="starModal" onclick="closeStarModal()">
   <div class="star-modal" onclick="event.stopPropagation()">
     <div class="star-icon">⭐</div>
@@ -141,6 +138,7 @@
   </div>
 </div>
 
+<!-- 录制弹窗 -->
 <div class="recording-modal-overlay" id="recordingModal" style="display:none;">
   <div class="recording-modal">
     <div class="recording-icon" id="recordingIcon">🔴</div>
@@ -152,10 +150,13 @@
   </div>
 </div>
 
+<!-- 主布局 -->
 <div class="app-container">
+  <!-- 左侧控制面板 -->
   <div class="control-panel">
     <h2>🎬 音乐视频生成器</h2>
 
+    <!-- 播放控制 -->
     <div class="section">
       <h3>▶ 播放控制</h3>
       <div class="btn-group">
@@ -172,6 +173,7 @@
       </div>
     </div>
 
+    <!-- 视频容器尺寸 -->
     <div class="section">
       <h3>📐 视频容器尺寸</h3>
       <div class="size-presets" id="containerSizePresets">
@@ -307,11 +309,21 @@
       </div>
     </div>
 
+    <!-- 背景视频/图片 -->
     <div class="section">
       <h3>🖼️ 背景视频/图片</h3>
-      <div class="form-group"><label>上传背景视频 (WebM/MP4)</label><div class="file-input-wrapper"><input type="file" id="bgVideoFile" accept="video/webm,video/mp4"></div><div class="file-status" id="bgVideoFileStatus"></div></div>
-      <div class="form-group"><label>上传背景图片</label><div class="file-input-wrapper"><input type="file" id="bgImageFile" accept="image/*"></div><div class="file-status" id="bgImageFileStatus"></div></div>
-      <div class="form-group" style="margin-top:12px;"><label>背景位置</label>
+      <div class="form-group">
+        <label>上传背景视频 (WebM/MP4)</label>
+        <div class="file-input-wrapper"><input type="file" id="bgVideoFile" accept="video/webm,video/mp4"></div>
+        <div class="file-status" id="bgVideoFileStatus"></div>
+      </div>
+      <div class="form-group">
+        <label>上传背景图片</label>
+        <div class="file-input-wrapper"><input type="file" id="bgImageFile" accept="image/*"></div>
+        <div class="file-status" id="bgImageFileStatus"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>背景位置</label>
         <div class="size-presets" id="bgPositionPresets">
           <button class="size-preset active" data-pos="center">居中</button>
           <button class="size-preset" data-pos="top">顶部</button>
@@ -325,18 +337,41 @@
         </div>
       </div>
       <div class="form-row" style="margin-top:8px;">
-        <div class="form-group"><label>水平偏移 (px)</label><input type="range" id="bgOffsetX" min="-500" max="500" value="0" style="width:100%;"><div class="hint">当前: <span id="bgOffsetXValue">0px</span></div></div>
-        <div class="form-group"><label>垂直偏移 (px)</label><input type="range" id="bgOffsetY" min="-500" max="500" value="0" style="width:100%;"><div class="hint">当前: <span id="bgOffsetYValue">0px</span></div></div>
+        <div class="form-group">
+          <label>水平偏移 (px)</label>
+          <input type="range" id="bgOffsetX" min="-500" max="500" value="0" style="width:100%;">
+          <div class="hint">当前: <span id="bgOffsetXValue">0px</span></div>
+        </div>
+        <div class="form-group">
+          <label>垂直偏移 (px)</label>
+          <input type="range" id="bgOffsetY" min="-500" max="500" value="0" style="width:100%;">
+          <div class="hint">当前: <span id="bgOffsetYValue">0px</span></div>
+        </div>
       </div>
-      <div class="form-group"><label>背景缩放: <span id="bgScaleValue">100%</span></label><input type="range" id="bgScale" min="50" max="200" value="100" style="width:100%;"><div class="hint">50% ~ 200%，100% 为原始大小</div></div>
+      <div class="form-group">
+        <label>背景缩放: <span id="bgScaleValue">100%</span></label>
+        <input type="range" id="bgScale" min="50" max="200" value="100" style="width:100%;">
+        <div class="hint">50% ~ 200%，100% 为原始大小</div>
+      </div>
     </div>
 
+    <!-- 蒙版设置 -->
     <div class="section">
       <h3>🎨 蒙版设置</h3>
-      <div class="form-group"><label>蒙版颜色</label><div class="color-picker-row"><input type="color" id="overlayColor" value="#000000"><input type="text" id="overlayColorText" value="#000000" style="flex:1;"></div></div>
-      <div class="form-group"><label>蒙版透明度: <span id="overlayOpacityValue">50%</span></label><input type="range" id="overlayOpacity" min="0" max="100" value="50" style="width:100%;"></div>
+      <div class="form-group">
+        <label>蒙版颜色</label>
+        <div class="color-picker-row">
+          <input type="color" id="overlayColor" value="#000000">
+          <input type="text" id="overlayColorText" value="#000000" style="flex:1;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>蒙版透明度: <span id="overlayOpacityValue">50%</span></label>
+        <input type="range" id="overlayOpacity" min="0" max="100" value="50" style="width:100%;">
+      </div>
     </div>
 
+    <!-- 文字信息 -->
     <div class="section">
       <h3>📝 文字信息</h3>
       <div class="form-group"><label>歌名</label><input type="text" id="songTitle" value="活该我盛开" placeholder="歌名"></div>
@@ -346,21 +381,53 @@
         <div class="form-group"><label>曲</label><input type="text" id="creditsMusic" value="山岭在逃" placeholder="作曲"></div>
         <div class="form-group"><label>演</label><input type="text" id="creditsArtist" value="" placeholder="演唱（可选）"></div>
       </div>
-      <div class="form-group"><label>文字颜色</label><div class="color-picker-row"><input type="color" id="textColor" value="#ffffff"><input type="text" id="textColorText" value="#ffffff" style="flex:1;"></div></div>
-      <div class="form-group"><label>歌名字号: <span id="titleFontSizeValue">28px</span></label><input type="range" id="titleFontSize" min="16" max="72" value="28" style="width:100%;"></div>
-      <div class="form-group"><label>其他文字字号: <span id="textFontSizeValue">14px</span></label><input type="range" id="textFontSize" min="10" max="36" value="14" style="width:100%;"></div>
+      <div class="form-group">
+        <label>文字颜色</label>
+        <div class="color-picker-row">
+          <input type="color" id="textColor" value="#ffffff">
+          <input type="text" id="textColorText" value="#ffffff" style="flex:1;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>歌名字号: <span id="titleFontSizeValue">28px</span></label>
+        <input type="range" id="titleFontSize" min="16" max="72" value="28" style="width:100%;">
+      </div>
+      <div class="form-group">
+        <label>其他文字字号: <span id="textFontSizeValue">14px</span></label>
+        <input type="range" id="textFontSize" min="10" max="36" value="14" style="width:100%;">
+      </div>
     </div>
 
+    <!-- 人物视频/图片 -->
     <div class="section">
       <h3>👤 人物视频/图片</h3>
-      <div class="form-group"><label>上传人物视频 (WebM/MP4)</label><div class="file-input-wrapper"><input type="file" id="figureVideoFile" accept="video/webm,video/mp4"></div><div class="file-status" id="figureVideoFileStatus"></div><div class="hint" style="color:#e8734a;">💡 建议使用 WebM 格式（支持透明通道，效果更佳）</div></div>
-      <div class="form-group"><label>上传人物图片</label><div class="file-input-wrapper"><input type="file" id="figureImageFile" accept="image/*"></div><div class="file-status" id="figureImageFileStatus"></div></div>
-      <div class="form-group"><label>人物尺寸</label><div class="size-presets" id="figureSizePresets"><button class="size-preset active" data-figure-size="medium">中</button><button class="size-preset" data-figure-size="small">小</button><button class="size-preset" data-figure-size="large">大</button></div></div>
+      <div class="form-group">
+        <label>上传人物视频 (WebM/MP4)</label>
+        <div class="file-input-wrapper"><input type="file" id="figureVideoFile" accept="video/webm,video/mp4"></div>
+        <div class="file-status" id="figureVideoFileStatus"></div>
+        <div class="hint" style="color:#e8734a;">💡 建议使用 WebM 格式（支持透明通道，效果更佳）</div>
+      </div>
+      <div class="form-group">
+        <label>上传人物图片</label>
+        <div class="file-input-wrapper"><input type="file" id="figureImageFile" accept="image/*"></div>
+        <div class="file-status" id="figureImageFileStatus"></div>
+      </div>
+      <div class="form-group">
+        <label>人物尺寸</label>
+        <div class="size-presets" id="figureSizePresets">
+          <button class="size-preset active" data-figure-size="medium">中</button>
+          <button class="size-preset" data-figure-size="small">小</button>
+          <button class="size-preset" data-figure-size="large">大</button>
+        </div>
+      </div>
     </div>
 
+    <!-- 歌词 -->
     <div class="section">
       <h3>🎤 歌词 (带时间戳)</h3>
-      <div class="form-group"><label>格式: [分:秒.毫秒]歌词</label><textarea id="lyricTimestamp">[00:18.99]空心人 站进人海
+      <div class="form-group">
+        <label>格式: [分:秒.毫秒]歌词</label>
+        <textarea id="lyricTimestamp">[00:18.99]空心人 站进人海
 [00:23.34]只剩九十斤的反骨 还在
 [00:26.88]废墟里 排队等一个赦免
 [00:30.72]等月光失约 才学会
@@ -370,18 +437,41 @@
 [00:52.74]活该我盛开
 [00:55.44]活该我 哭着哭着就笑出来
 [00:61.35]活该我盛开
-[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖</textarea></div>
-      <div class="form-group"><label>歌词可见行数: <span id="lyricVisibleLinesValue">5</span></label><input type="range" id="lyricVisibleLines" min="3" max="11" value="5" step="2" style="width:100%;"></div>
-      <div class="form-group"><label>歌词字号: <span id="lyricFontSizeValue">16px</span></label><input type="range" id="lyricFontSize" min="10" max="32" value="16" style="width:100%;"></div>
-      <div class="form-group"><label>当前播放歌词颜色</label><div class="color-picker-row"><input type="color" id="activeLyricColor" value="#ffd700"><input type="text" id="activeLyricColorText" value="#ffd700" style="flex:1;"></div><div class="hint">正在播放的那行歌词颜色</div></div>
+[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖</textarea>
+      </div>
+      <div class="form-group">
+        <label>歌词可见行数: <span id="lyricVisibleLinesValue">5</span></label>
+        <input type="range" id="lyricVisibleLines" min="3" max="11" value="5" step="2" style="width:100%;">
+      </div>
+      <div class="form-group">
+        <label>歌词字号: <span id="lyricFontSizeValue">16px</span></label>
+        <input type="range" id="lyricFontSize" min="10" max="32" value="16" style="width:100%;">
+      </div>
+      <div class="form-group">
+        <label>当前播放歌词颜色</label>
+        <div class="color-picker-row">
+          <input type="color" id="activeLyricColor" value="#ffd700">
+          <input type="text" id="activeLyricColorText" value="#ffd700" style="flex:1;">
+        </div>
+        <div class="hint">正在播放的那行歌词颜色</div>
+      </div>
     </div>
 
+    <!-- 音频 -->
     <div class="section">
       <h3>🎵 音频</h3>
-      <div class="form-group"><label>上传音频 (MP3/WAV)</label><div class="file-input-wrapper"><input type="file" id="audioFile" accept="audio/mpeg,audio/mp3,audio/wav,audio/wave,audio/x-wav,audio/*"></div><div class="file-status" id="audioFileStatus"></div></div>
-      <div class="form-group"><label>或音频外链 URL</label><input type="text" id="audioUrl" placeholder="https://example.com/song.mp3"></div>
+      <div class="form-group">
+        <label>上传音频 (MP3/WAV)</label>
+        <div class="file-input-wrapper"><input type="file" id="audioFile" accept="audio/mpeg,audio/mp3,audio/wav,audio/wave,audio/x-wav,audio/*"></div>
+        <div class="file-status" id="audioFileStatus"></div>
+      </div>
+      <div class="form-group">
+        <label>或音频外链 URL</label>
+        <input type="text" id="audioUrl" placeholder="https://example.com/song.mp3">
+      </div>
     </div>
 
+    <!-- 导出格式 -->
     <div class="section">
       <h3>📥 导出格式</h3>
       <div class="format-selector" id="formatSelector">
@@ -407,75 +497,89 @@
     <div class="status" id="status"></div>
     <audio id="audioPlayer" style="display:none;"></audio>
   </div>
-
-  <div class="preview-area" id="previewArea">
-    <div class="preview-wrapper" id="previewWrapper">
-      <div class="preview-container size-16-9" id="previewContainer">
-        <video class="preview-bg" id="previewBgVideo" style="display:none;" muted loop playsinline></video>
-        <img class="preview-bg" id="previewBgImage" style="display:none;">
-        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:#1a1a2e;z-index:1;" id="previewBgFallback"></div>
-        <div class="preview-overlay" id="previewOverlay"></div>
-        <div class="preview-content" id="previewContent">
-          <div class="preview-title" id="previewTitle">活该我盛开</div>
-          <div class="preview-subtitle" id="previewSubtitle" style="display:none;"></div>
-          <div class="preview-credits" id="previewCredits"></div>
-          <div class="preview-figure" id="previewFigure">
-            <video id="previewFigureVideo" style="display:none;" muted loop playsinline></video>
-            <img id="previewFigureImage" style="display:none;">
-          </div>
-          <div class="preview-lyrics" id="previewLyrics"></div>
-        </div>
-      </div>
-    </div>
-    <div class="zoom-control" id="zoomControl">
-      <button class="zoom-btn" onclick="zoomOut()">−</button>
-      <input type="range" id="zoomSlider" min="15" max="200" value="100" step="1">
-      <button class="zoom-btn" onclick="zoomIn()">+</button>
-      <span class="zoom-value" id="zoomValue">100%</span>
-      <button class="zoom-fit" onclick="fitToScreen()">适配窗口</button>
-    </div>
-  </div>
 </div>
-
+</body>
+</html>
 <script>
-// ========== 设备预设数据（完整） ==========
+// ========== 设备预设数据 ==========
 const devicePresets = {
-  iphone17promax:{width:440,height:956,name:'iPhone 17 Pro Max'},iphone17pro:{width:402,height:874,name:'iPhone 17 Pro'},
-  iphone17:{width:402,height:874,name:'iPhone 17'},iphone17air:{width:390,height:844,name:'iPhone 17 Air'},
-  iphone16promax:{width:430,height:932,name:'iPhone 16 Pro Max'},iphone16pro:{width:402,height:874,name:'iPhone 16 Pro'},
-  iphone16:{width:402,height:874,name:'iPhone 16'},iphone16e:{width:390,height:844,name:'iPhone 16e'},
-  iphone15promax:{width:430,height:932,name:'iPhone 15 Pro Max'},iphoneSE4:{width:390,height:844,name:'iPhone SE 第4代'},
-  s25ultra:{width:400,height:904,name:'Galaxy S25 Ultra'},s25plus:{width:384,height:854,name:'Galaxy S25+'},
-  s25:{width:360,height:780,name:'Galaxy S25'},zfold6:{width:374,height:816,name:'Galaxy Z Fold 6'},
-  zflip6:{width:360,height:780,name:'Galaxy Z Flip 6'},pixel9proxl:{width:400,height:890,name:'Pixel 9 Pro XL'},
-  pixel9pro:{width:384,height:856,name:'Pixel 9 Pro'},pixel9:{width:360,height:780,name:'Pixel 9'},
-  pixelFold2:{width:374,height:816,name:'Pixel 9 Pro Fold'},xiaomi15ultra:{width:400,height:890,name:'Xiaomi 15 Ultra'},
-  xiaomi15:{width:393,height:852,name:'Xiaomi 15'},redmiNote14pro:{width:395,height:874,name:'Redmi Note 14 Pro+'},
-  mate70pro:{width:400,height:904,name:'Mate 70 Pro'},pura80ultra:{width:393,height:852,name:'Pura 80 Ultra'},
-  oneplus13:{width:400,height:904,name:'OnePlus 13'},oppoFindX8pro:{width:400,height:890,name:'OPPO Find X8 Pro'},
-  vivoX200pro:{width:400,height:890,name:'vivo X200 Pro'},
-  ipadpro13m4:{width:1032,height:1376,name:'iPad Pro 13" M4'},ipadpro11m4:{width:834,height:1210,name:'iPad Pro 11" M4'},
-  ipadair13m3:{width:820,height:1180,name:'iPad Air 13" M3'},ipadair11m3:{width:820,height:1180,name:'iPad Air 11" M3'},
-  ipad11a16:{width:820,height:1180,name:'iPad 11" A16'},ipadmini7:{width:744,height:1133,name:'iPad mini A17 Pro'},
-  tabs10ultra:{width:926,height:1306,name:'Galaxy Tab S10 Ultra'},tabs10plus:{width:800,height:1280,name:'Galaxy Tab S10+'},
-  taba9plus:{width:800,height:1280,name:'Galaxy Tab A9+'},xiaomiPad7pro:{width:900,height:1340,name:'Xiaomi Pad 7 Pro'},
-  matepadpro132:{width:960,height:1440,name:'MatePad Pro 13.2"'},oneplusPad2:{width:900,height:1340,name:'OnePlus Pad 2'},
-  macbookpro16m4:{width:3456,height:2234,name:'MacBook Pro 16" M4'},macbookpro14m4:{width:3024,height:1964,name:'MacBook Pro 14" M4'},
-  macbookair15m4:{width:2880,height:1864,name:'MacBook Air 15" M4'},macbookair13m4:{width:2560,height:1664,name:'MacBook Air 13" M4'},
-  imac24m4:{width:4480,height:2520,name:'iMac 24" M4'},studioDisplay:{width:5120,height:2880,name:'Studio Display 27"'},
-  proDisplayXDR:{width:6016,height:3384,name:'Pro Display XDR 32"'},macminiM4:{width:2560,height:1440,name:'Mac mini M4 + QHD'},
-  macStudioM4:{width:5120,height:2880,name:'Mac Studio M4 Ultra + 5K'},visionPro:{width:3840,height:2160,name:'Apple Vision Pro'},
-  watchUltra3:{width:396,height:484,name:'Apple Watch Ultra 3'},watchS11_46mm:{width:396,height:484,name:'Apple Watch S11 46mm'},
-  '720p':{width:1280,height:720,name:'HD 720p'},'900p':{width:1600,height:900,name:'HD+ 900p'},
-  '1080p':{width:1920,height:1080,name:'Full HD 1080p'},'1080puw':{width:2560,height:1080,name:'Full HD 超宽'},
-  '1440p':{width:2560,height:1440,name:'QHD 1440p'},'1440puw':{width:3440,height:1440,name:'QHD 超宽'},
-  '1440psuw':{width:5120,height:1440,name:'QHD 超级超宽'},'4k':{width:3840,height:2160,name:'4K UHD'},
-  '4kuw':{width:5120,height:2160,name:'4K 超宽'},'4kcinema':{width:4096,height:2160,name:'4K DCI'},
-  '5k':{width:5120,height:2880,name:'5K'},'6k':{width:6016,height:3384,name:'6K'},'8k':{width:7680,height:4320,name:'8K UHD'}
+  iphone17promax: { width: 440, height: 956, name: 'iPhone 17 Pro Max' },
+  iphone17pro: { width: 402, height: 874, name: 'iPhone 17 Pro' },
+  iphone17: { width: 402, height: 874, name: 'iPhone 17' },
+  iphone17air: { width: 390, height: 844, name: 'iPhone 17 Air' },
+  iphone16promax: { width: 430, height: 932, name: 'iPhone 16 Pro Max' },
+  iphone16pro: { width: 402, height: 874, name: 'iPhone 16 Pro' },
+  iphone16: { width: 402, height: 874, name: 'iPhone 16' },
+  iphone16e: { width: 390, height: 844, name: 'iPhone 16e' },
+  iphone15promax: { width: 430, height: 932, name: 'iPhone 15 Pro Max' },
+  iphoneSE4: { width: 390, height: 844, name: 'iPhone SE 第4代' },
+  s25ultra: { width: 400, height: 904, name: 'Galaxy S25 Ultra' },
+  s25plus: { width: 384, height: 854, name: 'Galaxy S25+' },
+  s25: { width: 360, height: 780, name: 'Galaxy S25' },
+  zfold6: { width: 374, height: 816, name: 'Galaxy Z Fold 6' },
+  zflip6: { width: 360, height: 780, name: 'Galaxy Z Flip 6' },
+  pixel9proxl: { width: 400, height: 890, name: 'Pixel 9 Pro XL' },
+  pixel9pro: { width: 384, height: 856, name: 'Pixel 9 Pro' },
+  pixel9: { width: 360, height: 780, name: 'Pixel 9' },
+  pixelFold2: { width: 374, height: 816, name: 'Pixel 9 Pro Fold' },
+  xiaomi15ultra: { width: 400, height: 890, name: 'Xiaomi 15 Ultra' },
+  xiaomi15: { width: 393, height: 852, name: 'Xiaomi 15' },
+  redmiNote14pro: { width: 395, height: 874, name: 'Redmi Note 14 Pro+' },
+  mate70pro: { width: 400, height: 904, name: 'Mate 70 Pro' },
+  pura80ultra: { width: 393, height: 852, name: 'Pura 80 Ultra' },
+  oneplus13: { width: 400, height: 904, name: 'OnePlus 13' },
+  oppoFindX8pro: { width: 400, height: 890, name: 'OPPO Find X8 Pro' },
+  vivoX200pro: { width: 400, height: 890, name: 'vivo X200 Pro' },
+  // 平板
+  ipadpro13m4: { width: 1032, height: 1376, name: 'iPad Pro 13" M4' },
+  ipadpro11m4: { width: 834, height: 1210, name: 'iPad Pro 11" M4' },
+  ipadair13m3: { width: 820, height: 1180, name: 'iPad Air 13" M3' },
+  ipadair11m3: { width: 820, height: 1180, name: 'iPad Air 11" M3' },
+  ipad11a16: { width: 820, height: 1180, name: 'iPad 11" A16' },
+  ipadmini7: { width: 744, height: 1133, name: 'iPad mini A17 Pro' },
+  tabs10ultra: { width: 926, height: 1306, name: 'Galaxy Tab S10 Ultra' },
+  tabs10plus: { width: 800, height: 1280, name: 'Galaxy Tab S10+' },
+  taba9plus: { width: 800, height: 1280, name: 'Galaxy Tab A9+' },
+  xiaomiPad7pro: { width: 900, height: 1340, name: 'Xiaomi Pad 7 Pro' },
+  matepadpro132: { width: 960, height: 1440, name: 'MatePad Pro 13.2"' },
+  oneplusPad2: { width: 900, height: 1340, name: 'OnePlus Pad 2' },
+  // 显示器
+  macbookpro16m4: { width: 3456, height: 2234, name: 'MacBook Pro 16" M4' },
+  macbookpro14m4: { width: 3024, height: 1964, name: 'MacBook Pro 14" M4' },
+  macbookair15m4: { width: 2880, height: 1864, name: 'MacBook Air 15" M4' },
+  macbookair13m4: { width: 2560, height: 1664, name: 'MacBook Air 13" M4' },
+  imac24m4: { width: 4480, height: 2520, name: 'iMac 24" M4' },
+  studioDisplay: { width: 5120, height: 2880, name: 'Studio Display 27"' },
+  proDisplayXDR: { width: 6016, height: 3384, name: 'Pro Display XDR 32"' },
+  macminiM4: { width: 2560, height: 1440, name: 'Mac mini M4 + QHD' },
+  macStudioM4: { width: 5120, height: 2880, name: 'Mac Studio M4 Ultra + 5K' },
+  visionPro: { width: 3840, height: 2160, name: 'Apple Vision Pro' },
+  watchUltra3: { width: 396, height: 484, name: 'Apple Watch Ultra 3' },
+  watchS11_46mm: { width: 396, height: 484, name: 'Apple Watch S11 46mm' },
+  '720p': { width: 1280, height: 720, name: 'HD 720p' },
+  '900p': { width: 1600, height: 900, name: 'HD+ 900p' },
+  '1080p': { width: 1920, height: 1080, name: 'Full HD 1080p' },
+  '1080puw': { width: 2560, height: 1080, name: 'Full HD 超宽' },
+  '1440p': { width: 2560, height: 1440, name: 'QHD 1440p' },
+  '1440puw': { width: 3440, height: 1440, name: 'QHD 超宽' },
+  '1440psuw': { width: 5120, height: 1440, name: 'QHD 超级超宽' },
+  '4k': { width: 3840, height: 2160, name: '4K UHD' },
+  '4kuw': { width: 5120, height: 2160, name: '4K 超宽' },
+  '4kcinema': { width: 4096, height: 2160, name: '4K DCI' },
+  '5k': { width: 5120, height: 2880, name: '5K' },
+  '6k': { width: 6016, height: 3384, name: '6K' },
+  '8k': { width: 7680, height: 4320, name: '8K UHD' }
 };
 
 // ========== 全局变量 ==========
-const fileBase64 = { bgVideo: null, bgImage: null, figureVideo: null, figureImage: null, audio: null };
+const fileBase64 = {
+  bgVideo: null,
+  bgImage: null,
+  figureVideo: null,
+  figureImage: null,
+  audio: null
+};
+
 let audioElement = document.getElementById('audioPlayer');
 let parsedLyrics = [];
 let isPlaying = false;
@@ -493,18 +597,41 @@ let selectedExportFormat = 'webm';
 let ffmpeg = null;
 
 const config = {
-  containerSize: '16-9', containerWidth: 853, containerHeight: 480,
-  overlayColor: '#000000', overlayOpacity: 50,
-  textColor: '#ffffff', titleFontSize: 28, textFontSize: 14,
-  figureSize: 'medium', lyricVisibleLines: 5, lyricFontSize: 16,
-  bgPosition: 'center', bgOffsetX: 0, bgOffsetY: 0, bgScale: 100,
+  containerSize: '16-9',
+  containerWidth: 853,
+  containerHeight: 480,
+  overlayColor: '#000000',
+  overlayOpacity: 50,
+  textColor: '#ffffff',
+  titleFontSize: 28,
+  textFontSize: 14,
+  figureSize: 'medium',
+  lyricVisibleLines: 5,
+  lyricFontSize: 16,
+  bgPosition: 'center',
+  bgOffsetX: 0,
+  bgOffsetY: 0,
+  bgScale: 100,
   activeLyricColor: '#ffd700'
 };
 
 const defaultValues = {
-  songTitle: '活该我盛开', songSubtitle: '',
-  creditsLyrics: '山岭在逃', creditsMusic: '山岭在逃', creditsArtist: '',
-  lyricTimestamp: `[00:18.99]空心人 站进人海\n[00:23.34]只剩九十斤的反骨 还在\n[00:26.88]废墟里 排队等一个赦免\n[00:30.72]等月光失约 才学会\n[00:35.52]做自己的女娲 重塑这人间\n[00:44.13]眼泪是大的海\n[00:47.13]那就溺死 我的从前\n[00:52.74]活该我盛开\n[00:55.44]活该我 哭着哭着就笑出来\n[00:61.35]活该我盛开\n[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖`
+  songTitle: '活该我盛开',
+  songSubtitle: '',
+  creditsLyrics: '山岭在逃',
+  creditsMusic: '山岭在逃',
+  creditsArtist: '',
+  lyricTimestamp: `[00:18.99]空心人 站进人海
+[00:23.34]只剩九十斤的反骨 还在
+[00:26.88]废墟里 排队等一个赦免
+[00:30.72]等月光失约 才学会
+[00:35.52]做自己的女娲 重塑这人间
+[00:44.13]眼泪是大的海
+[00:47.13]那就溺死 我的从前
+[00:52.74]活该我盛开
+[00:55.44]活该我 哭着哭着就笑出来
+[00:61.35]活该我盛开
+[00:64.05]活该我 偏偏要 嫁给自由 嫁给我的 不够乖`
 };
 
 // ========== Star 弹窗 ==========
@@ -514,6 +641,7 @@ function closeStarModal() {
   localStorage.setItem('github_star_closed', 'true');
   localStorage.setItem('github_star_closed_time', now.toString());
 }
+
 window.addEventListener('load', function() {
   const modal = document.getElementById('starModal');
   const closed = localStorage.getItem('github_star_closed');
@@ -529,9 +657,12 @@ window.addEventListener('load', function() {
 // ========== 导出格式选择 ==========
 function selectExportFormat(format) {
   selectedExportFormat = format;
-  document.querySelectorAll('.format-option').forEach(opt => opt.classList.remove('active'));
-  document.querySelector(`.format-option[data-format="${format}"]`).classList.add('active');
-  const hint = document.getElementById('formatHint');
+  document.querySelectorAll('.format-option').forEach(function(opt) {
+    opt.classList.remove('active');
+  });
+  document.querySelector('.format-option[data-format="' + format + '"]').classList.add('active');
+  
+  var hint = document.getElementById('formatHint');
   if (format === 'webm') {
     hint.innerHTML = '✅ <strong>WebM</strong>：修复进度条，导出快速（推荐）<br>⚠️ <strong>MP4</strong>：兼容性最佳，适合所有平台（需转换）';
   } else {
@@ -539,14 +670,22 @@ function selectExportFormat(format) {
   }
 }
 
-// ========== FFmpeg ==========
+// ========== FFmpeg 初始化 ==========
 async function initFFmpeg() {
   if (ffmpeg) return ffmpeg;
+  
   try {
-    const { FFmpeg } = window;
-    ffmpeg = new FFmpeg();
-    ffmpeg.on('log', ({ message }) => { console.log('[FFmpeg]', message); });
-    await ffmpeg.load({ coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js' });
+    var FFmpegClass = window.FFmpeg;
+    ffmpeg = new FFmpegClass();
+    
+    ffmpeg.on('log', function(obj) {
+      console.log('[FFmpeg]', obj.message);
+    });
+    
+    await ffmpeg.load({
+      coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'
+    });
+    
     console.log('✅ FFmpeg 初始化成功');
     return ffmpeg;
   } catch (error) {
@@ -555,360 +694,938 @@ async function initFFmpeg() {
   }
 }
 
+// ========== 修复 WebM（添加索引元数据，支持拖动进度条）==========
 async function fixWebM(webmBlob) {
-  const ff = await initFFmpeg();
+  var ff = await initFFmpeg();
   if (!ff) return webmBlob;
+  
   try {
-    console.log('🔧 正在修复 WebM...');
-    const arrayBuffer = await webmBlob.arrayBuffer();
+    console.log('🔧 正在修复 WebM，添加完整索引...');
+    
+    var arrayBuffer = await webmBlob.arrayBuffer();
     await ff.writeFile('input.webm', new Uint8Array(arrayBuffer));
-    await ff.exec(['-i','input.webm','-c','copy','-fflags','+genpts','-reset_timestamps','1','-map','0','output.webm']);
-    const outputData = await ff.readFile('output.webm');
-    const fixedBlob = new Blob([outputData.buffer], { type: 'video/webm' });
+    
+    // 方法1：使用 DASH 模式生成索引
+    try {
+      await ff.exec([
+        '-i', 'input.webm',
+        '-c', 'copy',
+        '-map', '0',
+        '-f', 'webm',
+        '-cluster_time_limit', '2100',
+        '-cluster_size_limit', '1000000',
+        '-dash', '1',
+        '-dash_track_number', '1',
+        '-live', '0',
+        'output.webm'
+      ]);
+      console.log('✅ 方法1成功（DASH模式）');
+    } catch (e1) {
+      console.warn('方法1失败，尝试方法2:', e1.message);
+      // 方法2：重新生成 PTS
+      try {
+        await ff.exec([
+          '-i', 'input.webm',
+          '-c', 'copy',
+          '-fflags', '+genpts',
+          '-reset_timestamps', '1',
+          '-map', '0',
+          'output.webm'
+        ]);
+        console.log('✅ 方法2成功（genpts）');
+      } catch (e2) {
+        console.warn('方法2也失败，尝试重新编码:', e2.message);
+        // 方法3：完全重新编码（100%有效但较慢）
+        await ff.exec([
+          '-i', 'input.webm',
+          '-c:v', 'libvpx-vp9',
+          '-b:v', '0',
+          '-crf', '30',
+          '-deadline', 'realtime',
+          '-cpu-used', '5',
+          '-c:a', 'libopus',
+          '-b:a', '128k',
+          'output.webm'
+        ]);
+        console.log('✅ 重新编码完成');
+      }
+    }
+    
+    var outputData = await ff.readFile('output.webm');
+    var fixedBlob = new Blob([outputData.buffer], { type: 'video/webm' });
+    
     await ff.deleteFile('input.webm');
     await ff.deleteFile('output.webm');
-    console.log('✅ WebM 修复完成');
+    
+    console.log('✅ WebM 修复完成，已添加索引');
     return fixedBlob;
   } catch (error) {
-    console.error('WebM 修复失败:', error);
+    console.error('WebM 修复完全失败:', error);
     return webmBlob;
   }
 }
 
+// ========== MP4 转换（100% 支持进度条）==========
 async function convertToMP4(webmBlob) {
-  const ff = await initFFmpeg();
-  if (!ff) { showStatus('error', '❌ FFmpeg 不可用，请选择 WebM 格式'); return webmBlob; }
+  var ff = await initFFmpeg();
+  if (!ff) {
+    showStatus('error', '❌ FFmpeg 不可用，请选择 WebM 格式');
+    return webmBlob;
+  }
+  
   try {
-    console.log('🔄 正在转换为 MP4...');
-    const arrayBuffer = await webmBlob.arrayBuffer();
+    console.log('🔄 正在转换为 MP4（H.264 + AAC）...');
+    
+    var arrayBuffer = await webmBlob.arrayBuffer();
     await ff.writeFile('input.webm', new Uint8Array(arrayBuffer));
-    await ff.exec(['-i','input.webm','-c:v','libx264','-preset','medium','-crf','23','-c:a','aac','-b:a','128k','-pix_fmt','yuv420p','-movflags','+faststart','output.mp4']);
-    const outputData = await ff.readFile('output.mp4');
-    const mp4Blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+    
+    await ff.exec([
+      '-i', 'input.webm',
+      '-c:v', 'libx264',
+      '-preset', 'ultrafast',
+      '-crf', '23',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      '-pix_fmt', 'yuv420p',
+      '-movflags', '+faststart',
+      '-f', 'mp4',
+      'output.mp4'
+    ]);
+    
+    var outputData = await ff.readFile('output.mp4');
+    var mp4Blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+    
     await ff.deleteFile('input.webm');
     await ff.deleteFile('output.mp4');
+    
     console.log('✅ MP4 转换完成');
     return mp4Blob;
   } catch (error) {
     console.error('MP4 转换失败:', error);
+    showStatus('error', '❌ MP4 转换失败，已降级为 WebM 格式');
     return webmBlob;
   }
 }
 
-// ========== 获取容器尺寸 ==========
+// ========== 辅助函数 ==========
 function getContainerSize() {
-  const c = document.getElementById('previewContainer');
+  var c = document.getElementById('previewContainer');
   return { width: c.offsetWidth, height: c.offsetHeight };
 }
 
-// ========== 音频滑轨 ==========
+function formatTime(s) {
+  if (isNaN(s)) return '00:00';
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function showStatus(type, msg) {
+  var s = document.getElementById('status');
+  s.className = 'status ' + type;
+  s.textContent = msg;
+  s.style.display = 'block';
+  setTimeout(function() {
+    s.style.display = 'none';
+  }, 5000);
+}
+
+// Canvas 文字自动换行函数
+function wrapText(ctx, text, maxWidth) {
+  var words = text.split('');
+  var lines = [];
+  var currentLine = '';
+  
+  for (var i = 0; i < words.length; i++) {
+    var testLine = currentLine + words[i];
+    var metrics = ctx.measureText(testLine);
+    
+    if (metrics.width > maxWidth && currentLine !== '') {
+      lines.push(currentLine);
+      currentLine = words[i];
+    } else {
+      currentLine = testLine;
+    }
+  }
+  
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+  
+  return lines.length > 0 ? lines : [text];
+}
+  // ========== 音频滑轨控制 ==========
 function seekAudio(value) {
   if (!audioElement.src) return;
-  const duration = audioElement.duration || 0;
-  if (duration > 0) { audioElement.currentTime = (value / 100) * duration; updateLyricDisplay(); }
+  var duration = audioElement.duration || 0;
+  if (duration > 0) {
+    audioElement.currentTime = (value / 100) * duration;
+    updateLyricDisplay();
+  }
 }
+
 audioElement.addEventListener('timeupdate', function() {
   if (isRecording) return;
-  const duration = audioElement.duration || 0;
+  var duration = audioElement.duration || 0;
   if (duration > 0) {
     document.getElementById('audioSeekBar').value = (audioElement.currentTime / duration) * 100;
     document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
   }
 });
+
 audioElement.addEventListener('loadedmetadata', function() {
   document.getElementById('totalTime').textContent = formatTime(audioElement.duration);
 });
 
-// ========== 设备预设 ==========
+// ========== 设备预设应用 ==========
 function applyDevicePreset(type) {
-  const selectId = type==='phone'?'phoneModel':type==='pad'?'padModel':'monitorModel';
-  const select = document.getElementById(selectId);
-  const key = select.value;
+  var selectId;
+  if (type === 'phone') selectId = 'phoneModel';
+  else if (type === 'pad') selectId = 'padModel';
+  else selectId = 'monitorModel';
+  
+  var select = document.getElementById(selectId);
+  var key = select.value;
+  
   if (!key || !devicePresets[key]) return;
-  const preset = devicePresets[key];
-  if (type!=='phone') document.getElementById('phoneModel').value='';
-  if (type!=='pad') document.getElementById('padModel').value='';
-  if (type!=='monitor') document.getElementById('monitorModel').value='';
+  
+  var preset = devicePresets[key];
+  
+  // 清除其他选择器
+  if (type !== 'phone') document.getElementById('phoneModel').value = '';
+  if (type !== 'pad') document.getElementById('padModel').value = '';
+  if (type !== 'monitor') document.getElementById('monitorModel').value = '';
+  
   currentDeviceType = type;
-  document.querySelectorAll('#containerSizePresets .size-preset').forEach(b=>b.classList.remove('active'));
-  config.containerSize='custom'; config.containerWidth=preset.width; config.containerHeight=preset.height;
-  document.getElementById('containerCustomSize').style.display='block';
-  document.getElementById('containerWidth').value=preset.width;
-  document.getElementById('containerHeight').value=preset.height;
-  const container = document.getElementById('previewContainer');
+  
+  // 更新尺寸预设按钮状态
+  document.querySelectorAll('#containerSizePresets .size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  
+  config.containerSize = 'custom';
+  config.containerWidth = preset.width;
+  config.containerHeight = preset.height;
+  
+  document.getElementById('containerCustomSize').style.display = 'block';
+  document.getElementById('containerWidth').value = preset.width;
+  document.getElementById('containerHeight').value = preset.height;
+  
+  var container = document.getElementById('previewContainer');
   container.className = 'preview-container';
-  container.style.width=preset.width+'px'; container.style.height=preset.height+'px';
-  document.getElementById('deviceInfo').textContent=`已选择: ${preset.name} (${preset.width}×${preset.height})`;
-  setTimeout(fitToScreen,100); updatePreview();
+  container.style.width = preset.width + 'px';
+  container.style.height = preset.height + 'px';
+  
+  document.getElementById('deviceInfo').textContent = '已选择: ' + preset.name + ' (' + preset.width + '×' + preset.height + ')';
+  
+  setTimeout(fitToScreen, 100);
+  updatePreview();
 }
 
-// ========== 缩放 ==========
-const zoomSlider=document.getElementById('zoomSlider'),zoomValue=document.getElementById('zoomValue'),previewWrapper=document.getElementById('previewWrapper'),previewArea=document.getElementById('previewArea');
-function applyZoom(z){currentZoom=Math.max(15,Math.min(200,z));zoomSlider.value=currentZoom;zoomValue.textContent=currentZoom+'%';previewWrapper.style.transform=`scale(${currentZoom/100})`;}
-zoomSlider.addEventListener('input',function(){applyZoom(parseInt(this.value));});
-function zoomIn(){applyZoom(currentZoom+10);}
-function zoomOut(){applyZoom(currentZoom-10);}
-function fitToScreen(){const c=document.getElementById('previewContainer');const ax=previewArea.clientWidth-40,ay=previewArea.clientHeight-80;applyZoom(Math.floor(Math.min(ax/c.offsetWidth,ay/c.offsetHeight,1)*100));}
-let resizeTimeout;window.addEventListener('resize',()=>{clearTimeout(resizeTimeout);resizeTimeout=setTimeout(()=>{if(currentZoom===100)fitToScreen();},300);});
-previewArea.addEventListener('wheel',function(e){if(e.ctrlKey||e.metaKey){e.preventDefault();applyZoom(currentZoom+(e.deltaY<0?5:-5));}},{passive:false});
+// ========== 缩放控制 ==========
+var zoomSlider = document.getElementById('zoomSlider');
+var zoomValue = document.getElementById('zoomValue');
+var previewWrapper = document.getElementById('previewWrapper');
+var previewArea = document.getElementById('previewArea');
 
-// ========== 文件处理 ==========
-function fileToBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve({dataUrl:r.result,mimeType:file.type,fileName:file.name,size:file.size});r.onerror=reject;r.readAsDataURL(file);});}
-function formatFileSize(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';return (b/1048576).toFixed(1)+' MB';}
-function formatTime(s){if(isNaN(s))return'00:00';return String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');}
+function applyZoom(z) {
+  currentZoom = Math.max(15, Math.min(200, z));
+  zoomSlider.value = currentZoom;
+  zoomValue.textContent = currentZoom + '%';
+  previewWrapper.style.transform = 'scale(' + (currentZoom / 100) + ')';
+}
 
-async function handleFileUpload(iid,sid,key){
-  const inp=document.getElementById(iid),sel=document.getElementById(sid);
-  inp.addEventListener('change',async function(e){
-    const f=e.target.files[0];if(!f)return;
-    sel.textContent='⏳ 处理中...';sel.className='file-status show';
-    try{
-      const d=await fileToBase64(f);fileBase64[key]=d;
-      if(key==='audio'){audioElement.src=d.dataUrl;audioElement.load();document.getElementById('audioSeekBar').value=0;document.getElementById('currentTime').textContent='00:00';}
-      if(key==='bgVideo'){const el=document.getElementById('previewBgVideo');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewBgImage').style.display='none';document.getElementById('previewBgFallback').style.display='none';}
-      if(key==='bgImage'){const el=document.getElementById('previewBgImage');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewBgVideo').style.display='none';document.getElementById('previewBgFallback').style.display='none';}
-      if(key==='figureVideo'){const el=document.getElementById('previewFigureVideo');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewFigureImage').style.display='none';}
-      if(key==='figureImage'){const el=document.getElementById('previewFigureImage');el.src=d.dataUrl;el.style.display='block';document.getElementById('previewFigureVideo').style.display='none';}
-      sel.textContent='✅ '+f.name+' ('+formatFileSize(f.size)+')';sel.className='file-status show';sel.style.color='#4caf50';updatePreview();
-    }catch(err){sel.textContent='❌ 失败';sel.className='file-status show';sel.style.color='#f44336';}
+zoomSlider.addEventListener('input', function() {
+  applyZoom(parseInt(this.value));
+});
+
+function zoomIn() {
+  applyZoom(currentZoom + 10);
+}
+
+function zoomOut() {
+  applyZoom(currentZoom - 10);
+}
+
+function fitToScreen() {
+  var c = document.getElementById('previewContainer');
+  var ax = previewArea.clientWidth - 40;
+  var ay = previewArea.clientHeight - 80;
+  applyZoom(Math.floor(Math.min(ax / c.offsetWidth, ay / c.offsetHeight, 1) * 100));
+}
+
+var resizeTimeout;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function() {
+    if (currentZoom === 100) fitToScreen();
+  }, 300);
+});
+
+previewArea.addEventListener('wheel', function(e) {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+    applyZoom(currentZoom + (e.deltaY < 0 ? 5 : -5));
+  }
+}, { passive: false });
+
+// ========== 文件上传处理 ==========
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() {
+      resolve({
+        dataUrl: reader.result,
+        mimeType: file.type,
+        fileName: file.name,
+        size: file.size
+      });
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
 }
-handleFileUpload('bgVideoFile','bgVideoFileStatus','bgVideo');
-handleFileUpload('bgImageFile','bgImageFileStatus','bgImage');
-handleFileUpload('figureVideoFile','figureVideoFileStatus','figureVideo');
-handleFileUpload('figureImageFile','figureImageFileStatus','figureImage');
-handleFileUpload('audioFile','audioFileStatus','audio');
 
-// ========== 容器尺寸预设 ==========
-document.getElementById('containerSizePresets').addEventListener('click',function(e){
-  if(!e.target.classList.contains('size-preset'))return;
-  this.querySelectorAll('.size-preset').forEach(b=>b.classList.remove('active'));
-  e.target.classList.add('active');
-  config.containerSize=e.target.dataset.size;
-  document.getElementById('phoneModel').value='';document.getElementById('padModel').value='';document.getElementById('monitorModel').value='';
-  document.getElementById('deviceInfo').textContent='';currentDeviceType=null;
-  const c=document.getElementById('previewContainer');c.className='preview-container';
-  if(config.containerSize==='custom'){document.getElementById('containerCustomSize').style.display='block';c.style.width=config.containerWidth+'px';c.style.height=config.containerHeight+'px';}
-  else{document.getElementById('containerCustomSize').style.display='none';c.classList.add('size-'+config.containerSize);c.style.width='';c.style.height='';}
-  setTimeout(fitToScreen,100);
-});
-document.getElementById('containerWidth').addEventListener('input',function(){config.containerWidth=parseInt(this.value)||853;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.width=config.containerWidth+'px';setTimeout(fitToScreen,100);}});
-document.getElementById('containerHeight').addEventListener('input',function(){config.containerHeight=parseInt(this.value)||480;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.height=config.containerHeight+'px';setTimeout(fitToScreen,100);}});
-
-// ========== 蒙版 ==========
-document.getElementById('overlayColor').addEventListener('input',function(){config.overlayColor=this.value;document.getElementById('overlayColorText').value=this.value;updateOverlay();});
-document.getElementById('overlayColorText').addEventListener('input',function(){config.overlayColor=this.value;document.getElementById('overlayColor').value=this.value;updateOverlay();});
-document.getElementById('overlayOpacity').addEventListener('input',function(){config.overlayOpacity=parseInt(this.value);document.getElementById('overlayOpacityValue').textContent=this.value+'%';updateOverlay();});
-function updateOverlay(){const h=config.overlayColor;document.getElementById('previewOverlay').style.backgroundColor=`rgba(${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)},${config.overlayOpacity/100})`;}
-
-// ========== 文字 ==========
-document.getElementById('textColor').addEventListener('input',function(){config.textColor=this.value;document.getElementById('textColorText').value=this.value;updateTextStyles();});
-document.getElementById('textColorText').addEventListener('input',function(){config.textColor=this.value;document.getElementById('textColor').value=this.value;updateTextStyles();});
-document.getElementById('titleFontSize').addEventListener('input',function(){config.titleFontSize=parseInt(this.value);document.getElementById('titleFontSizeValue').textContent=this.value+'px';document.getElementById('previewTitle').style.fontSize=this.value+'px';});
-document.getElementById('textFontSize').addEventListener('input',function(){config.textFontSize=parseInt(this.value);document.getElementById('textFontSizeValue').textContent=this.value+'px';updateTextStyles();});
-function updateTextStyles(){
-  document.getElementById('previewTitle').style.color=config.textColor;
-  document.getElementById('previewSubtitle').style.color=config.textColor;
-  document.getElementById('previewCredits').style.color=config.textColor;
-  document.getElementById('previewSubtitle').style.fontSize=config.textFontSize+'px';
-  document.getElementById('previewCredits').style.fontSize=config.textFontSize+'px';
-  document.querySelectorAll('.preview-lyric-line').forEach(el=>{el.style.color=config.textColor;el.style.fontSize=config.lyricFontSize+'px';});
+async function handleFileUpload(inputId, statusId, key) {
+  var input = document.getElementById(inputId);
+  var status = document.getElementById(statusId);
+  
+  input.addEventListener('change', async function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    
+    status.textContent = '⏳ 处理中...';
+    status.className = 'file-status show';
+    
+    try {
+      var data = await fileToBase64(file);
+      fileBase64[key] = data;
+      
+      if (key === 'audio') {
+        audioElement.src = data.dataUrl;
+        audioElement.load();
+        document.getElementById('audioSeekBar').value = 0;
+        document.getElementById('currentTime').textContent = '00:00';
+      }
+      
+      if (key === 'bgVideo') {
+        var bgVideoEl = document.getElementById('previewBgVideo');
+        bgVideoEl.src = data.dataUrl;
+        bgVideoEl.style.display = 'block';
+        document.getElementById('previewBgImage').style.display = 'none';
+        document.getElementById('previewBgFallback').style.display = 'none';
+      }
+      
+      if (key === 'bgImage') {
+        var bgImageEl = document.getElementById('previewBgImage');
+        bgImageEl.src = data.dataUrl;
+        bgImageEl.style.display = 'block';
+        document.getElementById('previewBgVideo').style.display = 'none';
+        document.getElementById('previewBgFallback').style.display = 'none';
+      }
+      
+      if (key === 'figureVideo') {
+        var figureVideoEl = document.getElementById('previewFigureVideo');
+        figureVideoEl.src = data.dataUrl;
+        figureVideoEl.style.display = 'block';
+        document.getElementById('previewFigureImage').style.display = 'none';
+      }
+      
+      if (key === 'figureImage') {
+        var figureImageEl = document.getElementById('previewFigureImage');
+        figureImageEl.src = data.dataUrl;
+        figureImageEl.style.display = 'block';
+        document.getElementById('previewFigureVideo').style.display = 'none';
+      }
+      
+      status.textContent = '✅ ' + file.name + ' (' + formatFileSize(file.size) + ')';
+      status.className = 'file-status show';
+      status.style.color = '#4caf50';
+      updatePreview();
+    } catch (err) {
+      status.textContent = '❌ 处理失败';
+      status.className = 'file-status show';
+      status.style.color = '#f44336';
+    }
+  });
 }
 
-// ========== 歌词颜色 ==========
-document.getElementById('activeLyricColor').addEventListener('input',function(){config.activeLyricColor=this.value;document.getElementById('activeLyricColorText').value=this.value;updateLyricDisplay();});
-document.getElementById('activeLyricColorText').addEventListener('input',function(){config.activeLyricColor=this.value;document.getElementById('activeLyricColor').value=this.value;updateLyricDisplay();});
+// 绑定所有文件上传
+handleFileUpload('bgVideoFile', 'bgVideoFileStatus', 'bgVideo');
+handleFileUpload('bgImageFile', 'bgImageFileStatus', 'bgImage');
+handleFileUpload('figureVideoFile', 'figureVideoFileStatus', 'figureVideo');
+handleFileUpload('figureImageFile', 'figureImageFileStatus', 'figureImage');
+handleFileUpload('audioFile', 'audioFileStatus', 'audio');
 
-// ========== 背景位置 ==========
-document.getElementById('bgPositionPresets').addEventListener('click',function(e){
-  if(!e.target.classList.contains('size-preset'))return;
-  this.querySelectorAll('.size-preset').forEach(b=>b.classList.remove('active'));
+// ========== 容器尺寸预设按钮 ==========
+document.getElementById('containerSizePresets').addEventListener('click', function(e) {
+  if (!e.target.classList.contains('size-preset')) return;
+  
+  this.querySelectorAll('.size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
   e.target.classList.add('active');
-  config.bgPosition=e.target.dataset.pos;
+  
+  config.containerSize = e.target.dataset.size;
+  
+  // 清除设备选择
+  document.getElementById('phoneModel').value = '';
+  document.getElementById('padModel').value = '';
+  document.getElementById('monitorModel').value = '';
+  document.getElementById('deviceInfo').textContent = '';
+  currentDeviceType = null;
+  
+  var c = document.getElementById('previewContainer');
+  c.className = 'preview-container';
+  
+  if (config.containerSize === 'custom') {
+    document.getElementById('containerCustomSize').style.display = 'block';
+    c.style.width = config.containerWidth + 'px';
+    c.style.height = config.containerHeight + 'px';
+  } else {
+    document.getElementById('containerCustomSize').style.display = 'none';
+    c.classList.add('size-' + config.containerSize);
+    c.style.width = '';
+    c.style.height = '';
+  }
+  
+  setTimeout(fitToScreen, 100);
+});
+
+document.getElementById('containerWidth').addEventListener('input', function() {
+  config.containerWidth = parseInt(this.value) || 853;
+  if (config.containerSize === 'custom' || currentDeviceType) {
+    document.getElementById('previewContainer').style.width = config.containerWidth + 'px';
+    setTimeout(fitToScreen, 100);
+  }
+});
+
+document.getElementById('containerHeight').addEventListener('input', function() {
+  config.containerHeight = parseInt(this.value) || 480;
+  if (config.containerSize === 'custom' || currentDeviceType) {
+    document.getElementById('previewContainer').style.height = config.containerHeight + 'px';
+    setTimeout(fitToScreen, 100);
+  }
+});
+  // ========== 蒙版设置 ==========
+document.getElementById('overlayColor').addEventListener('input', function() {
+  config.overlayColor = this.value;
+  document.getElementById('overlayColorText').value = this.value;
+  updateOverlay();
+});
+
+document.getElementById('overlayColorText').addEventListener('input', function() {
+  config.overlayColor = this.value;
+  document.getElementById('overlayColor').value = this.value;
+  updateOverlay();
+});
+
+document.getElementById('overlayOpacity').addEventListener('input', function() {
+  config.overlayOpacity = parseInt(this.value);
+  document.getElementById('overlayOpacityValue').textContent = this.value + '%';
+  updateOverlay();
+});
+
+function updateOverlay() {
+  var h = config.overlayColor;
+  var r = parseInt(h.slice(1, 3), 16);
+  var g = parseInt(h.slice(3, 5), 16);
+  var b = parseInt(h.slice(5, 7), 16);
+  var a = config.overlayOpacity / 100;
+  document.getElementById('previewOverlay').style.backgroundColor = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+}
+
+// ========== 文字设置 ==========
+document.getElementById('textColor').addEventListener('input', function() {
+  config.textColor = this.value;
+  document.getElementById('textColorText').value = this.value;
+  updateTextStyles();
+});
+
+document.getElementById('textColorText').addEventListener('input', function() {
+  config.textColor = this.value;
+  document.getElementById('textColor').value = this.value;
+  updateTextStyles();
+});
+
+document.getElementById('titleFontSize').addEventListener('input', function() {
+  config.titleFontSize = parseInt(this.value);
+  document.getElementById('titleFontSizeValue').textContent = this.value + 'px';
+  document.getElementById('previewTitle').style.fontSize = this.value + 'px';
+});
+
+document.getElementById('textFontSize').addEventListener('input', function() {
+  config.textFontSize = parseInt(this.value);
+  document.getElementById('textFontSizeValue').textContent = this.value + 'px';
+  updateTextStyles();
+});
+
+function updateTextStyles() {
+  document.getElementById('previewTitle').style.color = config.textColor;
+  document.getElementById('previewSubtitle').style.color = config.textColor;
+  document.getElementById('previewCredits').style.color = config.textColor;
+  document.getElementById('previewSubtitle').style.fontSize = config.textFontSize + 'px';
+  document.getElementById('previewCredits').style.fontSize = config.textFontSize + 'px';
+  
+  document.querySelectorAll('.preview-lyric-line').forEach(function(el) {
+    el.style.color = config.textColor;
+    el.style.fontSize = config.lyricFontSize + 'px';
+  });
+}
+
+// ========== 歌词颜色设置 ==========
+document.getElementById('activeLyricColor').addEventListener('input', function() {
+  config.activeLyricColor = this.value;
+  document.getElementById('activeLyricColorText').value = this.value;
+  updateLyricDisplay();
+});
+
+document.getElementById('activeLyricColorText').addEventListener('input', function() {
+  config.activeLyricColor = this.value;
+  document.getElementById('activeLyricColor').value = this.value;
+  updateLyricDisplay();
+});
+
+// ========== 背景位置设置 ==========
+document.getElementById('bgPositionPresets').addEventListener('click', function(e) {
+  if (!e.target.classList.contains('size-preset')) return;
+  
+  this.querySelectorAll('.size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  e.target.classList.add('active');
+  
+  config.bgPosition = e.target.dataset.pos;
   updatePreviewBgPosition();
 });
-document.getElementById('bgOffsetX').addEventListener('input',function(){config.bgOffsetX=parseInt(this.value);document.getElementById('bgOffsetXValue').textContent=this.value+'px';updatePreviewBgPosition();});
-document.getElementById('bgOffsetY').addEventListener('input',function(){config.bgOffsetY=parseInt(this.value);document.getElementById('bgOffsetYValue').textContent=this.value+'px';updatePreviewBgPosition();});
-document.getElementById('bgScale').addEventListener('input',function(){config.bgScale=parseInt(this.value);document.getElementById('bgScaleValue').textContent=this.value+'%';updatePreviewBgPosition();});
-function updatePreviewBgPosition(){
-  const bgV=document.getElementById('previewBgVideo'),bgI=document.getElementById('previewBgImage');
-  let px='50%',py='50%';
-  switch(config.bgPosition){
-    case'top':px='50%';py='0%';break;case'bottom':px='50%';py='100%';break;
-    case'left':px='0%';py='50%';break;case'right':px='100%';py='50%';break;
-    case'topleft':px='0%';py='0%';break;case'topright':px='100%';py='0%';break;
-    case'bottomleft':px='0%';py='100%';break;case'bottomright':px='100%';py='100%';break;
+
+document.getElementById('bgOffsetX').addEventListener('input', function() {
+  config.bgOffsetX = parseInt(this.value);
+  document.getElementById('bgOffsetXValue').textContent = this.value + 'px';
+  updatePreviewBgPosition();
+});
+
+document.getElementById('bgOffsetY').addEventListener('input', function() {
+  config.bgOffsetY = parseInt(this.value);
+  document.getElementById('bgOffsetYValue').textContent = this.value + 'px';
+  updatePreviewBgPosition();
+});
+
+document.getElementById('bgScale').addEventListener('input', function() {
+  config.bgScale = parseInt(this.value);
+  document.getElementById('bgScaleValue').textContent = this.value + '%';
+  updatePreviewBgPosition();
+});
+
+function updatePreviewBgPosition() {
+  var bgV = document.getElementById('previewBgVideo');
+  var bgI = document.getElementById('previewBgImage');
+  var px = '50%';
+  var py = '50%';
+  
+  switch (config.bgPosition) {
+    case 'top': px = '50%'; py = '0%'; break;
+    case 'bottom': px = '50%'; py = '100%'; break;
+    case 'left': px = '0%'; py = '50%'; break;
+    case 'right': px = '100%'; py = '50%'; break;
+    case 'topleft': px = '0%'; py = '0%'; break;
+    case 'topright': px = '100%'; py = '0%'; break;
+    case 'bottomleft': px = '0%'; py = '100%'; break;
+    case 'bottomright': px = '100%'; py = '100%'; break;
   }
-  const op=`calc(${px} + ${config.bgOffsetX}px) calc(${py} + ${config.bgOffsetY}px)`;
-  if(bgV.style.display!=='none'){bgV.style.objectPosition=op;bgV.style.transform=`scale(${config.bgScale/100})`;}
-  if(bgI.style.display!=='none'){bgI.style.objectPosition=op;bgI.style.transform=`scale(${config.bgScale/100})`;}
+  
+  var op = 'calc(' + px + ' + ' + config.bgOffsetX + 'px) calc(' + py + ' + ' + config.bgOffsetY + 'px)';
+  
+  if (bgV.style.display !== 'none') {
+    bgV.style.objectPosition = op;
+    bgV.style.transform = 'scale(' + (config.bgScale / 100) + ')';
+  }
+  if (bgI.style.display !== 'none') {
+    bgI.style.objectPosition = op;
+    bgI.style.transform = 'scale(' + (config.bgScale / 100) + ')';
+  }
 }
 
-// ========== 人物尺寸 ==========
-document.getElementById('figureSizePresets').addEventListener('click',function(e){
-  if(!e.target.classList.contains('size-preset'))return;
-  this.querySelectorAll('.size-preset').forEach(b=>b.classList.remove('active'));
+// ========== 人物尺寸设置 ==========
+document.getElementById('figureSizePresets').addEventListener('click', function(e) {
+  if (!e.target.classList.contains('size-preset')) return;
+  
+  this.querySelectorAll('.size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
   e.target.classList.add('active');
-  config.figureSize=e.target.dataset.figureSize;
+  
+  config.figureSize = e.target.dataset.figureSize;
   updateFigureSize();
 });
-function updateFigureSize(){const s={small:'80px',medium:'150px',large:'250px'};document.getElementById('previewFigure').style.maxHeight=s[config.figureSize]||'150px';}
 
-// ========== 歌词 ==========
-document.getElementById('lyricVisibleLines').addEventListener('input',function(){config.lyricVisibleLines=parseInt(this.value);document.getElementById('lyricVisibleLinesValue').textContent=this.value;updateLyricDisplay();});
-document.getElementById('lyricFontSize').addEventListener('input',function(){config.lyricFontSize=parseInt(this.value);document.getElementById('lyricFontSizeValue').textContent=this.value+'px';document.querySelectorAll('.preview-lyric-line').forEach(el=>{el.style.fontSize=this.value+'px';});});
-function parseLyrics(){
-  const t=document.getElementById('lyricTimestamp').value;
-  const ls=t.split('\n').filter(l=>l.trim());
-  parsedLyrics=[];
-  const re=/\[(\d+):(\d+)\.(\d+)\](.*)/;
-  ls.forEach(l=>{const m=l.match(re);if(m){const tm=parseInt(m[1])*60+parseInt(m[2])+parseInt(m[3])/1000;const tx=m[4].trim();if(tx)parsedLyrics.push({time:tm,text:tx});}});
+function updateFigureSize() {
+  var sizes = { small: '80px', medium: '150px', large: '250px' };
+  document.getElementById('previewFigure').style.maxHeight = sizes[config.figureSize] || '150px';
 }
-function getVisibleLyrics(ct){
-  if(!parsedLyrics.length)return{lines:[],activeIndex:-1};
-  let ai=-1;
-  for(let i=parsedLyrics.length-1;i>=0;i--){if(ct>=parsedLyrics[i].time){ai=i;break;}}
-  const hf=Math.floor(config.lyricVisibleLines/2);
-  let st=Math.max(0,ai-hf);
-  let ed=Math.min(parsedLyrics.length,st+config.lyricVisibleLines);
-  if(ed-st<config.lyricVisibleLines)st=Math.max(0,ed-config.lyricVisibleLines);
-  return{lines:parsedLyrics.slice(st,ed).map((l,i)=>({...l,isActive:(st+i)===ai})),activeIndex:ai-st};
-}
-function updateLyricDisplay(){
-  const ct=audioElement.currentTime||0;
-  const{lines}=getVisibleLyrics(ct);
-  const c=document.getElementById('previewLyrics');
-  c.innerHTML='';
-  lines.forEach(l=>{
-    const d=document.createElement('div');
-    d.className='preview-lyric-line'+(l.isActive?' active':'');
-    d.textContent=l.text;
-    d.style.color=l.isActive?config.activeLyricColor:config.textColor;
-    d.style.fontSize=config.lyricFontSize+'px';
-    c.appendChild(d);
+
+// ========== 歌词设置 ==========
+document.getElementById('lyricVisibleLines').addEventListener('input', function() {
+  config.lyricVisibleLines = parseInt(this.value);
+  document.getElementById('lyricVisibleLinesValue').textContent = this.value;
+  updateLyricDisplay();
+});
+
+document.getElementById('lyricFontSize').addEventListener('input', function() {
+  config.lyricFontSize = parseInt(this.value);
+  document.getElementById('lyricFontSizeValue').textContent = this.value + 'px';
+  document.querySelectorAll('.preview-lyric-line').forEach(function(el) {
+    el.style.fontSize = this.value + 'px';
+  });
+});
+
+// 解析歌词
+function parseLyrics() {
+  var text = document.getElementById('lyricTimestamp').value;
+  var lines = text.split('\n').filter(function(l) { return l.trim(); });
+  parsedLyrics = [];
+  
+  var regex = /\[(\d+):(\d+)\.(\d+)\](.*)/;
+  
+  lines.forEach(function(l) {
+    var match = l.match(regex);
+    if (match) {
+      var time = parseInt(match[1]) * 60 + parseInt(match[2]) + parseInt(match[3]) / 1000;
+      var text = match[4].trim();
+      if (text) {
+        parsedLyrics.push({ time: time, text: text });
+      }
+    }
   });
 }
-function updateTextContent(){
-  document.getElementById('previewTitle').textContent=document.getElementById('songTitle').value||'歌名';
-  const sub=document.getElementById('songSubtitle').value;
-  const se=document.getElementById('previewSubtitle');
-  if(sub){se.textContent=sub;se.style.display='block';}else{se.style.display='none';}
-  const l=document.getElementById('creditsLyrics').value,m=document.getElementById('creditsMusic').value,a=document.getElementById('creditsArtist').value;
-  let cr='';if(l)cr+='词：'+l;if(m)cr+=(cr?'  ':'')+'曲：'+m;if(a)cr+=(cr?'  ':'')+'唱：'+a;
-  document.getElementById('previewCredits').textContent=cr;
+
+// 获取可见歌词
+function getVisibleLyrics(currentTime) {
+  if (!parsedLyrics.length) return { lines: [], activeIndex: -1 };
+  
+  var activeIndex = -1;
+  for (var i = parsedLyrics.length - 1; i >= 0; i--) {
+    if (currentTime >= parsedLyrics[i].time) {
+      activeIndex = i;
+      break;
+    }
+  }
+  
+  var halfVisible = Math.floor(config.lyricVisibleLines / 2);
+  var start = Math.max(0, activeIndex - halfVisible);
+  var end = Math.min(parsedLyrics.length, start + config.lyricVisibleLines);
+  
+  if (end - start < config.lyricVisibleLines) {
+    start = Math.max(0, end - config.lyricVisibleLines);
+  }
+  
+  var lines = parsedLyrics.slice(start, end).map(function(l, i) {
+    return {
+      time: l.time,
+      text: l.text,
+      isActive: (start + i) === activeIndex
+    };
+  });
+  
+  return { lines: lines, activeIndex: activeIndex - start };
 }
-function updatePreview(){
-  parseLyrics();updateOverlay();updateTextContent();updateTextStyles();
-  updateFigureSize();updateLyricDisplay();updatePreviewBgPosition();
-  document.getElementById('previewTitle').style.fontSize=config.titleFontSize+'px';
+
+// 更新歌词显示
+function updateLyricDisplay() {
+  var currentTime = audioElement.currentTime || 0;
+  var result = getVisibleLyrics(currentTime);
+  var container = document.getElementById('previewLyrics');
+  container.innerHTML = '';
+  
+  result.lines.forEach(function(l) {
+    var div = document.createElement('div');
+    div.className = 'preview-lyric-line' + (l.isActive ? ' active' : '');
+    div.textContent = l.text;
+    div.style.color = l.isActive ? config.activeLyricColor : config.textColor;
+    div.style.fontSize = config.lyricFontSize + 'px';
+    container.appendChild(div);
+  });
+}
+
+// 更新文字内容
+function updateTextContent() {
+  document.getElementById('previewTitle').textContent = document.getElementById('songTitle').value || '歌名';
+  
+  var sub = document.getElementById('songSubtitle').value;
+  var subEl = document.getElementById('previewSubtitle');
+  if (sub) {
+    subEl.textContent = sub;
+    subEl.style.display = 'block';
+  } else {
+    subEl.style.display = 'none';
+  }
+  
+  var lyr = document.getElementById('creditsLyrics').value;
+  var mus = document.getElementById('creditsMusic').value;
+  var art = document.getElementById('creditsArtist').value;
+  
+  var credits = '';
+  if (lyr) credits += '词：' + lyr;
+  if (mus) credits += (credits ? '  ' : '') + '曲：' + mus;
+  if (art) credits += (credits ? '  ' : '') + '唱：' + art;
+  
+  document.getElementById('previewCredits').textContent = credits;
+}
+
+// 更新所有预览
+function updatePreview() {
+  parseLyrics();
+  updateOverlay();
+  updateTextContent();
+  updateTextStyles();
+  updateFigureSize();
+  updateLyricDisplay();
+  updatePreviewBgPosition();
+  document.getElementById('previewTitle').style.fontSize = config.titleFontSize + 'px';
 }
 
 // ========== 播放控制 ==========
-function playPreview(){
-  if(!audioElement.src){showStatus('error','❌ 请先上传音频');return;}
-  audioElement.play().then(()=>{
-    isPlaying=true;
-    document.getElementById('previewBgVideo')?.play().catch(()=>{});
-    document.getElementById('previewFigureVideo')?.play().catch(()=>{});
+function playPreview() {
+  if (!audioElement.src) {
+    showStatus('error', '❌ 请先上传音频');
+    return;
+  }
+  
+  audioElement.play().then(function() {
+    isPlaying = true;
+    var bgV = document.getElementById('previewBgVideo');
+    var figV = document.getElementById('previewFigureVideo');
+    if (bgV) bgV.play().catch(function() {});
+    if (figV) figV.play().catch(function() {});
     startTimeUpdate();
-  }).catch(err=>showStatus('error','❌ '+err.message));
+  }).catch(function(err) {
+    showStatus('error', '❌ ' + err.message);
+  });
 }
-function pausePreview(){
-  audioElement.pause();isPlaying=false;
-  document.getElementById('previewBgVideo')?.pause();
-  document.getElementById('previewFigureVideo')?.pause();
-  if(animationId){cancelAnimationFrame(animationId);animationId=null;}
-}
-function startTimeUpdate(){
-  function upd(){if(!isPlaying)return;const t=audioElement.currentTime,d=audioElement.duration||0;if(d>0){document.getElementById('audioSeekBar').value=(t/d)*100;}document.getElementById('currentTime').textContent=formatTime(t);updateLyricDisplay();animationId=requestAnimationFrame(upd);}
-  upd();
-}
-audioElement.addEventListener('ended',()=>{isPlaying=false;if(animationId){cancelAnimationFrame(animationId);animationId=null;}document.getElementById('audioSeekBar').value=100;});
-document.getElementById('previewLyrics').addEventListener('click',function(e){
-  const ln=e.target.closest('.preview-lyric-line');
-  if(!ln||!parsedLyrics.length)return;
-  const fd=parsedLyrics.find(l=>l.text===ln.textContent);
-  if(fd){audioElement.currentTime=fd.time;updateLyricDisplay();}
-});
-document.getElementById('audioUrl').addEventListener('input',function(){if(this.value&&!fileBase64.audio){audioElement.src=this.value;audioElement.load();}});
-function showStatus(type,msg){const s=document.getElementById('status');s.className='status '+type;s.textContent=msg;s.style.display='block';setTimeout(()=>s.style.display='none',5000);}
 
-// ========== 录制 ==========
+function pausePreview() {
+  audioElement.pause();
+  isPlaying = false;
+  
+  var bgV = document.getElementById('previewBgVideo');
+  var figV = document.getElementById('previewFigureVideo');
+  if (bgV) bgV.pause();
+  if (figV) figV.pause();
+  
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+function startTimeUpdate() {
+  function update() {
+    if (!isPlaying) return;
+    
+    var t = audioElement.currentTime;
+    var d = audioElement.duration || 0;
+    
+    if (d > 0) {
+      document.getElementById('audioSeekBar').value = (t / d) * 100;
+    }
+    document.getElementById('currentTime').textContent = formatTime(t);
+    updateLyricDisplay();
+    
+    animationId = requestAnimationFrame(update);
+  }
+  
+  update();
+}
+
+// 音频结束事件
+audioElement.addEventListener('ended', function() {
+  isPlaying = false;
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+  document.getElementById('audioSeekBar').value = 100;
+});
+
+// 点击歌词跳转
+document.getElementById('previewLyrics').addEventListener('click', function(e) {
+  var line = e.target.closest('.preview-lyric-line');
+  if (!line || !parsedLyrics.length) return;
+  
+  var found = parsedLyrics.find(function(l) {
+    return l.text === line.textContent;
+  });
+  
+  if (found) {
+    audioElement.currentTime = found.time;
+    updateLyricDisplay();
+  }
+});
+
+// 音频外链
+document.getElementById('audioUrl').addEventListener('input', function() {
+  if (this.value && !fileBase64.audio) {
+    audioElement.src = this.value;
+    audioElement.load();
+  }
+});
+  // ========== 开始录制 ==========
 async function startRecording() {
-  if (!audioElement.src) { showStatus('error', '❌ 请先上传音频'); return; }
+  if (!audioElement.src) {
+    showStatus('error', '❌ 请先上传音频');
+    return;
+  }
   if (isRecording) return;
-  
-  const size = getContainerSize();
-  const maxDim = 1920;
-  let rw = size.width, rh = size.height;
-  if (rw > maxDim || rh > maxDim) { const scale = Math.min(maxDim/rw, maxDim/rh); rw = Math.floor(rw*scale); rh = Math.floor(rh*scale); }
-  
+
+  // 获取容器尺寸并限制最大分辨率
+  var size = getContainerSize();
+  var maxDim = 1920;
+  var rw = size.width;
+  var rh = size.height;
+
+  if (rw > maxDim || rh > maxDim) {
+    var scale = Math.min(maxDim / rw, maxDim / rh);
+    rw = Math.floor(rw * scale);
+    rh = Math.floor(rh * scale);
+  }
+
+  // 创建录制画布
   recordingCanvas = document.createElement('canvas');
-  recordingCanvas.width = rw; recordingCanvas.height = rh;
+  recordingCanvas.width = rw;
+  recordingCanvas.height = rh;
   recordingCtx = recordingCanvas.getContext('2d');
-  
-  const bgVideo = document.getElementById('previewBgVideo');
-  const bgImage = document.getElementById('previewBgImage');
-  const figureVideo = document.getElementById('previewFigureVideo');
-  const figureImage = document.getElementById('previewFigureImage');
-  
-  let bgImgElement = null, fgImgElement = null;
-  if (fileBase64.bgImage && bgImage.style.display !== 'none') { bgImgElement = new Image(); bgImgElement.src = fileBase64.bgImage.dataUrl; await new Promise(r => { bgImgElement.onload = r; }); }
-  if (fileBase64.figureImage && figureImage.style.display !== 'none') { fgImgElement = new Image(); fgImgElement.src = fileBase64.figureImage.dataUrl; await new Promise(r => { fgImgElement.onload = r; }); }
-  
-  const stream = recordingCanvas.captureStream(30);
-  const audioStream = audioElement.captureStream ? audioElement.captureStream() : null;
-  let combinedStream;
-  if (audioStream && audioStream.getAudioTracks().length > 0) { combinedStream = new MediaStream([stream.getVideoTracks()[0], audioStream.getAudioTracks()[0]]); }
-  else { combinedStream = stream; }
-  
-  const mimeTypes = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
-  let selectedMime = '';
-  for (const mt of mimeTypes) { if (MediaRecorder.isTypeSupported(mt)) { selectedMime = mt; break; } }
-  if (!selectedMime) { showStatus('error', '❌ 浏览器不支持录制'); return; }
-  
+
+  // 获取所有媒体元素
+  var bgVideo = document.getElementById('previewBgVideo');
+  var bgImage = document.getElementById('previewBgImage');
+  var figureVideo = document.getElementById('previewFigureVideo');
+  var figureImage = document.getElementById('previewFigureImage');
+
+  // 预加载图片
+  var bgImgElement = null;
+  var fgImgElement = null;
+
+  if (fileBase64.bgImage && bgImage.style.display !== 'none') {
+    bgImgElement = new Image();
+    bgImgElement.src = fileBase64.bgImage.dataUrl;
+    await new Promise(function(resolve) {
+      bgImgElement.onload = resolve;
+    });
+  }
+
+  if (fileBase64.figureImage && figureImage.style.display !== 'none') {
+    fgImgElement = new Image();
+    fgImgElement.src = fileBase64.figureImage.dataUrl;
+    await new Promise(function(resolve) {
+      fgImgElement.onload = resolve;
+    });
+  }
+
+  // 创建视频流
+  var canvasStream = recordingCanvas.captureStream(30);
+  var audioStream = audioElement.captureStream ? audioElement.captureStream() : null;
+  var combinedStream;
+
+  if (audioStream && audioStream.getAudioTracks().length > 0) {
+    combinedStream = new MediaStream([
+      canvasStream.getVideoTracks()[0],
+      audioStream.getAudioTracks()[0]
+    ]);
+  } else {
+    combinedStream = canvasStream;
+  }
+
+  // 检查支持的 MIME 类型
+  var mimeTypes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+  var selectedMime = '';
+
+  for (var i = 0; i < mimeTypes.length; i++) {
+    if (MediaRecorder.isTypeSupported(mimeTypes[i])) {
+      selectedMime = mimeTypes[i];
+      break;
+    }
+  }
+
+  if (!selectedMime) {
+    showStatus('error', '❌ 浏览器不支持视频录制');
+    return;
+  }
+
+  // 创建 MediaRecorder
   recordingChunks = [];
-  mediaRecorder = new MediaRecorder(combinedStream, { mimeType: selectedMime, videoBitsPerSecond: 5000000 });
-  mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordingChunks.push(e.data); };
-  
-  mediaRecorder.onstop = async () => {
+  mediaRecorder = new MediaRecorder(combinedStream, {
+    mimeType: selectedMime,
+    videoBitsPerSecond: 5000000
+  });
+
+  // 收集数据
+  mediaRecorder.ondataavailable = function(e) {
+    if (e.data.size > 0) {
+      recordingChunks.push(e.data);
+    }
+  };
+
+  // 录制完成处理
+  mediaRecorder.onstop = async function() {
+    // 显示处理状态
     document.getElementById('processingText').style.display = 'block';
     document.getElementById('cancelBtn').style.display = 'none';
-    
+
     try {
-      const rawBlob = new Blob(recordingChunks, { type: selectedMime });
-      let finalBlob = rawBlob;
-      let fileName = (document.getElementById('songTitle').value || '音乐视频');
-      let fileExt = '.webm';
-      
+      // 创建原始 WebM Blob
+      var rawBlob = new Blob(recordingChunks, { type: selectedMime });
+      var finalBlob = rawBlob;
+      var fileName = (document.getElementById('songTitle').value || '音乐视频');
+      var fileExt = '.webm';
+
       if (selectedExportFormat === 'mp4') {
+        // 转换为 MP4
         document.getElementById('recordingIcon').textContent = '🔄';
         document.getElementById('recordingTitle').textContent = '正在转换为 MP4...';
-        document.getElementById('processingText').textContent = '⏳ 正在转换为 MP4 格式，请稍候...';
+        document.getElementById('processingText').textContent = '⏳ 正在转换为 MP4 格式（H.264+AAC），请稍候...';
+        
         finalBlob = await convertToMP4(rawBlob);
         fileExt = '.mp4';
       } else {
+        // 修复 WebM 索引
         document.getElementById('recordingIcon').textContent = '🔧';
-        document.getElementById('recordingTitle').textContent = '正在修复视频文件...';
-        document.getElementById('processingText').textContent = '⏳ 正在添加进度条索引...';
+        document.getElementById('recordingTitle').textContent = '正在修复视频索引...';
+        document.getElementById('processingText').textContent = '⏳ 正在添加进度条索引，请稍候...';
+        
         finalBlob = await fixWebM(rawBlob);
         fileExt = '.webm';
       }
-      
+
       fileName += fileExt;
-      const url = URL.createObjectURL(finalBlob);
-      const a = document.createElement('a');
-      a.href = url; a.download = fileName;
-      document.body.appendChild(a); a.click();
+
+      // 触发下载
+      var url = URL.createObjectURL(finalBlob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
       document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      
-      showStatus('success', `✅ 导出成功！(${formatFileSize(finalBlob.size)}) - ${fileExt.replace('.','').toUpperCase()} 格式`);
+
+      // 延迟释放 URL
+      setTimeout(function() {
+        URL.revokeObjectURL(url);
+      }, 1000);
+
+      var formatName = fileExt.replace('.', '').toUpperCase();
+      showStatus('success', '✅ 导出成功！(' + formatFileSize(finalBlob.size) + ') - ' + formatName + ' 格式');
     } catch (error) {
-      console.error('处理失败:', error);
-      showStatus('error', '❌ 视频处理失败');
+      console.error('视频处理失败:', error);
+      showStatus('error', '❌ 视频处理失败，请重试');
     }
-    
+
+    // 恢复 UI 状态
     document.getElementById('recordingModal').style.display = 'none';
     document.getElementById('downloadBtn').disabled = false;
     document.getElementById('processingText').style.display = 'none';
@@ -918,51 +1635,65 @@ async function startRecording() {
     document.getElementById('cancelBtn').style.display = 'inline-block';
     isRecording = false;
   };
-  
+
+  // 显示录制弹窗
   document.getElementById('recordingModal').style.display = 'flex';
   document.getElementById('downloadBtn').disabled = true;
   isRecording = true;
-  
+
+  // 重置所有媒体到开头
   audioElement.currentTime = 0;
   if (bgVideo.style.display !== 'none') bgVideo.currentTime = 0;
   if (figureVideo.style.display !== 'none') figureVideo.currentTime = 0;
+
   recordingDuration = audioElement.duration || 60;
-  
+
+  // 开始录制
   mediaRecorder.start(100);
-  await audioElement.play().catch(() => {});
-  if (bgVideo.style.display !== 'none') bgVideo.play().catch(() => {});
-  if (figureVideo.style.display !== 'none') figureVideo.play().catch(() => {});
-  
+
+  // 开始播放
+  await audioElement.play().catch(function() {});
+  if (bgVideo.style.display !== 'none') bgVideo.play().catch(function() {});
+  if (figureVideo.style.display !== 'none') figureVideo.play().catch(function() {});
+
+  // 开始渲染帧
   renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
-  
-  const onEnded = () => {
-    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+
+  // 音频结束时自动停止录制
+  var onEnded = function() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
     audioElement.removeEventListener('ended', onEnded);
   };
   audioElement.addEventListener('ended', onEnded);
 }
 
-// ========== 录制帧渲染（完整版）==========
+// ========== 渲染录制帧 ==========
 function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh) {
   if (!isRecording) return;
-  
-  const ctx = recordingCtx;
-  const ct = audioElement.currentTime;
-  const total = recordingDuration || 1;
-  const progress = Math.min(ct / total * 100, 100);
-  
+
+  var ctx = recordingCtx;
+  var currentTime = audioElement.currentTime;
+  var total = recordingDuration || 1;
+  var progress = Math.min((currentTime / total) * 100, 100);
+
+  // 更新进度条
   document.getElementById('recordingProgressFill').style.width = progress + '%';
   document.getElementById('recordingProgressText').textContent = Math.floor(progress) + '%';
-  
+
+  // 清空画布
   ctx.clearRect(0, 0, rw, rh);
-  
-  // ===== 1. 背景绘制 =====
-  const bgScale = config.bgScale / 100;
-  const scaleRatio = rw / getContainerSize().width;
-  const bgOffX = config.bgOffsetX * scaleRatio;
-  const bgOffY = config.bgOffsetY * scaleRatio;
-  
-  let sourceW = rw, sourceH = rh;
+
+  // ===== 1. 绘制背景 =====
+  var bgScaleFactor = config.bgScale / 100;
+  var scaleRatio = rw / getContainerSize().width;
+  var bgOffX = config.bgOffsetX * scaleRatio;
+  var bgOffY = config.bgOffsetY * scaleRatio;
+
+  var sourceW = rw;
+  var sourceH = rh;
+
   if (bgVideo.style.display !== 'none' && bgVideo.readyState >= 2 && bgVideo.videoWidth) {
     sourceW = bgVideo.videoWidth;
     sourceH = bgVideo.videoHeight;
@@ -973,32 +1704,59 @@ function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figur
     sourceW = bgImage.naturalWidth;
     sourceH = bgImage.naturalHeight;
   }
-  
+
   // object-fit: cover 逻辑
-  const srcRatio = sourceW / sourceH;
-  const cntRatio = rw / rh;
-  let bgDW, bgDH, bgDX, bgDY;
+  var srcRatio = sourceW / sourceH;
+  var cntRatio = rw / rh;
+  var bgDW, bgDH, bgDX, bgDY;
+
   if (srcRatio > cntRatio) {
-    bgDH = rh * bgScale;
+    bgDH = rh * bgScaleFactor;
     bgDW = bgDH * srcRatio;
   } else {
-    bgDW = rw * bgScale;
+    bgDW = rw * bgScaleFactor;
     bgDH = bgDW / srcRatio;
   }
-  
+
   // 背景位置计算
   switch (config.bgPosition) {
-    case 'top': bgDX = (rw - bgDW) / 2 + bgOffX; bgDY = bgOffY; break;
-    case 'bottom': bgDX = (rw - bgDW) / 2 + bgOffX; bgDY = rh - bgDH + bgOffY; break;
-    case 'left': bgDX = bgOffX; bgDY = (rh - bgDH) / 2 + bgOffY; break;
-    case 'right': bgDX = rw - bgDW + bgOffX; bgDY = (rh - bgDH) / 2 + bgOffY; break;
-    case 'topleft': bgDX = bgOffX; bgDY = bgOffY; break;
-    case 'topright': bgDX = rw - bgDW + bgOffX; bgDY = bgOffY; break;
-    case 'bottomleft': bgDX = bgOffX; bgDY = rh - bgDH + bgOffY; break;
-    case 'bottomright': bgDX = rw - bgDW + bgOffX; bgDY = rh - bgDH + bgOffY; break;
-    default: bgDX = (rw - bgDW) / 2 + bgOffX; bgDY = (rh - bgDH) / 2 + bgOffY;
+    case 'top':
+      bgDX = (rw - bgDW) / 2 + bgOffX;
+      bgDY = bgOffY;
+      break;
+    case 'bottom':
+      bgDX = (rw - bgDW) / 2 + bgOffX;
+      bgDY = rh - bgDH + bgOffY;
+      break;
+    case 'left':
+      bgDX = bgOffX;
+      bgDY = (rh - bgDH) / 2 + bgOffY;
+      break;
+    case 'right':
+      bgDX = rw - bgDW + bgOffX;
+      bgDY = (rh - bgDH) / 2 + bgOffY;
+      break;
+    case 'topleft':
+      bgDX = bgOffX;
+      bgDY = bgOffY;
+      break;
+    case 'topright':
+      bgDX = rw - bgDW + bgOffX;
+      bgDY = bgOffY;
+      break;
+    case 'bottomleft':
+      bgDX = bgOffX;
+      bgDY = rh - bgDH + bgOffY;
+      break;
+    case 'bottomright':
+      bgDX = rw - bgDW + bgOffX;
+      bgDY = rh - bgDH + bgOffY;
+      break;
+    default: // center
+      bgDX = (rw - bgDW) / 2 + bgOffX;
+      bgDY = (rh - bgDH) / 2 + bgOffY;
   }
-  
+
   // 绘制背景
   if (bgVideo.style.display !== 'none' && bgVideo.readyState >= 2) {
     ctx.drawImage(bgVideo, bgDX, bgDY, bgDW, bgDH);
@@ -1010,138 +1768,190 @@ function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figur
     ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, 0, rw, rh);
   }
-  
-  // ===== 2. 蒙版覆盖 =====
-  const hex = config.overlayColor;
-  ctx.fillStyle = `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${config.overlayOpacity/100})`;
+
+  // ===== 2. 绘制蒙版 =====
+  var hex = config.overlayColor;
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  var a = config.overlayOpacity / 100;
+
+  ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
   ctx.fillRect(0, 0, rw, rh);
-  
-  // ===== 3. 文字绘制 =====
+
+  // ===== 3. 绘制文字 =====
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const centerX = rw / 2;
-  let currentY = rh * 0.22;
-  
-  const titleFS = config.titleFontSize * scaleRatio;
-  const textFS = config.textFontSize * scaleRatio;
-  const lyricFS = config.lyricFontSize * scaleRatio;
-  
+
+  var centerX = rw / 2;
+  var currentY = rh * 0.22;
+
+  var titleFS = config.titleFontSize * scaleRatio;
+  var textFS = config.textFontSize * scaleRatio;
+  var lyricFS = config.lyricFontSize * scaleRatio;
+
   // 歌名
   ctx.fillStyle = config.textColor;
-  ctx.font = `bold ${titleFS}px "PingFang SC","Microsoft YaHei",sans-serif`;
+  ctx.font = 'bold ' + titleFS + 'px "PingFang SC","Microsoft YaHei",sans-serif';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
   ctx.shadowBlur = 8;
   ctx.fillText(document.getElementById('songTitle').value || '歌名', centerX, currentY);
   currentY += titleFS * 1.8;
-  
+
   // 副标题
-  const subtitle = document.getElementById('songSubtitle').value;
+  var subtitle = document.getElementById('songSubtitle').value;
   if (subtitle) {
-    ctx.font = `${textFS}px "PingFang SC","Microsoft YaHei",sans-serif`;
+    ctx.font = textFS + 'px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.shadowBlur = 6;
     ctx.fillText(subtitle, centerX, currentY);
     currentY += textFS * 1.8;
   }
-  
+
   // 制作信息
-  const ly = document.getElementById('creditsLyrics').value;
-  const mu = document.getElementById('creditsMusic').value;
-  const ar = document.getElementById('creditsArtist').value;
-  let credits = '';
+  var ly = document.getElementById('creditsLyrics').value;
+  var mu = document.getElementById('creditsMusic').value;
+  var ar = document.getElementById('creditsArtist').value;
+  var credits = '';
   if (ly) credits += '词：' + ly;
   if (mu) credits += (credits ? '  ' : '') + '曲：' + mu;
   if (ar) credits += (credits ? '  ' : '') + '唱：' + ar;
-  
+
   if (credits) {
     ctx.globalAlpha = 0.85;
-    ctx.font = `${textFS}px "PingFang SC","Microsoft YaHei",sans-serif`;
+    ctx.font = textFS + 'px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.shadowBlur = 4;
     ctx.fillText(credits, centerX, currentY);
     ctx.globalAlpha = 1;
     currentY += textFS * 2;
   }
-  
-  // ===== 4. 人物绘制 =====
+
+  // ===== 4. 绘制人物 =====
   ctx.shadowColor = 'rgba(0,0,0,0.4)';
   ctx.shadowBlur = 20;
-  const figureSizes = { small: rh * 0.10, medium: rh * 0.22, large: rh * 0.35 };
-  const figureMaxH = figureSizes[config.figureSize] || rh * 0.22;
-  
+
+  var figureSizes = {
+    small: rh * 0.10,
+    medium: rh * 0.22,
+    large: rh * 0.35
+  };
+  var figureMaxH = figureSizes[config.figureSize] || rh * 0.22;
+
   if (figureVideo.style.display !== 'none' && figureVideo.readyState >= 2 && figureVideo.videoWidth) {
-    const fw = figureVideo.videoWidth;
-    const fh = figureVideo.videoHeight;
-    const s = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
+    var fw = figureVideo.videoWidth;
+    var fh = figureVideo.videoHeight;
+    var s = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
     ctx.drawImage(figureVideo, centerX - (fw * s) / 2, currentY, fw * s, fh * s);
     currentY += fh * s + 15;
   } else if (fgImgElement && fgImgElement.width) {
-    const fw = fgImgElement.width;
-    const fh = fgImgElement.height;
-    const s = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
-    ctx.drawImage(fgImgElement, centerX - (fw * s) / 2, currentY, fw * s, fh * s);
-    currentY += fh * s + 15;
+    var fw2 = fgImgElement.width;
+    var fh2 = fgImgElement.height;
+    var s2 = Math.min(figureMaxH / fh2, (rw * 0.6) / fw2);
+    ctx.drawImage(fgImgElement, centerX - (fw2 * s2) / 2, currentY, fw2 * s2, fh2 * s2);
+    currentY += fh2 * s2 + 15;
   } else if (figureImage.style.display !== 'none' && figureImage.complete && figureImage.naturalWidth) {
-    const fw = figureImage.naturalWidth;
-    const fh = figureImage.naturalHeight;
-    const s = Math.min(figureMaxH / fh, (rw * 0.6) / fw);
-    ctx.drawImage(figureImage, centerX - (fw * s) / 2, currentY, fw * s, fh * s);
-    currentY += fh * s + 15;
+    var fw3 = figureImage.naturalWidth;
+    var fh3 = figureImage.naturalHeight;
+    var s3 = Math.min(figureMaxH / fh3, (rw * 0.6) / fw3);
+    ctx.drawImage(figureImage, centerX - (fw3 * s3) / 2, currentY, fw3 * s3, fh3 * s3);
+    currentY += fh3 * s3 + 15;
   }
+
   ctx.shadowColor = 'transparent';
   ctx.shadowBlur = 0;
-  
-  // ===== 5. 歌词绘制 =====
-  const { lines } = getVisibleLyrics(ct);
-  const activeLyricFS = lyricFS * 1.08;
-  const lineH = activeLyricFS * 1.8;
-  const totalLyricH = lines.length * lineH;
-  let lyricSY = Math.min(currentY + 20, rh - totalLyricH - 20);
-  
+
+  // ===== 5. 绘制歌词（支持自动换行）=====
+  var lyricsResult = getVisibleLyrics(currentTime);
+  var lines = lyricsResult.lines;
+  var activeLyricFS = lyricFS * 1.08;
+  var baseLyricFS = lyricFS;
+  var maxLineWidth = rw * 0.85;
+
   ctx.shadowColor = 'rgba(0,0,0,0.6)';
   ctx.shadowBlur = 4;
-  
-  lines.forEach(line => {
-    if (line.isActive) {
+
+  // 先计算总高度
+  var allWrappedLines = [];
+  var totalLyricH = 0;
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var fontStr = line.isActive ?
+      'bold ' + activeLyricFS + 'px "PingFang SC","Microsoft YaHei",sans-serif"' :
+      baseLyricFS + 'px "PingFang SC","Microsoft YaHei",sans-serif"';
+    ctx.font = fontStr;
+
+    var wrapped = wrapText(ctx, line.text, maxLineWidth);
+    allWrappedLines.push({
+      wrapped: wrapped,
+      isActive: line.isActive
+    });
+
+    totalLyricH += wrapped.length * activeLyricFS * 1.2 + 8;
+  }
+
+  var lyricSY = Math.min(currentY + 20, rh - totalLyricH - 20);
+
+  // 绘制每行歌词
+  for (var j = 0; j < allWrappedLines.length; j++) {
+    var item = allWrappedLines[j];
+
+    if (item.isActive) {
       ctx.globalAlpha = 1;
-      ctx.font = `bold ${activeLyricFS}px "PingFang SC","Microsoft YaHei",sans-serif`;
+      ctx.font = 'bold ' + activeLyricFS + 'px "PingFang SC","Microsoft YaHei",sans-serif"';
       ctx.fillStyle = config.activeLyricColor;
     } else {
       ctx.globalAlpha = 0.5;
-      ctx.font = `${lyricFS}px "PingFang SC","Microsoft YaHei",sans-serif`;
+      ctx.font = baseLyricFS + 'px "PingFang SC","Microsoft YaHei",sans-serif"';
       ctx.fillStyle = config.textColor;
     }
-    ctx.fillText(line.text, centerX, lyricSY);
-    lyricSY += lineH;
-  });
-  
+
+    for (var k = 0; k < item.wrapped.length; k++) {
+      ctx.fillText(item.wrapped[k], centerX, lyricSY);
+      lyricSY += activeLyricFS * 1.2;
+    }
+    lyricSY += 8;
+  }
+
   ctx.globalAlpha = 1;
   ctx.shadowColor = 'transparent';
   ctx.shadowBlur = 0;
-  
-  // ===== 6. 下一帧 =====
-  recordingAnimationId = requestAnimationFrame(() => {
+
+  // ===== 6. 请求下一帧 =====
+  recordingAnimationId = requestAnimationFrame(function() {
     renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
   });
 }
 
+// ========== 取消录制 ==========
 function cancelRecording() {
-  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
-  if (recordingAnimationId) { cancelAnimationFrame(recordingAnimationId); recordingAnimationId = null; }
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    mediaRecorder.stop();
+  }
+
+  if (recordingAnimationId) {
+    cancelAnimationFrame(recordingAnimationId);
+    recordingAnimationId = null;
+  }
+
   audioElement.pause();
-  document.getElementById('previewBgVideo')?.pause();
-  document.getElementById('previewFigureVideo')?.pause();
+  var bgV = document.getElementById('previewBgVideo');
+  var figV = document.getElementById('previewFigureVideo');
+  if (bgV) bgV.pause();
+  if (figV) figV.pause();
+
   document.getElementById('recordingModal').style.display = 'none';
   document.getElementById('downloadBtn').disabled = false;
   document.getElementById('processingText').style.display = 'none';
   document.getElementById('cancelBtn').style.display = 'inline-block';
+
   isRecording = false;
   recordingChunks = [];
   showStatus('info', '已取消录制');
 }
-
-// ========== 重置 ==========
+  // ========== 重置表单 ==========
 function resetForm() {
   if (isRecording) cancelRecording();
-  
+
   // 恢复文字默认值
   document.getElementById('songTitle').value = defaultValues.songTitle;
   document.getElementById('songSubtitle').value = defaultValues.songSubtitle;
@@ -1150,7 +1960,7 @@ function resetForm() {
   document.getElementById('creditsArtist').value = defaultValues.creditsArtist;
   document.getElementById('lyricTimestamp').value = defaultValues.lyricTimestamp;
   document.getElementById('audioUrl').value = '';
-  
+
   // 恢复蒙版
   document.getElementById('overlayColor').value = '#000000';
   document.getElementById('overlayColorText').value = '#000000';
@@ -1158,95 +1968,137 @@ function resetForm() {
   document.getElementById('overlayOpacityValue').textContent = '50%';
   config.overlayColor = '#000000';
   config.overlayOpacity = 50;
-  
+
   // 恢复文字颜色和字号
   document.getElementById('textColor').value = '#ffffff';
   document.getElementById('textColorText').value = '#ffffff';
   config.textColor = '#ffffff';
+
   document.getElementById('activeLyricColor').value = '#ffd700';
   document.getElementById('activeLyricColorText').value = '#ffd700';
   config.activeLyricColor = '#ffd700';
+
   document.getElementById('titleFontSize').value = 28;
   document.getElementById('titleFontSizeValue').textContent = '28px';
   config.titleFontSize = 28;
+
   document.getElementById('textFontSize').value = 14;
   document.getElementById('textFontSizeValue').textContent = '14px';
   config.textFontSize = 14;
+
   document.getElementById('lyricFontSize').value = 16;
   document.getElementById('lyricFontSizeValue').textContent = '16px';
   config.lyricFontSize = 16;
+
   document.getElementById('lyricVisibleLines').value = 5;
   document.getElementById('lyricVisibleLinesValue').textContent = '5';
   config.lyricVisibleLines = 5;
-  
+
   // 恢复容器尺寸
-  document.querySelectorAll('#containerSizePresets .size-preset').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#containerSizePresets .size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
   document.querySelector('#containerSizePresets .size-preset[data-size="16-9"]').classList.add('active');
   config.containerSize = '16-9';
   document.getElementById('containerCustomSize').style.display = 'none';
+
+  // 清除设备选择
   document.getElementById('phoneModel').value = '';
   document.getElementById('padModel').value = '';
   document.getElementById('monitorModel').value = '';
   document.getElementById('deviceInfo').textContent = '';
   currentDeviceType = null;
-  const c = document.getElementById('previewContainer');
+
+  var c = document.getElementById('previewContainer');
   c.className = 'preview-container size-16-9';
   c.style.width = '';
   c.style.height = '';
-  
+
   // 恢复背景位置
-  document.querySelectorAll('#bgPositionPresets .size-preset').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#bgPositionPresets .size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
   document.querySelector('#bgPositionPresets .size-preset[data-pos="center"]').classList.add('active');
   config.bgPosition = 'center';
+
   document.getElementById('bgOffsetX').value = 0;
   document.getElementById('bgOffsetXValue').textContent = '0px';
   config.bgOffsetX = 0;
+
   document.getElementById('bgOffsetY').value = 0;
   document.getElementById('bgOffsetYValue').textContent = '0px';
   config.bgOffsetY = 0;
+
   document.getElementById('bgScale').value = 100;
   document.getElementById('bgScaleValue').textContent = '100%';
   config.bgScale = 100;
-  
+
   // 恢复人物尺寸
-  document.querySelectorAll('#figureSizePresets .size-preset').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#figureSizePresets .size-preset').forEach(function(b) {
+    b.classList.remove('active');
+  });
   document.querySelector('#figureSizePresets .size-preset[data-figure-size="medium"]').classList.add('active');
   config.figureSize = 'medium';
-  
+
   // 恢复导出格式
   selectedExportFormat = 'webm';
-  document.querySelectorAll('.format-option').forEach(opt => opt.classList.remove('active'));
+  document.querySelectorAll('.format-option').forEach(function(opt) {
+    opt.classList.remove('active');
+  });
   document.querySelector('.format-option[data-format="webm"]').classList.add('active');
-  document.getElementById('formatHint').innerHTML = '✅ <strong>WebM</strong>：修复进度条，导出快速（推荐）<br>⚠️ <strong>MP4</strong>：兼容性最佳，适合所有平台（需转换）';
-  
-  // 清除文件
-  Object.keys(fileBase64).forEach(k => fileBase64[k] = null);
-  document.querySelectorAll('input[type="file"]').forEach(i => i.value = '');
-  document.querySelectorAll('.file-status').forEach(el => { el.className = 'file-status'; el.textContent = ''; });
+  document.getElementById('formatHint').innerHTML =
+    '✅ <strong>WebM</strong>：修复进度条，导出快速（推荐）<br>⚠️ <strong>MP4</strong>：兼容性最佳，适合所有平台（需转换）';
+
+  // 清除上传的文件
+  Object.keys(fileBase64).forEach(function(k) {
+    fileBase64[k] = null;
+  });
+
+  document.querySelectorAll('input[type="file"]').forEach(function(i) {
+    i.value = '';
+  });
+
+  document.querySelectorAll('.file-status').forEach(function(el) {
+    el.className = 'file-status';
+    el.textContent = '';
+  });
+
+  // 恢复预览元素
   document.getElementById('previewBgVideo').style.display = 'none';
   document.getElementById('previewBgImage').style.display = 'none';
   document.getElementById('previewBgFallback').style.display = 'block';
   document.getElementById('previewFigureVideo').style.display = 'none';
   document.getElementById('previewFigureImage').style.display = 'none';
+
+  // 清除音频
   audioElement.src = '';
   pausePreview();
+
   document.getElementById('audioSeekBar').value = 0;
   document.getElementById('currentTime').textContent = '00:00';
   document.getElementById('totalTime').textContent = '00:00';
-  
+
+  // 更新预览
   updatePreview();
   setTimeout(fitToScreen, 100);
   showStatus('success', '✅ 已恢复默认值');
 }
 
 // ========== 初始化 ==========
-window.addEventListener('load', () => {
+window.addEventListener('load', function() {
   updatePreview();
   setTimeout(fitToScreen, 200);
-  initFFmpeg().then(() => {
-    console.log('🎉 应用已就绪，WebM 和 MP4 格式均已支持');
+  
+  // 预加载 FFmpeg
+  initFFmpeg().then(function() {
+    console.log('🎉 应用已就绪');
+    console.log('   - WebM 格式：自动修复进度条索引');
+    console.log('   - MP4 格式：H.264 + AAC 编码，兼容所有设备');
+    console.log('   - 支持手机/平板/显示器设备预设');
+    console.log('   - 歌词自动换行，支持长文本');
   });
 });
+
 </script>
 </body>
 </html>
