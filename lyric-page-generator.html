@@ -75,6 +75,7 @@
     .format-option.active { border-color: #e8734a; background: #3a2a1a; }
     .format-option .format-name { font-size: 14px; font-weight: bold; color: #fff; }
     .format-option .format-desc { font-size: 10px; color: #999; margin-top: 4px; }
+    .format-option .format-badge { display: inline-block; background: #4caf50; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 3px; margin-top: 2px; }
     
     .status { margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; display: none; }
     .status.success { display: block; background: #1a3a1a; color: #4caf50; border: 1px solid #2d5a2d; }
@@ -108,11 +109,6 @@
     .zoom-control .zoom-btn:hover { background: #e8734a; }
     .zoom-control .zoom-fit { background: #333; border: 1px solid #555; color: #ccc; padding: 4px 10px; border-radius: 10px; cursor: pointer; font-size: 10px; transition: all 0.2s; white-space: nowrap; }
     .zoom-control .zoom-fit:hover { background: #e8734a; border-color: #e8734a; color: #fff; }
-    
-    /* 转换进度提示 */
-    .conversion-status { display: none; margin-top: 8px; padding: 8px; background: #1a2a3a; border: 1px solid #2d405a; border-radius: 6px; color: #64b5f6; font-size: 11px; text-align: center; }
-    .conversion-status.show { display: block; }
-    
     @media (max-width: 900px) { .app-container { flex-direction: column; } .control-panel { width: 100%; min-width: auto; height: auto; max-height: 40vh; border-right: none; border-bottom: 1px solid #333; } .preview-area { flex: 1; min-height: 300px; } .preview-container.size-16-9 { width: 853px; height: 480px; } .preview-container.size-9-16 { width: 270px; height: 480px; } .preview-container.size-4-3 { width: 640px; height: 480px; } .preview-container.size-1-1 { width: 480px; height: 480px; } .preview-container.size-21-9 { width: 1120px; height: 480px; } .zoom-control input[type="range"] { width: 100px; } }
   </style>
 </head>
@@ -136,7 +132,6 @@
     <h3 id="recordingTitle">正在录制视频...</h3>
     <div class="progress-bar"><div class="progress-fill" id="recordingProgressFill"></div></div>
     <div class="progress-text" id="recordingProgressText">0%</div>
-    <div class="conversion-status" id="conversionStatus">⏳ 正在转换为 MP4 格式...</div>
     <button class="btn-cancel" onclick="cancelRecording()">取消录制</button>
   </div>
 </div>
@@ -248,18 +243,19 @@
     <div class="section">
       <h3>📥 导出格式</h3>
       <div class="format-selector" id="formatSelector">
-        <div class="format-option active" data-format="webm" onclick="selectExportFormat('webm')">
+        <div class="format-option active" data-format="webm-fixed" onclick="selectExportFormat('webm-fixed')">
           <div class="format-name">🎬 WebM</div>
-          <div class="format-desc">高质量 · 快速导出</div>
+          <div class="format-desc">可拖动进度条</div>
+          <div class="format-badge">修复版</div>
         </div>
         <div class="format-option" data-format="mp4" onclick="selectExportFormat('mp4')">
           <div class="format-name">📱 MP4</div>
-          <div class="format-desc">兼容性好 · 需转换</div>
+          <div class="format-desc">兼容性好 · 可拖动</div>
         </div>
       </div>
       <div class="hint" style="margin-top: 6px;" id="formatHint">
-        ✅ WebM 格式：导出速度快，适合网页使用<br>
-        ⚠️ MP4 格式：兼容性更好，但需要额外转换时间
+        ✅ <strong>WebM (修复版)</strong>：修复了进度条无法拖动的问题<br>
+        ✅ <strong>MP4</strong>：更好的兼容性，但需要额外转换时间
       </div>
     </div>
 
@@ -318,8 +314,8 @@
   let recordingDuration = 0;
   let recordingAnimationId = null;
   let isRecording = false;
-  let selectedExportFormat = 'webm'; // 默认导出格式
-  let ffmpeg = null; // FFmpeg 实例
+  let selectedExportFormat = 'webm-fixed'; // 默认使用修复版WebM
+  let ffmpeg = null;
 
   const config = {
     containerSize: '16-9', containerWidth: 853, containerHeight: 480,
@@ -345,10 +341,10 @@
     document.querySelector(`.format-option[data-format="${format}"]`).classList.add('active');
     
     const hint = document.getElementById('formatHint');
-    if (format === 'webm') {
-      hint.innerHTML = '✅ WebM 格式：导出速度快，适合网页使用<br>⚠️ MP4 格式：兼容性更好，但需要额外转换时间';
+    if (format === 'webm-fixed') {
+      hint.innerHTML = '✅ <strong>WebM (修复版)</strong>：修复了进度条无法拖动的问题，导出快速<br>⚠️ <strong>MP4</strong>：更好的兼容性，但需要额外转换时间';
     } else {
-      hint.innerHTML = '⚠️ MP4 格式：兼容性更好，但需要额外转换时间<br>✅ WebM 格式：导出速度快，适合网页使用';
+      hint.innerHTML = '⚠️ <strong>MP4</strong>：更好的兼容性，但需要额外转换时间<br>✅ <strong>WebM (修复版)</strong>：修复了进度条无法拖动的问题，导出快速';
     }
   }
 
@@ -360,12 +356,10 @@
       const { FFmpeg } = window;
       ffmpeg = new FFmpeg();
       
-      // 监听日志输出
       ffmpeg.on('log', ({ message }) => {
         console.log('[FFmpeg]', message);
       });
       
-      // 加载 FFmpeg
       await ffmpeg.load({
         coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
       });
@@ -374,8 +368,52 @@
       return ffmpeg;
     } catch (error) {
       console.error('FFmpeg 初始化失败:', error);
-      showStatus('warning', '⚠️ FFmpeg 加载失败，将只能导出 WebM 格式');
+      showStatus('warning', '⚠️ FFmpeg 加载失败，WebM 进度条可能仍有问题');
       return null;
+    }
+  }
+
+  // ========== 修复 WebM 文件（添加索引元数据）==========
+  async function fixWebMSeekable(webmBlob) {
+    try {
+      const ff = await initFFmpeg();
+      if (!ff) {
+        showStatus('warning', '⚠️ FFmpeg 不可用，WebM 进度条可能无法拖动');
+        return webmBlob;
+      }
+      
+      console.log('正在修复 WebM 文件索引...');
+      
+      const inputFileName = 'input.webm';
+      const outputFileName = 'fixed.webm';
+      
+      const arrayBuffer = await webmBlob.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      
+      await ff.writeFile(inputFileName, uint8Array);
+      
+      // 关键命令：重新封装 WebM，添加 Cues 索引
+      await ff.exec([
+        '-i', inputFileName,
+        '-c', 'copy',           // 复制视频和音频流（不重新编码，速度很快）
+        '-fflags', '+genpts',   // 生成演示时间戳
+        '-map', '0',            // 映射所有流
+        '-f', 'webm',           // 输出格式
+        outputFileName
+      ]);
+      
+      const outputData = await ff.readFile(outputFileName);
+      const fixedBlob = new Blob([outputData.buffer], { type: 'video/webm' });
+      
+      await ff.deleteFile(inputFileName);
+      await ff.deleteFile(outputFileName);
+      
+      console.log('WebM 文件修复完成，已添加索引元数据');
+      return fixedBlob;
+    } catch (error) {
+      console.error('WebM 修复失败:', error);
+      showStatus('warning', '⚠️ WebM 修复失败，降级为原始文件');
+      return webmBlob;
     }
   }
 
@@ -388,12 +426,8 @@
         return webmBlob;
       }
       
-      // 显示转换状态
-      document.getElementById('conversionStatus').classList.add('show');
-      document.getElementById('recordingTitle').textContent = '正在转换格式...';
-      document.getElementById('recordingIcon').textContent = '🔄';
+      console.log('正在转换为 MP4 格式...');
       
-      // 读取 WebM 文件
       const inputFileName = 'input.webm';
       const outputFileName = 'output.mp4';
       
@@ -402,24 +436,22 @@
       
       await ff.writeFile(inputFileName, uint8Array);
       
-      // 执行转换命令
+      // 转换为 MP4（H.264 + AAC）
       await ff.exec([
         '-i', inputFileName,
-        '-c:v', 'libx264',      // 使用 H.264 编码
-        '-preset', 'medium',     // 编码速度（fast/medium/slow）
-        '-crf', '23',            // 质量（18-28，越小质量越好）
-        '-c:a', 'aac',           // 音频编码
-        '-b:a', '128k',          // 音频比特率
-        '-pix_fmt', 'yuv420p',   // 像素格式（兼容性）
-        '-movflags', '+faststart', // 快速启动（适合网络播放）
+        '-c:v', 'libx264',
+        '-preset', 'medium',
+        '-crf', '23',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-pix_fmt', 'yuv420p',
+        '-movflags', '+faststart',
         outputFileName
       ]);
       
-      // 读取转换后的文件
       const outputData = await ff.readFile(outputFileName);
       const mp4Blob = new Blob([outputData.buffer], { type: 'video/mp4' });
       
-      // 清理临时文件
       await ff.deleteFile(inputFileName);
       await ff.deleteFile(outputFileName);
       
@@ -428,13 +460,10 @@
       console.error('转换失败:', error);
       showStatus('error', '❌ MP4 转换失败，已降级为 WebM 格式');
       return webmBlob;
-    } finally {
-      document.getElementById('conversionStatus').classList.remove('show');
-      document.getElementById('recordingTitle').textContent = '正在录制视频...';
-      document.getElementById('recordingIcon').textContent = '🔴';
     }
   }
 
+  // 设备预设等配置（与之前相同，此处省略以节省空间）
   const devicePresets = {
     iphone17promax:{width:440,height:956,name:'iPhone 17 Pro Max'},iphone17pro:{width:402,height:874,name:'iPhone 17 Pro'},
     iphone17:{width:402,height:874,name:'iPhone 17'},iphone17air:{width:390,height:844,name:'iPhone 17 Air'},
@@ -644,19 +673,19 @@
       let fileName = (document.getElementById('songTitle').value || '音乐视频');
       let fileType = 'webm';
       
-      // 如果选择 MP4 格式，进行转换
-      if (selectedExportFormat === 'mp4') {
-        try {
-          showStatus('info', '🔄 正在转换为 MP4 格式...');
-          blob = await convertWebMToMP4(blob);
-          fileType = 'mp4';
-          fileName += '.mp4';
-        } catch (error) {
-          console.error('MP4 转换失败:', error);
-          showStatus('warning', '⚠️ MP4 转换失败，已降级为 WebM');
-          fileType = 'webm';
-          fileName += '.webm';
-        }
+      // 根据选择的格式进行处理
+      if (selectedExportFormat === 'webm-fixed') {
+        // 修复 WebM 文件，添加索引元数据
+        showStatus('info', '🔧 正在修复 WebM 文件索引...');
+        blob = await fixWebMSeekable(blob);
+        fileName += '_fixed.webm';
+        fileType = 'webm-fixed';
+      } else if (selectedExportFormat === 'mp4') {
+        // 转换为 MP4
+        showStatus('info', '🔄 正在转换为 MP4 格式...');
+        blob = await convertWebMToMP4(blob);
+        fileName += '.mp4';
+        fileType = 'mp4';
       } else {
         fileName += '.webm';
       }
@@ -669,19 +698,11 @@
       document.getElementById('recordingModal').style.display = 'none'; 
       document.getElementById('downloadBtn').disabled = false; 
       isRecording = false;
-      document.getElementById('conversionStatus').classList.remove('show');
-      document.getElementById('recordingTitle').textContent = '正在录制视频...';
-      document.getElementById('recordingIcon').textContent = '🔴';
-      showStatus('success', `✅ 视频导出成功！(${formatFileSize(blob.size)}) - ${fileType.toUpperCase()} 格式`);
+      showStatus('success', `✅ 视频导出成功！(${formatFileSize(blob.size)}) - ${fileType.toUpperCase()} 格式${fileType === 'webm-fixed' ? ' (可拖动进度条)' : ''}`);
     };
     document.getElementById('recordingModal').style.display = 'flex'; 
     document.getElementById('downloadBtn').disabled = true; 
     isRecording = true;
-    
-    // 更新按钮文字
-    const formatLabel = selectedExportFormat === 'mp4' ? 'MP4' : 'WebM';
-    document.getElementById('recordingTitle').textContent = `正在录制并导出 ${formatLabel}...`;
-    document.getElementById('recordingIcon').textContent = selectedExportFormat === 'mp4' ? '🎬' : '🔴';
     
     audioElement.currentTime = 0; 
     if (bgVideo.style.display !== 'none') bgVideo.currentTime = 0; 
@@ -707,7 +728,7 @@
     document.getElementById('recordingProgressText').textContent = Math.floor(progress) + '%';
     ctx.clearRect(0, 0, rw, rh);
     
-    // 1. 背景（object-fit: cover 等价逻辑）
+    // 1. 背景
     const bgScale = config.bgScale / 100;
     const scaleRatio = rw / getContainerSize().width;
     const bgOffX = config.bgOffsetX * scaleRatio;
@@ -781,7 +802,7 @@
     }
     ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 
-    // 5. 歌词（当前播放歌词放大 + 自定义颜色）
+    // 5. 歌词
     const { lines } = getVisibleLyrics(ct);
     const activeLyricFS = lyricFS * 1.08;
     const lineH = activeLyricFS * 1.8;
@@ -814,9 +835,6 @@
     audioElement.pause(); document.getElementById('previewBgVideo')?.pause(); document.getElementById('previewFigureVideo')?.pause();
     document.getElementById('recordingModal').style.display = 'none'; 
     document.getElementById('downloadBtn').disabled = false;
-    document.getElementById('conversionStatus').classList.remove('show');
-    document.getElementById('recordingTitle').textContent = '正在录制视频...';
-    document.getElementById('recordingIcon').textContent = '🔴';
     isRecording = false; recordingChunks = [];
     showStatus('info', '已取消录制');
   }
@@ -850,11 +868,10 @@
     document.getElementById('bgScale').value=100;document.getElementById('bgScaleValue').textContent='100%';config.bgScale=100;
     document.querySelectorAll('#figureSizePresets .size-preset').forEach(b=>b.classList.remove('active'));
     document.querySelector('#figureSizePresets .size-preset[data-figure-size="medium"]').classList.add('active');config.figureSize='medium';
-    // 重置格式选择
-    selectedExportFormat = 'webm';
+    selectedExportFormat = 'webm-fixed';
     document.querySelectorAll('.format-option').forEach(opt => opt.classList.remove('active'));
-    document.querySelector('.format-option[data-format="webm"]').classList.add('active');
-    document.getElementById('formatHint').innerHTML = '✅ WebM 格式：导出速度快，适合网页使用<br>⚠️ MP4 格式：兼容性更好，但需要额外转换时间';
+    document.querySelector('.format-option[data-format="webm-fixed"]').classList.add('active');
+    document.getElementById('formatHint').innerHTML = '✅ <strong>WebM (修复版)</strong>：修复了进度条无法拖动的问题，导出快速<br>⚠️ <strong>MP4</strong>：更好的兼容性，但需要额外转换时间';
     
     Object.keys(fileBase64).forEach(k=>fileBase64[k]=null);
     document.querySelectorAll('input[type="file"]').forEach(i=>i.value='');document.querySelectorAll('.file-status').forEach(el=>{el.className='file-status';el.textContent='';});
@@ -869,8 +886,6 @@
   window.addEventListener('load',()=>{
     updatePreview();
     setTimeout(fitToScreen,200);
-    // 预初始化 FFmpeg（可选，提高首次转换速度）
-    // initFFmpeg();
   });
 </script>
 </body>
