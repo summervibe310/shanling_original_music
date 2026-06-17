@@ -66,6 +66,13 @@
             margin-top: 0;
         }
 
+        h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 16px 0 8px;
+        }
+
         p {
             margin-bottom: 10px;
             color: var(--text-secondary);
@@ -154,6 +161,107 @@
             font-weight: 500;
         }
 
+        /* 折叠模块 */
+        .collapsible {
+            margin-bottom: 24px;
+        }
+
+        .collapsible-header {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 16px 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            transition: border-radius 0.2s ease;
+        }
+
+        .collapsible-header:hover {
+            border-color: #c0c8d4;
+        }
+
+        .collapsible-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: 18px;
+        }
+
+        .collapsible-arrow {
+            font-size: 14px;
+            color: #a0aec0;
+            transition: transform 0.2s ease;
+        }
+
+        .collapsible.open .collapsible-arrow {
+            transform: rotate(90deg);
+        }
+
+        .collapsible-body {
+            background: var(--card-bg);
+            border-radius: 0 0 10px 10px;
+            padding: 0 40px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid transparent;
+        }
+
+        .collapsible.open .collapsible-body {
+            max-height: 8000px;
+            padding: 20px 40px 36px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .collapsible.open .collapsible-header {
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* 表格 */
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .detail-table th {
+            background: #f5f7fa;
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .detail-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        .detail-table tr:hover td {
+            background: #fafbfc;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #4a6fa5;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
         @media print {
             body {
                 background: #fff;
@@ -164,14 +272,37 @@
                 border: 1px solid #ddd;
                 break-inside: avoid;
             }
+            .collapsible-body {
+                max-height: none !important;
+                padding: 20px 40px 36px !important;
+            }
+            .collapsible-header {
+                cursor: default;
+            }
         }
 
         @media (max-width: 600px) {
             .card {
                 padding: 20px 16px;
             }
+            .collapsible-header {
+                padding: 16px 20px;
+            }
+            .collapsible-body {
+                padding: 0 20px;
+            }
+            .collapsible.open .collapsible-body {
+                padding: 16px 20px 24px;
+            }
             body {
                 padding: 16px 8px;
+            }
+            .detail-table {
+                font-size: 11px;
+            }
+            .detail-table th,
+            .detail-table td {
+                padding: 6px 8px;
             }
         }
     </style>
@@ -291,6 +422,307 @@
             <img src="end.png" alt="后端工作总结 - 事件驱动异步同步架构" class="end-image" />
         </div>
 
+        <!-- ==================== 扩展模块：前端CRM深度讲解 ==================== -->
+        <div class="collapsible" id="expand-frontend">
+            <div class="collapsible-header" onclick="toggleCollapsible('expand-frontend')">
+                <h2>📂 扩展阅读：前端CRM项目深度讲解（15分钟面试稿）</h2>
+                <span class="collapsible-arrow">▶</span>
+            </div>
+            <div class="collapsible-body">
+
+                <h3>第一部分：项目背景与架构概览</h3>
+                <p>
+                    这个CRM是为二手工业设备交易平台（51panhuo.com）从零搭建的内部系统，用户是50-100名销售和运营人员。核心场景是销售从拿到线索开始，跟进客户、匹配设备、报价、收订金到成交的全流程管理。
+                </p>
+                <p>
+                    系统采用经典的三栏布局：左侧功能菜单、中间数据列表、右侧详情/操作面板。用户可以在中栏和右栏同时打开多个Tab页面，类似于浏览器的多标签页体验。这个交互模式是整个系统架构的核心，也是最大的技术挑战。
+                </p>
+
+                <h4>技术选型理由</h4>
+                <ul>
+                    <li><strong>Vue 3：</strong>Composition API更适合大型项目，逻辑按功能组织而不是按选项类型分散；公司对IE没有兼容要求</li>
+                    <li><strong>Vite：</strong>开发服务器冷启动2-3秒，热更新毫秒级，比之前Webpack项目15秒+提升明显</li>
+                    <li><strong>Pinia：</strong>相比Vuex，去掉了mutations，TypeScript支持开箱即用，API更简洁</li>
+                    <li><strong>Element Plus：</strong>表单密集型后台管理的首选，模板语法开发效率高</li>
+                </ul>
+
+                <h3>第二部分：多Tab缓存架构（核心设计）</h3>
+                <p>
+                    这是整个系统技术含量最高的部分。用户在中栏打开客户列表，点击某个客户后在右栏打开客户详情；切换到另一个客户时，右栏可以覆盖上一个Tab，也可以锁定后同时打开多个进行对比。
+                </p>
+
+                <h4>useIndexStore 核心方法</h4>
+                <table class="detail-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>功能</th>
+                        <th>技术细节</th>
+                    </tr>
+                    <tr>
+                        <td><code>addTab(name, component, position, params)</code></td>
+                        <td>打开新Tab</td>
+                        <td>同类页面默认覆盖旧Tab，加锁状态下允许多个同名Tab并存</td>
+                    </tr>
+                    <tr>
+                        <td><code>changeLock()</code></td>
+                        <td>切换锁定状态</td>
+                        <td>锁定后Tab不可关闭，支持同时对比两个客户详情</td>
+                    </tr>
+                    <tr>
+                        <td><code>refreshTab()</code></td>
+                        <td>刷新当前Tab</td>
+                        <td>布尔值翻转触发子组件watch，实现跨组件联动刷新</td>
+                    </tr>
+                    <tr>
+                        <td><code>removeTab()</code></td>
+                        <td>关闭Tab</td>
+                        <td>锁定时拒绝删除，防误操作</td>
+                    </tr>
+                </table>
+
+                <p>
+                    配合Vue的<code>&lt;KeepAlive&gt;</code>组件，切换Tab时组件实例被缓存，表单填写状态、滚动位置、筛选条件都不会丢失。这是B端高频操作场景下最重要的体验优化。
+                </p>
+
+                <h3>第三部分：9阶段意向状态机</h3>
+                <p>
+                    二手设备交易流程很长，从销售第一次接触客户到最终成交，中间要经历多个阶段。我把这个流程抽象为9个状态：
+                </p>
+                <table class="detail-table">
+                    <tr>
+                        <th>阶段</th><th>状态</th><th>说明</th>
+                    </tr>
+                    <tr><td>1</td><td>初挖</td><td>销售初步接触客户，了解基本需求</td></tr>
+                    <tr><td>2</td><td>深挖</td><td>深入了解客户预算、设备类型偏好、时间节点</td></tr>
+                    <tr><td>3</td><td>配货</td><td>根据需求在设备库中匹配合适的二手设备</td></tr>
+                    <tr><td>4</td><td>报价</td><td>向客户提交正式报价</td></tr>
+                    <tr><td>5</td><td>议价</td><td>价格谈判阶段</td></tr>
+                    <tr><td>6</td><td>订金</td><td>客户支付订金，锁定设备</td></tr>
+                    <tr><td>7</td><td>成交</td><td>完成交易</td></tr>
+                    <tr><td>8</td><td>关闭</td><td>意向终止（丢单或客户放弃）</td></tr>
+                    <tr><td>9</td><td>复购</td><td>老客户再次购买</td></tr>
+                </table>
+
+                <p>
+                    <strong>关键设计：</strong>报价不是独立模块，而是通过创建特殊类型的跟进记录（type='50'）来实现。这样做的好处是：所有报价操作天然进入跟进时间轴，无需额外开发审计日志功能。每条报价记录都可以追溯到哪个销售、什么时间、报了哪个设备、什么价格，实现了全流程审计可追溯。
+                </p>
+
+                <h3>第四部分：4K等级自动判定引擎</h3>
+                <p>
+                    销售需要根据客户信息的完整度来判断客户质量。我设计了9项必填项的检查规则，自动驱动客户等级升降：
+                </p>
+                <ul>
+                    <li>客户名称、联系电话、设备类型需求、预算范围、采购时间节点、决策人角色、公司名称、使用地点、历史购买记录</li>
+                    <li>9项全部满足 → A级（高意向）</li>
+                    <li>满足6-8项 → B级</li>
+                    <li>满足3-5项 → C级</li>
+                    <li>满足0-2项 → D级</li>
+                </ul>
+                <p>
+                    等级判定在前端实时计算，任何必填项的变更都会触发重新判定。规则配置化，后续增加或调整判定条件只需修改配置对象，不需要改动组件逻辑。
+                </p>
+
+                <h3>第五部分：AXB隐私号安全方案</h3>
+                <p>
+                    二手设备交易平台的核心资产是设备信息和客户关系。为了防止销售拿到客户真实手机号后私下交易（飞单），集成了阿里云AXB隐私号服务。
+                </p>
+                <ul>
+                    <li>销售点击"联系卖家"按钮 → 系统向阿里云申请临时中间号 → 销售拨打中间号 → 阿里云转接到卖家真实号码</li>
+                    <li>通话页面显示倒计时，控制通话时长</li>
+                    <li>通话结束后强制弹出"机况记录"表单，要求销售填写通话内容摘要</li>
+                    <li>所有通话记录留痕，包含主叫方、被叫方、通话时间、机况记录</li>
+                </ul>
+
+                <h3>第六部分：性能分级策略</h3>
+                <p>
+                    内部系统用户量不大，没必要上WebSocket增加复杂度。我采用了分级HTTP轮询策略：
+                </p>
+                <table class="detail-table">
+                    <tr><th>场景</th><th>策略</th><th>频率</th><th>原因</th></tr>
+                    <tr><td>提醒列表（Alerts）</td><td>短轮询</td><td>10秒</td><td>需要准实时感知新消息</td></tr>
+                    <tr><td>看板数据（TipsBoard）</td><td>长轮询</td><td>100秒</td><td>数据变化频率低，延迟可接受</td></tr>
+                    <tr><td>核心业务列表</td><td>事件驱动</td><td>按需</td><td>用户操作后才刷新，避免无效请求</td></tr>
+                </table>
+
+                <h3>第七部分：项目规模与复盘</h3>
+                <p>
+                    整个项目131个业务组件，其中61个被多模块复用，沉淀为核心组件库。最大单组件IntentionDetail.vue有2894行代码。系统上线后稳定运行，支撑销售团队日常工作。
+                </p>
+                <p>
+                    <strong>技术反思：</strong>如果现在重新设计，我会优先落地JSON Schema驱动的动态表单方案来进一步减少重复组件；打包体积方面引入路由懒加载把首屏体积从900KB+降下来；轮询方案可以升级为WebSocket统一推送减少不必要的HTTP请求。
+                </p>
+
+                <hr class="divider">
+                <p style="text-align:center;color:#a0aec0;font-size:13px;">⏱️ 以上内容可作为15-20分钟面试深度讲解</p>
+            </div>
+        </div>
+
+        <!-- ==================== 扩展模块：后端TMS深度讲解 ==================== -->
+        <div class="collapsible" id="expand-backend">
+            <div class="collapsible-header" onclick="toggleCollapsible('expand-backend')">
+                <h2>📂 扩展阅读：后端TMS项目深度讲解（15分钟面试稿）</h2>
+                <span class="collapsible-arrow">▶</span>
+            </div>
+            <div class="collapsible-body">
+
+                <h3>第一部分：项目背景</h3>
+                <p>
+                    运多星是怡亚通旗下的运输管理系统（TMS），服务于货运物流行业。系统采用Spring Boot微服务架构，分为MDC（基础数据中心）、SDC（业务中心）、FCC（财务中心）三大服务，通过Feign实现服务间调用，Nacos作为注册中心。
+                </p>
+                <p>
+                    翔和翎是合作方的物流平台，需要实时获取我们系统的货主、司机、车辆、运单等核心数据。我负责的就是这个三方对接模块，分支xhl.1.0.0.zyl，提交约7400行代码。
+                </p>
+
+                <h3>第二部分：系统架构与我的位置</h3>
+                <table class="detail-table">
+                    <tr><th>微服务</th><th>职责</th><th>我负责的内容</th></tr>
+                    <tr>
+                        <td>MDC（基础数据中心）</td>
+                        <td>管理用户、司机、车辆、企业认证等基础数据</td>
+                        <td>XhlEventListener监听8类事件，XhlApiClient封装货主/司机/车辆/人车合照的出站API</td>
+                    </tr>
+                    <tr>
+                        <td>SDC（业务中心）</td>
+                        <td>管理订单、运单、轨迹等核心业务</td>
+                        <td>BillEventListener监听6类运单事件，XhlApiClient封装订单/运单的出站API</td>
+                    </tr>
+                    <tr>
+                        <td>FCC（财务中心）</td>
+                        <td>管理支付、退款、银行对接</td>
+                        <td>支付和span跨域是其他同事负责，我联调时读过相关代码但非主开发</td>
+                    </tr>
+                </table>
+
+                <h3>第三部分：32个API全链路联调</h3>
+                <p>
+                    我设计并实现了MDC和SDC两个模块的出站客户端，覆盖32个API的请求模型与参数组装逻辑。以下是完整清单：
+                </p>
+
+                <h4>MDC侧 — XhlApiClient（主数据同步，8个API）</h4>
+                <table class="detail-table">
+                    <tr><th>业务动作</th><th>方法</th><th>数据源表</th><th>翔和翎接口路径</th></tr>
+                    <tr><td>新增货主</td><td><code>createOwner</code></td><td>enterprise_info, user_app, user_basic_info, identity_info</td><td>/otms/external/api/yyt/company/save</td></tr>
+                    <tr><td>修改货主</td><td><code>updateOwner</code></td><td>同上</td><td>/otms/external/api/yyt/company/update</td></tr>
+                    <tr><td>新增司机</td><td><code>createDriver</code></td><td>user_app, user_basic_info, identity_info, user_practice_seniority, user_driver_license</td><td>/otms/external/api/yyt/driver/save</td></tr>
+                    <tr><td>修改司机</td><td><code>updateDriver</code></td><td>同上</td><td>/otms/external/api/yyt/driver/update</td></tr>
+                    <tr><td>新增车辆</td><td><code>createVehicle</code></td><td>car_license_audit</td><td>/otms/external/api/yyt/truck/save</td></tr>
+                    <tr><td>修改车辆</td><td><code>updateVehicle</code></td><td>同上</td><td>/otms/external/api/yyt/truck/update</td></tr>
+                    <tr><td>新增人车合照</td><td><code>createDriverTruck</code></td><td>car_license_audit, identity_info</td><td>/otms/external/api/yyt/rel/driver_truck/save</td></tr>
+                    <tr><td>更新人车合照</td><td><code>updateDriverTruck</code></td><td>同上</td><td>/otms/external/api/yyt/rel/driver_truck/update</td></tr>
+                </table>
+
+                <h4>SDC侧 — XhlApiClient（订单运单同步，7个API）</h4>
+                <table class="detail-table">
+                    <tr><th>业务动作</th><th>方法</th><th>数据源表</th><th>翔和翎接口路径</th></tr>
+                    <tr><td>创建三方订单</td><td><code>saveOrder</code></td><td>bill, bill_un_loading_place, goods_info</td><td>/otms/external/api/yyt/order/save</td></tr>
+                    <tr><td>派单</td><td><code>sendOrder</code></td><td>bill, way_bill, 费用, 司机身份证</td><td>/otms/external/api/yyt/order/send</td></tr>
+                    <tr><td>修改订单</td><td><code>updateOrder</code></td><td>订单/装卸货/货物/费用</td><td>/otms/external/api/yyt/order/update</td></tr>
+                    <tr><td>运单发车</td><td><code>departWaybill</code></td><td>bill, way_bill</td><td>/otms/external/api/yyt/waybill/depart</td></tr>
+                    <tr><td>运单签收</td><td><code>signWaybill</code></td><td>签收时间/结算重量/回单照片</td><td>/otms/external/api/yyt/waybill/sign</td></tr>
+                    <tr><td>运单删除/作废</td><td><code>deleteWaybill</code></td><td>way_bill_code作tpWaybillNo</td><td>/otms/external/api/yyt/waybill/delete</td></tr>
+                    <tr><td>运单信息更新</td><td><code>updateWaybill</code></td><td>装卸货/费用/司机/签收汇总</td><td>/otms/external/api/yyt/waybill/update</td></tr>
+                </table>
+
+                <h4>事件监听器（MDC 8个 + SDC 6个 = 14个）</h4>
+                <table class="detail-table">
+                    <tr><th>模块</th><th>监听器</th><th>监听事件</th></tr>
+                    <tr><td rowspan="8">MDC<br>XhlEventListener</td><td><code>handleCreateOwnerEvent</code></td><td>CreateOwnerEvent</td></tr>
+                    <tr><td><code>handleUpdateOwnerEvent</code></td><td>UpdateOwnerEvent</td></tr>
+                    <tr><td><code>handleCreateDriverEvent</code></td><td>CreateDriverEvent</td></tr>
+                    <tr><td><code>handleUpdateDriverEvent</code></td><td>UpdateDriverEvent</td></tr>
+                    <tr><td><code>handleCreateVehicleEvent</code></td><td>CreateVehicleEvent</td></tr>
+                    <tr><td><code>handleUpdateVehicleEvent</code></td><td>UpdateVehicleEvent</td></tr>
+                    <tr><td><code>handleCreateDriverTruckEvent</code></td><td>CreateDriverTruckEvent</td></tr>
+                    <tr><td><code>handleUpdateDriverTruckEvent</code></td><td>UpdateDriverTruckEvent</td></tr>
+                    <tr><td rowspan="6">SDC<br>BillEventListener</td><td><code>handleSaveBillEvent</code></td><td>SaveBillEvent（司机接单/建单）</td></tr>
+                    <tr><td><code>handleUpdateBillEvent</code></td><td>UpdateBillEvent（修改订单）</td></tr>
+                    <tr><td><code>handleDepartWayBillEvent</code></td><td>DepartWayBillEvent（发车）</td></tr>
+                    <tr><td><code>handleSignWayBillEvent</code></td><td>SignWayBillEvent（签收）</td></tr>
+                    <tr><td><code>handleDeleteWayBillEvent</code></td><td>DeleteWayBillEvent（运单删除）</td></tr>
+                    <tr><td><code>handleUpdateWayBillEvent</code></td><td>UpdateWayBillEvent（运单修改）</td></tr>
+                </table>
+
+                <h3>第四部分：事件驱动异步同步机制</h3>
+                <p>
+                    这是整个模块的核心设计决策。货主注册、运单签收这些操作有自己的主事务，如果在业务方法里直接调用翔和翎HTTP接口，对方超时会把主事务也拖长，甚至阻塞数据库连接池。
+                </p>
+                <p>
+                    我的方案是三层解耦：
+                </p>
+                <ol>
+                    <li><strong>业务层发布事件：</strong>业务方法完成后通过Spring Event发布领域事件（如CreateOwnerEvent）</li>
+                    <li><strong>事务提交后触发监听：</strong>@TransactionalEventListener(AFTER_COMMIT)保证本地数据库事务提交后才执行监听器</li>
+                    <li><strong>异步执行HTTP调用：</strong>@Async用独立线程池发送HTTP请求到翔和翎，主业务线程立即返回，不受三方接口响应时间影响</li>
+                </ol>
+
+                <div class="highlight-box">
+                    <strong>为什么不是AFTER_COMPLET而不是AFTER_COMMIT？</strong>AFTER_COMPLET在事务回滚后也会执行，会导致没存上的数据反而同步到翔和翎。AFTER_COMMIT只在事务成功提交后触发，保证数据一致性。
+                </div>
+
+                <h3>第五部分：MD5签名鉴权与回调</h3>
+                <p><strong>出站签名（AppSignUtil.getSign）：</strong></p>
+                <ul>
+                    <li>把请求参数按key排序拼接</li>
+                    <li>加上apiKey作为盐值</li>
+                    <li>MD5加密生成签名</li>
+                    <li>请求时带timestamp和sign两个字段</li>
+                </ul>
+                <p><strong>入站回调验签（verifySign）：</strong></p>
+                <ul>
+                    <li>先校验timestamp在1分钟有效期内，防止重放攻击</li>
+                    <li>重新计算签名和传来的sign比对</li>
+                    <li>不匹配就抛InvalidAccessException</li>
+                </ul>
+                <p><strong>回调侧（XhlCallBackApiController + XhlCallBackApiServiceImpl）：</strong></p>
+                <table class="detail-table">
+                    <tr><th>回调类型</th><th>方法</th><th>操作的表</th></tr>
+                    <tr><td>货主审核</td><td><code>callBackShipperAuditResult</code></td><td>enterprise_info</td></tr>
+                    <tr><td>司机驾驶证审核</td><td><code>callBackDriverLicenseAuditResult</code></td><td>user_basic_info</td></tr>
+                    <tr><td>实名审核</td><td><code>callBackIdentityAuditResult</code></td><td>user_basic_info</td></tr>
+                    <tr><td>车辆审核</td><td><code>callBackCarAuditResult</code></td><td>car_license_audit</td></tr>
+                    <tr><td>人车合照审核</td><td><code>callBackDriverVehiclePhotoAuditResult</code></td><td>car_license_audit</td></tr>
+                </table>
+
+                <h3>第六部分：人车合照审核闭环</h3>
+                <p>
+                    这是我最完整的业务闭环实践。翔和翎要求司机上传车辆正面人车合照后同步到他们平台审核，审完再回调我们更新审核状态。我负责了整条链路：
+                </p>
+                <ol>
+                    <li><strong>数据库字段扩展：</strong>在car_license_audit表新增人车合照审核字段（审核状态、审核意见）</li>
+                    <li><strong>事件触发：</strong>CarLicenseAuditServiceImpl审核完成后发布CreateDriverTruckEvent或UpdateDriverTruckEvent</li>
+                    <li><strong>异步同步：</strong>XhlEventListener异步调用XhlApiClient的createDriverTruck或updateDriverTruck，POST到翔和翎</li>
+                    <li><strong>回调落库：</strong>XhlCallBackApiServiceImpl接收对方回调，更新car_license_audit的合照审核字段，区分前车牌照和后车牌照做字段映射</li>
+                </ol>
+
+                <h3>第七部分：联调踩坑记录</h3>
+                <h4>踩坑1：运单接口URL混用</h4>
+                <p>
+                    联调运单状态同步时，对方反馈修改和删除运单没生效。查日志发现HTTP有返回但对方数据没变。回头对照ApiAccessTest里的Demo URL，发现XhlApiClient里复制粘贴时URL没改对：删除运单的方法里写成了waybill/update，修改运单的方法里写成了order/send。修正后四个接口全部通过。后来我把所有URL提取成常量，避免再犯。
+                </p>
+                <h4>踩坑2：文档与实网行为不一致</h4>
+                <p>
+                    对接过程中多次遇到翔和翎文档写的参数名、返回值格式和实际接口行为不一致的问题。我养成了先写ApiAccessTest验证接口实际行为的习惯，遇到不一致就截图留证跟对方技术支持对齐，避免在业务代码里反复改参数名。
+                </p>
+
+                <h3>第八部分：技术反思与改进方向</h3>
+                <ul>
+                    <li><strong>异步失败重试机制：</strong>当前异步推送失败只打日志，后续可以加失败记录表和定时任务重试，重试三次后告警</li>
+                    <li><strong>回调幂等性加固：</strong>目前靠更新同一条记录保证业务幂等，数据库层面可以加唯一约束防并发写入</li>
+                    <li><strong>出站客户端抽象：</strong>32个API的参数组装逻辑可以进一步模板化，减少重复代码</li>
+                </ul>
+
+                <hr class="divider">
+                <p style="text-align:center;color:#a0aec0;font-size:13px;">⏱️ 以上内容可作为15-20分钟面试深度讲解</p>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        function toggleCollapsible(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('open');
+        }
+    </script>
 </body>
 </html>
