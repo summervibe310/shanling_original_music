@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张怡琳 - 个人简历</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-secondary: #5a6c7d;
+            --border: #e0e4e8;
+            --accent: #2c3e50;
+            --tag-bg: #eef2f7;
+            --tag-text: #4a5568;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 36px 40px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 20px 0 10px;
+        }
+
+        h3:first-of-type {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .tag-row {
+            margin-bottom: 16px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #a0aec0;
+            font-size: 12px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px dashed var(--border);
+            margin: 24px 0;
+        }
+
+        .end-image {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: #a0aec0;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: #f0f7ff;
+            border-left: 3px solid #4a90d9;
+            padding: 12px 16px;
+            border-radius: 0 6px 6px 0;
+            margin: 16px 0;
+            font-size: 14px;
+            color: #3a6a9e;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .skill-item {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px 16px;
+            }
+            body {
+                padding: 16px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ==================== 自我介绍 ==================== -->
+        <div class="card">
+            <h2>👤 自我介绍</h2>
+            <p>
+                我叫张怡琳，大学学的是国际金融，后来转行做开发，从前端到后端走了一条完整的全栈路径。
+            </p>
+            <p>
+                前端我独立负责过一个二手机械CRM系统，Vue 3加Element Plus，我主导了整个前端架构，包括三栏多Tab工作台、9阶段意向跟进流程、KeepAlive加锁机制解决多详情对比的交互问题，上线后销售团队一直在用。
+            </p>
+            <p>
+                后端我在怡亚通TMS项目里负责翔和翎三方对接模块，核心是用Spring Event加异步事件，把货主、司机、车辆、运单这些数据在本地事务提交后推送到翔和翎。我写了32个API的参数组装逻辑，鉴权用MD5加时间戳签名，还独立负责了人车合照审核闭环，从数据库字段到事件触发再到回调落库，整条链路我跟下来的。
+            </p>
+            <p>
+                因为两端都实际做过，我做后端的时候会从前端怎么调用、需要什么数据的角度去设计接口，做前端的时候也理解后端在性能和一致性上的约束。这个全栈视角是我和单一栈开发者最大的区别。
+            </p>
+        </div>
+
+        <!-- ==================== 技术栈 ==================== -->
+        <div class="card">
+            <h2>🛠️ 技术栈</h2>
+            <div class="skill-list">
+                <span class="skill-item">Vue 3</span>
+                <span class="skill-item">Vite</span>
+                <span class="skill-item">Element Plus</span>
+                <span class="skill-item">Pinia</span>
+                <span class="skill-item">Vue Router</span>
+                <span class="skill-item">Axios</span>
+                <span class="skill-item">ECharts</span>
+                <span class="skill-item">Socket.io</span>
+                <span class="skill-item">Spring Boot</span>
+                <span class="skill-item">MyBatis-Plus</span>
+                <span class="skill-item">MySQL</span>
+                <span class="skill-item">Redis</span>
+                <span class="skill-item">MongoDB</span>
+                <span class="skill-item">RabbitMQ</span>
+                <span class="skill-item">Nacos</span>
+                <span class="skill-item">XXL-Job</span>
+                <span class="skill-item">Spring Event</span>
+                <span class="skill-item">Git</span>
+            </div>
+        </div>
+
+        <!-- ==================== 前端项目 ==================== -->
+        <div class="card">
+            <h2>🖥️ 前端项目</h2>
+
+            <h3>CRM销售管理系统</h3>
+            <p class="meta">前端负责人，独立完成 | Vue 3 + Vite + Element Plus + Pinia</p>
+
+            <p>
+                为二手工业设备交易平台（51panhuo.com）独立设计并开发内部CRM前端。系统采用三栏布局（菜单/列表/详情），基于Pinia + KeepAlive实现多Tab详情缓存，设计并落地9阶段意向状态机、自动4K等级判定引擎、AXB隐私号联系卖家等核心模块。构建60+可复用组件库，使用分级HTTP轮询策略实现准实时数据更新。
+            </p>
+
+            <div class="tag-row">
+                <span class="tag">Vue 3</span>
+                <span class="tag">Vite</span>
+                <span class="tag">Element Plus</span>
+                <span class="tag">Pinia</span>
+                <span class="tag">ECharts</span>
+                <span class="tag">Socket.io</span>
+            </div>
+
+            <ul>
+                <li><strong>多Tab缓存架构：</strong>设计并实现中栏/右栏双Tab系统，由Pinia useIndexStore统一调度，支持同类页面覆盖、锁定多开、refreshTab布尔翻转联动刷新，配合KeepAlive保持页面状态，解决B端高频操作下的状态管理难题</li>
+                <li><strong>9阶段意向状态机：</strong>实现初挖、深挖、配货、报价、订金、成交、关闭全流程状态流转，报价通过创建特殊类型跟进记录（type='50'）实现审计留痕</li>
+                <li><strong>4K等级自动判定引擎：</strong>设计9项必填项检查规则，自动驱动客户等级升降，规则引擎化</li>
+                <li><strong>隐私号安全方案：</strong>集成阿里云AXB中间号，销售联系卖家时看不到真实号码，通话后强制留机况记录，解决销售私联风控问题</li>
+                <li><strong>分级轮询策略：</strong>提醒类数据10s短轮询，看板数据100s轮询，核心业务列表靠操作联动事件刷新，规避WebSocket复杂度</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>技术亮点：</strong>复杂业务状态机落地 · Pinia + KeepAlive多Tab缓存体系 · AXB隐私号安全方案 · 数据驱动等级判定 · 轮询分级策略
+            </div>
+        </div>
+
+        <!-- ==================== 后端项目 ==================== -->
+        <div class="card">
+            <h2>⚙️ 后端项目</h2>
+
+            <h3>怡亚通 TMS × 翔和翎物流平台三方对接</h3>
+            <p class="meta">后端开发 | 2025.04 | 分支 xhl.1.0.0.zyl | 提交约 7400+ 行</p>
+
+            <p>
+                负责MDC/SDC双模块与翔和翎物流平台的全链路数据对接，覆盖货主、司机、车辆、订单、运单等核心业务数据同步，基于Spring Event异步事件驱动，保证本地事务与外部同步的数据一致性。
+            </p>
+
+            <div class="tag-row">
+                <span class="tag">Spring Boot</span>
+                <span class="tag">MyBatis-Plus</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">Spring Event</span>
+                <span class="tag">@Async</span>
+                <span class="tag">@TransactionalEventListener</span>
+                <span class="tag">MD5签名</span>
+            </div>
+
+            <ul>
+                <li><strong>32个API全链路联调：</strong>设计并实现MDC/SDC双模块出站客户端，覆盖货主、司机、车辆、订单、运单、发票、费用等32个API请求模型与参数组装，完成与翔和翎全链路联调</li>
+                <li><strong>事件驱动异步同步：</strong>基于Spring Event + @Async与@TransactionalEventListener(AFTER_COMMIT)，在本地事务提交后异步推送数据至三方，避免阻塞主业务事务</li>
+                <li><strong>签名鉴权与回调：</strong>实现MD5 + timestamp签名鉴权（AppSignUtil），出站自动带sign，入站验签防伪造；完成货主、司机、车辆、实名、人车合照等5类审核结果回调落库</li>
+                <li><strong>人车合照审核闭环：</strong>扩展car_license_audit表人车合照审核字段，打通"审核通过→事件触发→三方人车关系同步→回调更新本地状态"完整业务闭环</li>
+                <li><strong>联调验证：</strong>编写ApiAccessTest分阶段验证，处理文档与实网行为不一致问题，联调期间修复运单接口URL混用等关键缺陷</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>核心设计决策：</strong>为什么用事件驱动而非直接同步调HTTP？——货主注册、运单签收等操作有自己的主事务，如果在业务方法里直接调翔和翎HTTP，对方超时会把主事务也拖长。用@TransactionalEventListener(AFTER_COMMIT)保证本地事务提交后才发事件，@Async用独立线程池发HTTP，主业务不受三方接口影响。
+            </div>
+
+            <!-- 后端工作总结图 -->
+            <img src="end.png" alt="后端工作总结 - 事件驱动异步同步架构" class="end-image" />
+        </div>
+
+    </div>
+</body>
+</html>
