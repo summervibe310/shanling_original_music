@@ -67,10 +67,20 @@
     .btn-download { background: #e8734a; color: #fff; width: 100%; margin-top: 8px; } .btn-download:hover { background: #d1653d; }
     .btn-download:disabled { background: #555; color: #999; cursor: not-allowed; }
     .btn-reset { background: #333; color: #999; border: 1px solid #555; width: 100%; margin-top: 6px; } .btn-reset:hover { background: #444; color: #fff; }
+    
+    /* 格式选择样式 */
+    .format-selector { display: flex; gap: 8px; margin-top: 8px; }
+    .format-option { flex: 1; padding: 8px; border: 2px solid #444; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .format-option:hover { border-color: #e8734a; background: #333; }
+    .format-option.active { border-color: #e8734a; background: #3a2a1a; }
+    .format-option .format-name { font-size: 14px; font-weight: bold; color: #fff; }
+    .format-option .format-desc { font-size: 10px; color: #999; margin-top: 4px; }
+    
     .status { margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; display: none; }
     .status.success { display: block; background: #1a3a1a; color: #4caf50; border: 1px solid #2d5a2d; }
     .status.error { display: block; background: #3a1a1a; color: #f44336; border: 1px solid #5a2d2d; }
     .status.info { display: block; background: #1a2a3a; color: #64b5f6; border: 1px solid #2d405a; }
+    .status.warning { display: block; background: #3a3a1a; color: #ffd700; border: 1px solid #5a5a2d; }
     .audio-seek-container { margin-top: 12px; }
     .audio-seek-container input[type="range"] { width: 100%; accent-color: #e8734a; cursor: pointer; }
     .audio-time-labels { display: flex; justify-content: space-between; font-size: 10px; color: #666; margin-top: 2px; }
@@ -98,6 +108,11 @@
     .zoom-control .zoom-btn:hover { background: #e8734a; }
     .zoom-control .zoom-fit { background: #333; border: 1px solid #555; color: #ccc; padding: 4px 10px; border-radius: 10px; cursor: pointer; font-size: 10px; transition: all 0.2s; white-space: nowrap; }
     .zoom-control .zoom-fit:hover { background: #e8734a; border-color: #e8734a; color: #fff; }
+    
+    /* 转换进度提示 */
+    .conversion-status { display: none; margin-top: 8px; padding: 8px; background: #1a2a3a; border: 1px solid #2d405a; border-radius: 6px; color: #64b5f6; font-size: 11px; text-align: center; }
+    .conversion-status.show { display: block; }
+    
     @media (max-width: 900px) { .app-container { flex-direction: column; } .control-panel { width: 100%; min-width: auto; height: auto; max-height: 40vh; border-right: none; border-bottom: 1px solid #333; } .preview-area { flex: 1; min-height: 300px; } .preview-container.size-16-9 { width: 853px; height: 480px; } .preview-container.size-9-16 { width: 270px; height: 480px; } .preview-container.size-4-3 { width: 640px; height: 480px; } .preview-container.size-1-1 { width: 480px; height: 480px; } .preview-container.size-21-9 { width: 1120px; height: 480px; } .zoom-control input[type="range"] { width: 100px; } }
   </style>
 </head>
@@ -117,10 +132,11 @@
 </div>
 <div class="recording-modal-overlay" id="recordingModal" style="display:none;">
   <div class="recording-modal">
-    <div class="recording-icon">🔴</div>
-    <h3>正在录制视频...</h3>
+    <div class="recording-icon" id="recordingIcon">🔴</div>
+    <h3 id="recordingTitle">正在录制视频...</h3>
     <div class="progress-bar"><div class="progress-fill" id="recordingProgressFill"></div></div>
     <div class="progress-text" id="recordingProgressText">0%</div>
+    <div class="conversion-status" id="conversionStatus">⏳ 正在转换为 MP4 格式...</div>
     <button class="btn-cancel" onclick="cancelRecording()">取消录制</button>
   </div>
 </div>
@@ -228,7 +244,26 @@
       <div class="form-group"><label>或音频外链 URL</label><input type="text" id="audioUrl" placeholder="https://example.com/song.mp3"></div>
     </div>
 
-    <button class="btn btn-download" id="downloadBtn" onclick="startRecording()">⬇ 导出视频 (WebM)</button>
+    <!-- 导出格式选择 -->
+    <div class="section">
+      <h3>📥 导出格式</h3>
+      <div class="format-selector" id="formatSelector">
+        <div class="format-option active" data-format="webm" onclick="selectExportFormat('webm')">
+          <div class="format-name">🎬 WebM</div>
+          <div class="format-desc">高质量 · 快速导出</div>
+        </div>
+        <div class="format-option" data-format="mp4" onclick="selectExportFormat('mp4')">
+          <div class="format-name">📱 MP4</div>
+          <div class="format-desc">兼容性好 · 需转换</div>
+        </div>
+      </div>
+      <div class="hint" style="margin-top: 6px;" id="formatHint">
+        ✅ WebM 格式：导出速度快，适合网页使用<br>
+        ⚠️ MP4 格式：兼容性更好，但需要额外转换时间
+      </div>
+    </div>
+
+    <button class="btn btn-download" id="downloadBtn" onclick="startRecording()">⬇ 导出视频</button>
     <button class="btn btn-reset" onclick="resetForm()">🔄 恢复默认值</button>
     <div class="status" id="status"></div>
     <audio id="audioPlayer" style="display:none;"></audio>
@@ -263,6 +298,10 @@
     </div>
   </div>
 </div>
+
+<!-- FFmpeg WebAssembly 库 -->
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.min.js"></script>
+
 <script>
   // ========== 全局变量 ==========
   const fileBase64 = { bgVideo: null, bgImage: null, figureVideo: null, figureImage: null, audio: null };
@@ -279,6 +318,8 @@
   let recordingDuration = 0;
   let recordingAnimationId = null;
   let isRecording = false;
+  let selectedExportFormat = 'webm'; // 默认导出格式
+  let ffmpeg = null; // FFmpeg 实例
 
   const config = {
     containerSize: '16-9', containerWidth: 853, containerHeight: 480,
@@ -294,6 +335,105 @@
     creditsLyrics: '山岭在逃', creditsMusic: '山岭在逃', creditsArtist: '',
     lyricTimestamp: document.getElementById('lyricTimestamp').value
   };
+
+  // ========== 导出格式选择 ==========
+  function selectExportFormat(format) {
+    selectedExportFormat = format;
+    document.querySelectorAll('.format-option').forEach(opt => {
+      opt.classList.remove('active');
+    });
+    document.querySelector(`.format-option[data-format="${format}"]`).classList.add('active');
+    
+    const hint = document.getElementById('formatHint');
+    if (format === 'webm') {
+      hint.innerHTML = '✅ WebM 格式：导出速度快，适合网页使用<br>⚠️ MP4 格式：兼容性更好，但需要额外转换时间';
+    } else {
+      hint.innerHTML = '⚠️ MP4 格式：兼容性更好，但需要额外转换时间<br>✅ WebM 格式：导出速度快，适合网页使用';
+    }
+  }
+
+  // ========== FFmpeg 初始化 ==========
+  async function initFFmpeg() {
+    if (ffmpeg) return ffmpeg;
+    
+    try {
+      const { FFmpeg } = window;
+      ffmpeg = new FFmpeg();
+      
+      // 监听日志输出
+      ffmpeg.on('log', ({ message }) => {
+        console.log('[FFmpeg]', message);
+      });
+      
+      // 加载 FFmpeg
+      await ffmpeg.load({
+        coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+      });
+      
+      console.log('FFmpeg 初始化成功');
+      return ffmpeg;
+    } catch (error) {
+      console.error('FFmpeg 初始化失败:', error);
+      showStatus('warning', '⚠️ FFmpeg 加载失败，将只能导出 WebM 格式');
+      return null;
+    }
+  }
+
+  // ========== WebM 转 MP4 ==========
+  async function convertWebMToMP4(webmBlob) {
+    try {
+      const ff = await initFFmpeg();
+      if (!ff) {
+        showStatus('error', '❌ FFmpeg 不可用，请选择 WebM 格式导出');
+        return webmBlob;
+      }
+      
+      // 显示转换状态
+      document.getElementById('conversionStatus').classList.add('show');
+      document.getElementById('recordingTitle').textContent = '正在转换格式...';
+      document.getElementById('recordingIcon').textContent = '🔄';
+      
+      // 读取 WebM 文件
+      const inputFileName = 'input.webm';
+      const outputFileName = 'output.mp4';
+      
+      const arrayBuffer = await webmBlob.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      
+      await ff.writeFile(inputFileName, uint8Array);
+      
+      // 执行转换命令
+      await ff.exec([
+        '-i', inputFileName,
+        '-c:v', 'libx264',      // 使用 H.264 编码
+        '-preset', 'medium',     // 编码速度（fast/medium/slow）
+        '-crf', '23',            // 质量（18-28，越小质量越好）
+        '-c:a', 'aac',           // 音频编码
+        '-b:a', '128k',          // 音频比特率
+        '-pix_fmt', 'yuv420p',   // 像素格式（兼容性）
+        '-movflags', '+faststart', // 快速启动（适合网络播放）
+        outputFileName
+      ]);
+      
+      // 读取转换后的文件
+      const outputData = await ff.readFile(outputFileName);
+      const mp4Blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+      
+      // 清理临时文件
+      await ff.deleteFile(inputFileName);
+      await ff.deleteFile(outputFileName);
+      
+      return mp4Blob;
+    } catch (error) {
+      console.error('转换失败:', error);
+      showStatus('error', '❌ MP4 转换失败，已降级为 WebM 格式');
+      return webmBlob;
+    } finally {
+      document.getElementById('conversionStatus').classList.remove('show');
+      document.getElementById('recordingTitle').textContent = '正在录制视频...';
+      document.getElementById('recordingIcon').textContent = '🔴';
+    }
+  }
 
   const devicePresets = {
     iphone17promax:{width:440,height:956,name:'iPhone 17 Pro Max'},iphone17pro:{width:402,height:874,name:'iPhone 17 Pro'},
@@ -413,7 +553,8 @@
   handleFileUpload('bgVideoFile','bgVideoFileStatus','bgVideo');handleFileUpload('bgImageFile','bgImageFileStatus','bgImage');
   handleFileUpload('figureVideoFile','figureVideoFileStatus','figureVideo');handleFileUpload('figureImageFile','figureImageFileStatus','figureImage');
   handleFileUpload('audioFile','audioFileStatus','audio');
-    // ========== 容器尺寸 ==========
+  
+  // ========== 容器尺寸 ==========
   document.getElementById('containerSizePresets').addEventListener('click',function(e){if(!e.target.classList.contains('size-preset'))return;this.querySelectorAll('.size-preset').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');config.containerSize=e.target.dataset.size;document.getElementById('phoneModel').value='';document.getElementById('padModel').value='';document.getElementById('monitorModel').value='';document.getElementById('deviceInfo').textContent='';currentDeviceType=null;const c=document.getElementById('previewContainer');c.classList.remove('size-16-9','size-9-16','size-4-3','size-1-1','size-21-9','size-custom');if(config.containerSize==='custom'){document.getElementById('containerCustomSize').style.display='block';c.style.width=config.containerWidth+'px';c.style.height=config.containerHeight+'px';}else{document.getElementById('containerCustomSize').style.display='none';c.classList.add('size-'+config.containerSize);c.style.width='';c.style.height='';}setTimeout(fitToScreen,100);});
   document.getElementById('containerWidth').addEventListener('input',function(){config.containerWidth=parseInt(this.value)||853;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.width=config.containerWidth+'px';setTimeout(fitToScreen,100);}});
   document.getElementById('containerHeight').addEventListener('input',function(){config.containerHeight=parseInt(this.value)||480;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.height=config.containerHeight+'px';setTimeout(fitToScreen,100);}});
@@ -464,12 +605,13 @@
   document.getElementById('previewLyrics').addEventListener('click',function(e){const ln=e.target.closest('.preview-lyric-line');if(!ln||!parsedLyrics.length)return;const fd=parsedLyrics.find(l=>l.text===ln.textContent);if(fd){audioElement.currentTime=fd.time;updateLyricDisplay();}});
   document.getElementById('audioUrl').addEventListener('input',function(){if(this.value&&!fileBase64.audio){audioElement.src=this.value;audioElement.load();}});
 
-  function showStatus(type,msg){const s=document.getElementById('status');s.className='status '+type;s.textContent=msg;s.style.display='block';setTimeout(()=>s.style.display='none',3000);}
+  function showStatus(type,msg){const s=document.getElementById('status');s.className='status '+type;s.textContent=msg;s.style.display='block';setTimeout(()=>s.style.display='none',5000);}
 
   // ========== 录制 ==========
   async function startRecording() {
     if (!audioElement.src) { showStatus('error', '❌ 请先上传音频'); return; }
     if (isRecording) return;
+    
     const size = getContainerSize();
     const bw = size.width, bh = size.height;
     const maxDim = 1920;
@@ -497,24 +639,67 @@
     recordingChunks = [];
     mediaRecorder = new MediaRecorder(combinedStream, { mimeType: selectedMime, videoBitsPerSecond: 5000000 });
     mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordingChunks.push(e.data); };
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(recordingChunks, { type: selectedMime });
+    mediaRecorder.onstop = async () => {
+      let blob = new Blob(recordingChunks, { type: selectedMime });
+      let fileName = (document.getElementById('songTitle').value || '音乐视频');
+      let fileType = 'webm';
+      
+      // 如果选择 MP4 格式，进行转换
+      if (selectedExportFormat === 'mp4') {
+        try {
+          showStatus('info', '🔄 正在转换为 MP4 格式...');
+          blob = await convertWebMToMP4(blob);
+          fileType = 'mp4';
+          fileName += '.mp4';
+        } catch (error) {
+          console.error('MP4 转换失败:', error);
+          showStatus('warning', '⚠️ MP4 转换失败，已降级为 WebM');
+          fileType = 'webm';
+          fileName += '.webm';
+        }
+      } else {
+        fileName += '.webm';
+      }
+      
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = (document.getElementById('songTitle').value || '音乐视频') + '.webm';
+      const a = document.createElement('a'); 
+      a.href = url; 
+      a.download = fileName;
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      document.getElementById('recordingModal').style.display = 'none'; document.getElementById('downloadBtn').disabled = false; isRecording = false;
-      showStatus('success', `✅ 视频导出成功！(${formatFileSize(blob.size)})`);
+      document.getElementById('recordingModal').style.display = 'none'; 
+      document.getElementById('downloadBtn').disabled = false; 
+      isRecording = false;
+      document.getElementById('conversionStatus').classList.remove('show');
+      document.getElementById('recordingTitle').textContent = '正在录制视频...';
+      document.getElementById('recordingIcon').textContent = '🔴';
+      showStatus('success', `✅ 视频导出成功！(${formatFileSize(blob.size)}) - ${fileType.toUpperCase()} 格式`);
     };
-    document.getElementById('recordingModal').style.display = 'flex'; document.getElementById('downloadBtn').disabled = true; isRecording = true;
-    audioElement.currentTime = 0; if (bgVideo.style.display !== 'none') bgVideo.currentTime = 0; if (figureVideo.style.display !== 'none') figureVideo.currentTime = 0;
+    document.getElementById('recordingModal').style.display = 'flex'; 
+    document.getElementById('downloadBtn').disabled = true; 
+    isRecording = true;
+    
+    // 更新按钮文字
+    const formatLabel = selectedExportFormat === 'mp4' ? 'MP4' : 'WebM';
+    document.getElementById('recordingTitle').textContent = `正在录制并导出 ${formatLabel}...`;
+    document.getElementById('recordingIcon').textContent = selectedExportFormat === 'mp4' ? '🎬' : '🔴';
+    
+    audioElement.currentTime = 0; 
+    if (bgVideo.style.display !== 'none') bgVideo.currentTime = 0; 
+    if (figureVideo.style.display !== 'none') figureVideo.currentTime = 0;
     recordingDuration = audioElement.duration || 60;
     mediaRecorder.start(100);
-    await audioElement.play().catch(() => {}); if (bgVideo.style.display !== 'none') bgVideo.play().catch(() => {}); if (figureVideo.style.display !== 'none') figureVideo.play().catch(() => {});
+    await audioElement.play().catch(() => {}); 
+    if (bgVideo.style.display !== 'none') bgVideo.play().catch(() => {}); 
+    if (figureVideo.style.display !== 'none') figureVideo.play().catch(() => {});
     renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
-    const onEnded = () => { if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); audioElement.removeEventListener('ended', onEnded); };
+    const onEnded = () => { 
+      if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); 
+      audioElement.removeEventListener('ended', onEnded); 
+    };
     audioElement.addEventListener('ended', onEnded);
   }
-    function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh) {
+  
+  function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh) {
     if (!isRecording) return;
     const ctx = recordingCtx; const ct = audioElement.currentTime; const total = recordingDuration || 1;
     const progress = Math.min(ct / total * 100, 100);
@@ -523,13 +708,13 @@
     ctx.clearRect(0, 0, rw, rh);
     
     // 1. 背景（object-fit: cover 等价逻辑）
-    const bgVideoEl = bgVideo; const bgScale = config.bgScale / 100;
+    const bgScale = config.bgScale / 100;
     const scaleRatio = rw / getContainerSize().width;
     const bgOffX = config.bgOffsetX * scaleRatio;
     const bgOffY = config.bgOffsetY * scaleRatio;
     let sourceW = rw, sourceH = rh;
-    if (bgVideoEl.style.display !== 'none' && bgVideoEl.readyState >= 2 && bgVideoEl.videoWidth) {
-      sourceW = bgVideoEl.videoWidth; sourceH = bgVideoEl.videoHeight;
+    if (bgVideo.style.display !== 'none' && bgVideo.readyState >= 2 && bgVideo.videoWidth) {
+      sourceW = bgVideo.videoWidth; sourceH = bgVideo.videoHeight;
     } else if (bgImgElement && bgImgElement.width) {
       sourceW = bgImgElement.width; sourceH = bgImgElement.height;
     } else if (bgImage.style.display !== 'none' && bgImage.complete && bgImage.naturalWidth) {
@@ -550,7 +735,7 @@
       case 'bottomright': bgDX = rw - bgDW + bgOffX; bgDY = rh - bgDH + bgOffY; break;
       default: bgDX = (rw - bgDW) / 2 + bgOffX; bgDY = (rh - bgDH) / 2 + bgOffY;
     }
-    if (bgVideoEl.style.display !== 'none' && bgVideoEl.readyState >= 2) { ctx.drawImage(bgVideoEl, bgDX, bgDY, bgDW, bgDH); }
+    if (bgVideo.style.display !== 'none' && bgVideo.readyState >= 2) { ctx.drawImage(bgVideo, bgDX, bgDY, bgDW, bgDH); }
     else if (bgImgElement) { ctx.drawImage(bgImgElement, bgDX, bgDY, bgDW, bgDH); }
     else if (bgImage.style.display !== 'none' && bgImage.complete) { ctx.drawImage(bgImage, bgDX, bgDY, bgDW, bgDH); }
     else { ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, 0, rw, rh); }
@@ -627,7 +812,11 @@
     if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
     if (recordingAnimationId) { cancelAnimationFrame(recordingAnimationId); recordingAnimationId = null; }
     audioElement.pause(); document.getElementById('previewBgVideo')?.pause(); document.getElementById('previewFigureVideo')?.pause();
-    document.getElementById('recordingModal').style.display = 'none'; document.getElementById('downloadBtn').disabled = false;
+    document.getElementById('recordingModal').style.display = 'none'; 
+    document.getElementById('downloadBtn').disabled = false;
+    document.getElementById('conversionStatus').classList.remove('show');
+    document.getElementById('recordingTitle').textContent = '正在录制视频...';
+    document.getElementById('recordingIcon').textContent = '🔴';
     isRecording = false; recordingChunks = [];
     showStatus('info', '已取消录制');
   }
@@ -661,6 +850,12 @@
     document.getElementById('bgScale').value=100;document.getElementById('bgScaleValue').textContent='100%';config.bgScale=100;
     document.querySelectorAll('#figureSizePresets .size-preset').forEach(b=>b.classList.remove('active'));
     document.querySelector('#figureSizePresets .size-preset[data-figure-size="medium"]').classList.add('active');config.figureSize='medium';
+    // 重置格式选择
+    selectedExportFormat = 'webm';
+    document.querySelectorAll('.format-option').forEach(opt => opt.classList.remove('active'));
+    document.querySelector('.format-option[data-format="webm"]').classList.add('active');
+    document.getElementById('formatHint').innerHTML = '✅ WebM 格式：导出速度快，适合网页使用<br>⚠️ MP4 格式：兼容性更好，但需要额外转换时间';
+    
     Object.keys(fileBase64).forEach(k=>fileBase64[k]=null);
     document.querySelectorAll('input[type="file"]').forEach(i=>i.value='');document.querySelectorAll('.file-status').forEach(el=>{el.className='file-status';el.textContent='';});
     document.getElementById('previewBgVideo').style.display='none';document.getElementById('previewBgImage').style.display='none';
@@ -671,7 +866,12 @@
   }
 
   // ========== 初始化 ==========
-  window.addEventListener('load',()=>{updatePreview();setTimeout(fitToScreen,200);});
+  window.addEventListener('load',()=>{
+    updatePreview();
+    setTimeout(fitToScreen,200);
+    // 预初始化 FFmpeg（可选，提高首次转换速度）
+    // initFFmpeg();
+  });
 </script>
 </body>
 </html>
