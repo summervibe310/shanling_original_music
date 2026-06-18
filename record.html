@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>Canvas + AudioContext录制</title>
+<title>Video Only Test</title>
 
 <style>
 body{
@@ -22,22 +22,16 @@ button{
 </head>
 <body>
 
-<h2>Canvas录制测试</h2>
+<h2>Canvas录制测试（仅录视频）</h2>
 
-<canvas id="canvas"
-        width="1280"
-        height="720">
-</canvas>
+<canvas id="canvas" width="1280" height="720"></canvas>
 
 <br><br>
 
-<button id="startBtn">
-开始录制
-</button>
+<button id="startBtn">开始录制</button>
+<button id="stopBtn">停止录制</button>
 
-<button id="stopBtn">
-停止录制
-</button>
+<br><br>
 
 <audio
     id="audio"
@@ -47,22 +41,20 @@ button{
 
 <script>
 
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-const audioElement=
+const audioElement =
     document.getElementById("audio");
 
 let recorder;
-let chunks=[];
+let chunks = [];
 
-let animationId;
-
-let x=0;
+let x = 0;
 
 function render(){
 
-    ctx.fillStyle="black";
+    ctx.fillStyle = "black";
     ctx.fillRect(
         0,
         0,
@@ -70,18 +62,18 @@ function render(){
         canvas.height
     );
 
-    ctx.fillStyle="red";
+    ctx.fillStyle = "red";
 
     ctx.fillRect(
         x,
         300,
-        100,
-        100
+        120,
+        120
     );
 
-    ctx.fillStyle="white";
+    ctx.fillStyle = "white";
 
-    ctx.font="60px Arial";
+    ctx.font = "60px Arial";
 
     ctx.fillText(
         new Date().toLocaleTimeString(),
@@ -89,77 +81,47 @@ function render(){
         100
     );
 
-    x+=5;
+    x += 5;
 
-    if(x>canvas.width){
-        x=-100;
+    if(x > canvas.width){
+        x = -120;
     }
 
-    animationId=
-        requestAnimationFrame(render);
+    requestAnimationFrame(render);
 }
 
 render();
 
 document
 .getElementById("startBtn")
-.onclick=async()=>{
+.onclick = () => {
 
-    chunks=[];
+    chunks = [];
 
-    const videoStream=
+    // 只录视频
+    const videoStream =
         canvas.captureStream(30);
 
-    const audioContext=
-        new AudioContext();
-
-    await audioContext.resume();
-
-    const source=
-        audioContext
-        .createMediaElementSource(
-            audioElement
-        );
-
-    const destination=
-        audioContext
-        .createMediaStreamDestination();
-
-    source.connect(destination);
-
-    source.connect(
-        audioContext.destination
-    );
-
-    const combinedStream=
-        new MediaStream([
-            ...videoStream.getVideoTracks(),
-            ...destination
-                .stream
-                .getAudioTracks()
-        ]);
-
-    recorder=
+    recorder =
         new MediaRecorder(
-            combinedStream,
+            videoStream,
             {
-                mimeType:
-                "video/webm;codecs=vp9,opus"
+                mimeType:"video/webm"
             }
         );
 
-    recorder.ondataavailable=(e)=>{
+    recorder.ondataavailable = (e)=>{
 
-        if(e.data.size>0){
+        if(e.data.size > 0){
 
             chunks.push(e.data);
 
         }
     };
 
-    recorder.onstop=()=>{
+    recorder.onstop = ()=>{
 
-        const blob=
+        const blob =
             new Blob(
                 chunks,
                 {
@@ -168,52 +130,58 @@ document
             );
 
         console.log(
-            "文件大小(MB):",
+            "文件大小(MB)：",
             (
-                blob.size/
-                1024/
+                blob.size /
+                1024 /
                 1024
             ).toFixed(2)
         );
 
-        const url=
+        const url =
             URL.createObjectURL(blob);
 
-        const a=
+        // 页面预览
+        const video =
+            document.createElement("video");
+
+        video.controls = true;
+        video.style.width = "800px";
+        video.src = url;
+
+        document.body.appendChild(
+            document.createElement("br")
+        );
+
+        document.body.appendChild(video);
+
+        // 自动下载
+        const a =
             document.createElement("a");
 
-        a.href=url;
-
-        a.download=
-            "record.webm";
-
+        a.href = url;
+        a.download = "video_only.webm";
         a.click();
-
-        URL.revokeObjectURL(url);
     };
 
-    recorder.start(1000);
+    recorder.start();
 
-    audioElement.currentTime=0;
-
+    // 音乐照样播放
+    audioElement.currentTime = 0;
     audioElement.play();
 
-    console.log(
-        "开始录制"
-    );
+    console.log("开始录制");
 };
 
 document
 .getElementById("stopBtn")
-.onclick=()=>{
+.onclick = ()=>{
 
     recorder.stop();
 
     audioElement.pause();
 
-    console.log(
-        "停止录制"
-    );
+    console.log("停止录制");
 };
 
 </script>
