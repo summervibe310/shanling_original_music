@@ -556,21 +556,51 @@ async function initFFmpeg() {
 }
 
 async function fixWebM(webmBlob) {
+
   const ff = await initFFmpeg();
-  if (!ff) return webmBlob;
+
+  if (!ff) {
+    return webmBlob;
+  }
+
   try {
-    console.log('🔧 正在修复 WebM...');
+
     const arrayBuffer = await webmBlob.arrayBuffer();
-    await ff.writeFile('input.webm', new Uint8Array(arrayBuffer));
-    await ff.exec(['-i','input.webm','-c','copy','-fflags','+genpts','-reset_timestamps','1','-map','0','output.webm']);
-    const outputData = await ff.readFile('output.webm');
-    const fixedBlob = new Blob([outputData.buffer], { type: 'video/webm' });
+
+    await ff.writeFile(
+      'input.webm',
+      new Uint8Array(arrayBuffer)
+    );
+
+    await ff.exec([
+      '-i',
+      'input.webm',
+      '-map',
+      '0',
+      '-c',
+      'copy',
+      '-avoid_negative_ts',
+      'make_zero',
+      'fixed.webm'
+    ]);
+
+    const outputData =
+      await ff.readFile('fixed.webm');
+
     await ff.deleteFile('input.webm');
-    await ff.deleteFile('output.webm');
-    console.log('✅ WebM 修复完成');
-    return fixedBlob;
-  } catch (error) {
-    console.error('WebM 修复失败:', error);
+    await ff.deleteFile('fixed.webm');
+
+    return new Blob(
+      [outputData.buffer],
+      {
+        type: 'video/webm'
+      }
+    );
+
+  } catch (err) {
+
+    console.error(err);
+
     return webmBlob;
   }
 }
@@ -582,7 +612,17 @@ async function convertToMP4(webmBlob) {
     console.log('🔄 正在转换为 MP4...');
     const arrayBuffer = await webmBlob.arrayBuffer();
     await ff.writeFile('input.webm', new Uint8Array(arrayBuffer));
-    await ff.exec(['-i','input.webm','-c:v','libx264','-preset','medium','-crf','23','-c:a','aac','-b:a','128k','-pix_fmt','yuv420p','-movflags','+faststart','output.mp4']);
+    await ff.exec([
+  '-i',
+  'input.webm',
+  '-map',
+  '0',
+  '-c',
+  'copy',
+  '-avoid_negative_ts',
+  'make_zero',
+  'output.webm'
+]);
     const outputData = await ff.readFile('output.mp4');
     const mp4Blob = new Blob([outputData.buffer], { type: 'video/mp4' });
     await ff.deleteFile('input.webm');
@@ -862,7 +902,10 @@ async function startRecording() {
   if (audioStream && audioStream.getAudioTracks().length > 0) { combinedStream = new MediaStream([stream.getVideoTracks()[0], audioStream.getAudioTracks()[0]]); }
   else { combinedStream = stream; }
   
-  const mimeTypes = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+ const mimeTypes = [
+  'video/webm;codecs=vp8',
+  'video/webm'
+];
   let selectedMime = '';
   for (const mt of mimeTypes) { if (MediaRecorder.isTypeSupported(mt)) { selectedMime = mt; break; } }
   if (!selectedMime) { showStatus('error', '❌ 浏览器不支持录制'); return; }
@@ -928,7 +971,7 @@ async function startRecording() {
   if (figureVideo.style.display !== 'none') figureVideo.currentTime = 0;
   recordingDuration = audioElement.duration || 60;
   
-  mediaRecorder.start(100);
+  mediaRecorder.start();
   await audioElement.play().catch(() => {});
   if (bgVideo.style.display !== 'none') bgVideo.play().catch(() => {});
   if (figureVideo.style.display !== 'none') figureVideo.play().catch(() => {});
@@ -936,9 +979,19 @@ async function startRecording() {
   renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
   
   const onEnded = () => {
-    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
-    audioElement.removeEventListener('ended', onEnded);
-  };
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+
+    try {
+      mediaRecorder.requestData();
+    } catch (e) {}
+
+    setTimeout(() => {
+      mediaRecorder.stop();
+    }, 200);
+  }
+
+  audioElement.removeEventListener('ended', onEnded);
+};
   audioElement.addEventListener('ended', onEnded);
 }
 
@@ -1123,8 +1176,10 @@ function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figur
   });
 }
 
-function cancelRecording() {
-  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+if (mediaRecorder && mediaRecorder.state === 'recording') {
+    try {
+      mediaRecorder.requestData();
+    } catch (e) {} mediaRecorder.stop();
   if (recordingAnimationId) { cancelAnimationFrame(recordingAnimationId); recordingAnimationId = null; }
   audioElement.pause();
   document.getElementById('previewBgVideo')?.pause();
