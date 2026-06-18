@@ -755,7 +755,7 @@ document.getElementById('containerSizePresets').addEventListener('click',functio
 document.getElementById('containerWidth').addEventListener('input',function(){config.containerWidth=parseInt(this.value)||853;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.width=config.containerWidth+'px';setTimeout(fitToScreen,100);}});
 document.getElementById('containerHeight').addEventListener('input',function(){config.containerHeight=parseInt(this.value)||480;if(config.containerSize==='custom'||currentDeviceType){document.getElementById('previewContainer').style.height=config.containerHeight+'px';setTimeout(fitToScreen,100);}});
 
-// ========== 蒙版 ==========
+// ========== 蒙版 ===========
 document.getElementById('overlayColor').addEventListener('input',function(){config.overlayColor=this.value;document.getElementById('overlayColorText').value=this.value;updateOverlay();});
 document.getElementById('overlayColorText').addEventListener('input',function(){config.overlayColor=this.value;document.getElementById('overlayColor').value=this.value;updateOverlay();});
 document.getElementById('overlayOpacity').addEventListener('input',function(){config.overlayOpacity=parseInt(this.value);document.getElementById('overlayOpacityValue').textContent=this.value+'%';updateOverlay();});
@@ -1052,6 +1052,8 @@ audioElement.addEventListener(
   onEnded
 );
 
+}
+
 // ========== 录制帧渲染（完整版）==========
 function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh) {
   if (!isRecording) return;
@@ -1064,7 +1066,7 @@ function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figur
   document.getElementById('recordingProgressFill').style.width = progress + '%';
   document.getElementById('recordingProgressText').textContent = Math.floor(progress) + '%';
   
-  ctx.clearRect(0, 0, rw, rh);
+  ctx.clearRect(0,0, rw, rh);
   
   // ===== 1. 背景绘制 =====
   const bgScale = config.bgScale / 100;
@@ -1233,10 +1235,14 @@ function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figur
   });
 }
 
-if (mediaRecorder && mediaRecorder.state === 'recording') {
+// ========== 取消录制 ==========
+function cancelRecording() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
     try {
       mediaRecorder.requestData();
-    } catch (e) {} mediaRecorder.stop();
+    } catch (e) { }
+    mediaRecorder.stop();
+  }
   if (recordingAnimationId) { cancelAnimationFrame(recordingAnimationId); recordingAnimationId = null; }
   audioElement.pause();
   document.getElementById('previewBgVideo')?.pause();
@@ -1345,7 +1351,6 @@ function resetForm() {
   document.getElementById('audioSeekBar').value = 0;
   document.getElementById('currentTime').textContent = '00:00';
   document.getElementById('totalTime').textContent = '00:00';
-  
   updatePreview();
   setTimeout(fitToScreen, 100);
   showStatus('success', '✅ 已恢复默认值');
@@ -1362,6 +1367,3 @@ window.addEventListener('load', () => {
 </script>
 </body>
 </html>
-
-
-
