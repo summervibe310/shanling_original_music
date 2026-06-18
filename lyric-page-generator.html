@@ -543,15 +543,34 @@ function selectExportFormat(format) {
 // ========== FFmpeg ==========
 async function initFFmpeg() {
   if (ffmpeg) return ffmpeg;
+
   try {
-    const { FFmpeg } = window;
+
+    if (!window.FFmpegWASM) {
+      throw new Error('FFmpeg 脚本未加载');
+    }
+
+    const { FFmpeg } = window.FFmpegWASM;
+
     ffmpeg = new FFmpeg();
-    ffmpeg.on('log', ({ message }) => { console.log('[FFmpeg]', message); });
-    await ffmpeg.load({ coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js' });
+
+    ffmpeg.on('log', ({ message }) => {
+      console.log('[FFmpeg]', message);
+    });
+
+    await ffmpeg.load({
+      coreURL:
+        'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'
+    });
+
     console.log('✅ FFmpeg 初始化成功');
+
     return ffmpeg;
+
   } catch (error) {
+
     console.error('❌ FFmpeg 初始化失败:', error);
+
     return null;
   }
 }
@@ -1011,31 +1030,20 @@ async function startRecording() {
   
   const onEnded = () => {
 
-  if (
-    mediaRecorder &&
-    mediaRecorder.state === 'recording'
-  ) {
+  setTimeout(() => {
 
-    console.log('音频结束，准备停止录制');
+      if (
+          mediaRecorder &&
+          mediaRecorder.state === 'recording'
+      ) {
+          mediaRecorder.stop();
+      }
 
-    try {
-      mediaRecorder.requestData();
-    } catch(e) {
-      console.error(e);
-    }
-
-    setTimeout(() => {
-
-      console.log('执行stop');
-
-      mediaRecorder.stop();
-
-    }, 1000);
-  }
+  }, 500);
 
   audioElement.removeEventListener(
-    'ended',
-    onEnded
+      'ended',
+      onEnded
   );
 };
 
