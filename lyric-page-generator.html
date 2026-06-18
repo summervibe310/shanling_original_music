@@ -912,9 +912,39 @@ async function startRecording() {
   
   recordingChunks = [];
   mediaRecorder = new MediaRecorder(combinedStream, { mimeType: selectedMime, videoBitsPerSecond: 5000000 });
-  mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordingChunks.push(e.data); };
+  mediaRecorder.ondataavailable = (e) => {
+
+  console.log(
+    '收到chunk:',
+    e.data.size
+  );
+
+  if (e.data.size > 0) {
+    recordingChunks.push(e.data);
+  }
+};
   
   mediaRecorder.onstop = async () => {
+
+  console.log(
+    'chunks数量:',
+    recordingChunks.length
+  );
+
+  const totalSize =
+    recordingChunks.reduce(
+      (sum,item)=>sum+item.size,
+      0
+    );
+
+  console.log(
+    'chunks总大小:',
+    totalSize
+  );
+
+  document.getElementById(
+    'processingText'
+  ).style.display = 'block';
     document.getElementById('processingText').style.display = 'block';
     document.getElementById('cancelBtn').style.display = 'none';
     
@@ -979,21 +1009,39 @@ async function startRecording() {
   renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh);
   
   const onEnded = () => {
-  if (mediaRecorder && mediaRecorder.state === 'recording') {
+
+  if (
+    mediaRecorder &&
+    mediaRecorder.state === 'recording'
+  ) {
+
+    console.log('音频结束，准备停止录制');
 
     try {
       mediaRecorder.requestData();
-    } catch (e) {}
+    } catch(e) {
+      console.error(e);
+    }
 
     setTimeout(() => {
+
+      console.log('执行stop');
+
       mediaRecorder.stop();
-    }, 200);
+
+    }, 1000);
   }
 
-  audioElement.removeEventListener('ended', onEnded);
+  audioElement.removeEventListener(
+    'ended',
+    onEnded
+  );
 };
-  audioElement.addEventListener('ended', onEnded);
-}
+
+audioElement.addEventListener(
+  'ended',
+  onEnded
+);
 
 // ========== 录制帧渲染（完整版）==========
 function renderRecordingFrame(bgVideo, bgImage, bgImgElement, figureVideo, figureImage, fgImgElement, rw, rh) {
