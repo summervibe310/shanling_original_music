@@ -629,31 +629,76 @@ async function fixWebM(webmBlob) {
 }
 
 async function convertToMP4(webmBlob) {
+
   const ff = await initFFmpeg();
-  if (!ff) { showStatus('error', '❌ FFmpeg 不可用，请选择 WebM 格式'); return webmBlob; }
+
+  if (!ff) {
+    showStatus('error','❌ FFmpeg不可用');
+    return webmBlob;
+  }
+
   try {
-    console.log('🔄 正在转换为 MP4...');
+
     const arrayBuffer = await webmBlob.arrayBuffer();
-    await ff.writeFile('input.webm', new Uint8Array(arrayBuffer));
+
+    await ff.writeFile(
+      'input.webm',
+      new Uint8Array(arrayBuffer)
+    );
+
+
     await ff.exec([
-  '-i',
-  'input.webm',
-  '-map',
-  '0',
-  '-c',
-  'copy',
-  '-avoid_negative_ts',
-  'make_zero',
-  'output.webm'
-]);
-    const outputData = await ff.readFile('output.mp4');
-    const mp4Blob = new Blob([outputData.buffer], { type: 'video/mp4' });
+      '-i',
+      'input.webm',
+
+      // 视频重新编码
+      '-c:v',
+      'libx264',
+
+      '-preset',
+      'medium',
+
+      '-pix_fmt',
+      'yuv420p',
+
+      // 音频重新编码
+      '-c:a',
+      'aac',
+
+      '-b:a',
+      '192k',
+
+      // iPhone兼容
+      '-movflags',
+      '+faststart',
+
+      'output.mp4'
+    ]);
+
+
+    const outputData =
+      await ff.readFile('output.mp4');
+
+
     await ff.deleteFile('input.webm');
     await ff.deleteFile('output.mp4');
-    console.log('✅ MP4 转换完成');
-    return mp4Blob;
-  } catch (error) {
-    console.error('MP4 转换失败:', error);
+
+
+    return new Blob(
+      [outputData.buffer],
+      {
+        type:'video/mp4'
+      }
+    );
+
+
+  } catch(error){
+
+    console.error(
+      'MP4转换失败:',
+      error
+    );
+
     return webmBlob;
   }
 }
